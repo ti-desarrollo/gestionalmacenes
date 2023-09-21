@@ -2,6 +2,8 @@ function listarPedidosAdm() {
   $("#btnReportar_PedidoAdm").html(
     '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Cargando'
   );
+  $("#divLista_PedidoAdm").show();
+  $("#divDetalle_PedidoAdm").hide();
   $.post(
     "../../controllers/PedidoController.php",
     {
@@ -18,6 +20,9 @@ function listarPedidosAdm() {
       $.each(datos, function (i) {
         tbody.append(`
           <tr>
+              <td class="text-primary" onclick="listarDetallePedidoAdm(${
+                datos[i].codigo
+              }, ${datos[i].sedeCodigo})">${datos[i].codigo}</td>
               <td>${datos[i].estado}</td>
               <td>${datos[i].conformidad}</td>
               <td>${datos[i].pedido}</td>
@@ -27,8 +32,8 @@ function listarPedidosAdm() {
               <td>${datos[i].fechaRecepcion}</td>
               <td>${datos[i].sede}</td>       
               <td>${datos[i].documentos.map((doc) => {
-          return `<a href="https://gestionalmacenes.3aamseq.com.pe/docs/pedidos/${datos[i].carpeta}/RECEPCIÓN%20DE%20MERCADERÍA%20-%20ALMACÉN/${datos[i].year}/${datos[i].mes}/COMPRAS NACIONALES/${datos[i].proveedor}/${datos[i].fechaFormato}/${doc.dp_documento}" target="_blank">${doc.dp_documento}</a>`;
-        })}</td>             
+                return `<a href="https://gestionalmacenes.3aamseq.com.pe/docs/pedidos/${datos[i].carpeta}/RECEPCIÓN%20DE%20MERCADERÍA%20-%20ALMACÉN/${datos[i].year}/${datos[i].mes}/COMPRAS NACIONALES/${datos[i].proveedor}/${datos[i].fechaFormato}/${doc.dp_documento}" target="_blank">${doc.dp_documento}</a>`;
+              })}</td>             
           </tr>
       `);
       });
@@ -41,6 +46,62 @@ function listarPedidosAdm() {
           order: [[0, "DESC"]],
           language: { url: "../../libs/datatables/dt_spanish.json" },
         });
+      }
+    }
+  );
+}
+
+function listarDetallePedidoAdm(docentry, sede) {
+  $("#divLista_PedidoAdm").hide();
+  $("#divDetalle_PedidoAdm").show();
+
+  $.post(
+    "../../controllers/PedidoController.php",
+    { task: 2, docentry, sede },
+    function (response) {
+      let datos = JSON.parse(response);
+      let table = $("#tDetalle_PedidoAdm");
+      let tbody = $("#tbodyDetalle_PedidoAdm");
+      tbody.empty();
+
+      if (datos.length > 0) {
+        $("#txtGuia_PedidoAdm").val(datos[0].guia);
+        $("#txtNumDoc_PedidoAdm").val(datos[0].documento);
+        $("#txtFechaDoc_PedidoAdm").val(datos[0].fecha);
+        $("#txtEstado_PedidoAdm").val(datos[0].estado);
+        $("#txtConformidad_PedidoAdm").val(datos[0].conformidad);
+        $("#txtComentario_PedidoAdm").val(datos[0].observacion);
+
+        $.each(datos, function (i) {
+          tbody.append(
+            `
+            <tr>
+                <td style="vertical-align: middle">${i + 1}</td>
+                <td style="vertical-align: middle">${datos[i].item}</td>
+                <td style="vertical-align: middle">${datos[i].descripcion}</td>
+                <td style="vertical-align: middle">${datos[i].um}</td>
+                <td style="vertical-align: middle">${
+                  datos[i].cantidadPedida
+                }</td>
+                <td style="vertical-align: middle">${
+                  datos[i].cantidadRecibida
+                }</td>
+                <td style="vertical-align: middle">${
+                  datos[i].cantidadRecepcionada
+                }</td>
+            </tr>
+            `
+          );
+        });
+
+        if (!$.fn.DataTable.isDataTable(table)) {
+          table.DataTable({
+            dom: "Bfrtp",
+            buttons: ["excel"],
+            pageLength: 25,
+            language: { url: "../../libs/datatables/dt_spanish.json" },
+          });
+        }
       }
     }
   );
@@ -138,14 +199,18 @@ function listarDetallePedido(docentry) {
                 <td style="vertical-align: middle">${datos[i].item}</td>
                 <td style="vertical-align: middle">${datos[i].descripcion}</td>
                 <td style="vertical-align: middle">${datos[i].um}</td>
-                <td style="vertical-align: middle" class="inputQPedida">${datos[i].cantidadPedida
-            }</td>
-                <td style="vertical-align: middle" class="inputQRecibida">${datos[i].cantidadRecibida
-            }</td>
-                <td style="vertical-align: middle"><input class="inputQRecepcionada" id="txtCantidadRecepcionada_${datos[i].item
-            }" type="number" value="${parseFloat(
+                <td style="vertical-align: middle" class="inputQPedida">${
+                  datos[i].cantidadPedida
+                }</td>
+                <td style="vertical-align: middle" class="inputQRecibida">${
+                  datos[i].cantidadRecibida
+                }</td>
+                <td style="vertical-align: middle"><input class="inputQRecepcionada" id="txtCantidadRecepcionada_${
+                  datos[i].item
+                }" type="number" value="${parseFloat(
               datos[i].cantidadRecepcionada
-            )}" ${parseFloat(datos[i].cantidadRecepcionada) === 0 ? "disabled" : ""
+            )}" ${
+              parseFloat(datos[i].cantidadRecepcionada) === 0 ? "disabled" : ""
             } /></td>
             </tr>
             `
@@ -207,39 +272,50 @@ function layoutPedido(docentry) {
               <p style="margin: unset;">MZA. F LOTE. 08 URB. LA MERCED ET.1 LA LIBERTAD - TRUJILLO - TRUJILLO</p>
           </div>
         </div>
-        <h3 style="text-align: center; margin: 10px;">PEDIDO ${datos[0].DocNum ?? "---"
+        <h3 style="text-align: center; margin: 10px;">PEDIDO ${
+          datos[0].DocNum ?? "---"
         }</h3>
         <div>
           <div class="row" style="font-size: 13px;">
               <div class="col-sm-7">
                   <div class="row">
                       <div class="col-sm-12" style="padding-bottom: 15px;">
-                          <p style="margin: unset;"><b>Empresa:</b> ${datos[0].NombreSocio ?? "---"
-        }</p>
-                          <p style="margin: unset;"><b>RUC:</b> ${datos[0].RUC ?? "---"
-        }</p>
-                          <p style="margin: unset;"><b>Domicilio Fiscal:</b> ${datos[0].DirPagar ?? "---"
-        }</p>
+                          <p style="margin: unset;"><b>Empresa:</b> ${
+                            datos[0].NombreSocio ?? "---"
+                          }</p>
+                          <p style="margin: unset;"><b>RUC:</b> ${
+                            datos[0].RUC ?? "---"
+                          }</p>
+                          <p style="margin: unset;"><b>Domicilio Fiscal:</b> ${
+                            datos[0].DirPagar ?? "---"
+                          }</p>
                       </div>
                       <div class="col-sm-12" style="padding-bottom: 15px;">
-                          <p style="margin: unset;"><b>Contacto:</b> ${datos[0].Contacto ?? "---"
-        }</p>
-                          <p style="margin: unset;"><b>Email:</b> ${datos[0].email ?? "---"
-        }</p>
-                          <p style="margin: unset;"><b>Teléfono:</b> ${datos[0].Celular ?? "---"
-        }</p>
+                          <p style="margin: unset;"><b>Contacto:</b> ${
+                            datos[0].Contacto ?? "---"
+                          }</p>
+                          <p style="margin: unset;"><b>Email:</b> ${
+                            datos[0].email ?? "---"
+                          }</p>
+                          <p style="margin: unset;"><b>Teléfono:</b> ${
+                            datos[0].Celular ?? "---"
+                          }</p>
                       </div>
                       <div class="col-sm-12" style="padding-bottom: 15px;">
-                          <p style="margin: unset;"><b>Sírvase suministrar a:</b> ${datos[0].NombreBD ?? "---"
-        }</p>
-                          <p style="margin: unset;"><b>RUC:</b> ${datos[0].RUCBD ?? "---"
-        }</p>
-                          <p style="margin: unset;"><b>Domicio Fiscal:</b> ${datos[0].DireccionBD ?? "---"
-        }</p>
+                          <p style="margin: unset;"><b>Sírvase suministrar a:</b> ${
+                            datos[0].NombreBD ?? "---"
+                          }</p>
+                          <p style="margin: unset;"><b>RUC:</b> ${
+                            datos[0].RUCBD ?? "---"
+                          }</p>
+                          <p style="margin: unset;"><b>Domicio Fiscal:</b> ${
+                            datos[0].DireccionBD ?? "---"
+                          }</p>
                       </div>
                       <div class="col-sm-12" style="padding-bottom: 15px;">
-                          <p style="margin: unset;"><b>Fecha de entrega:</b> ${datos[0].FechaEntrega.date.substring(0, 10) ?? "---"
-        }</p>
+                          <p style="margin: unset;"><b>Fecha de entrega:</b> ${
+                            datos[0].FechaEntrega.date.substring(0, 10) ?? "---"
+                          }</p>
                       </div>
                   </div>
               </div>
@@ -253,39 +329,48 @@ function layoutPedido(docentry) {
                                   <div class="col-sm-4"><b>Fecha</b></div>
                               </div>
                               <div class="row">
-                                  <div class="col-sm-8"> ${datos[0]["NAT-SOLCOMPRA"] ?? "---"
-        }</div>
-                                  <div class="col-sm-4"> ${datos[0].Fecha.date.substring(0, 10) ??
-        "---"
-        }</div>
+                                  <div class="col-sm-8"> ${
+                                    datos[0]["NAT-SOLCOMPRA"] ?? "---"
+                                  }</div>
+                                  <div class="col-sm-4"> ${
+                                    datos[0].Fecha.date.substring(0, 10) ??
+                                    "---"
+                                  }</div>
                               </div>
                               <div class="row">
                                   <div class="col-sm-12"><b>Persona de Contacto / Tel.</b></div>
                               </div>
                               <div class="row">
-                                  <div class="col-sm-12"> ${datos[0]["NAT-ELABORADO"]
-        } / ${datos[0]["NAT-CELULAR"] ?? "---"}</div>
+                                  <div class="col-sm-12"> ${
+                                    datos[0]["NAT-ELABORADO"]
+                                  } / ${datos[0]["NAT-CELULAR"] ?? "---"}</div>
                               </div>
                               <div class="row">
                                   <div class="col-sm-12"><b>Email</b></div>
                               </div>
                               <div class="row">
-                                  <div class="col-sm-12"> ${datos[0]["NAT-EMAIL"] ?? "---"
-        }</div>
+                                  <div class="col-sm-12"> ${
+                                    datos[0]["NAT-EMAIL"] ?? "---"
+                                  }</div>
                               </div>
                           </div>
                       </div>
                       <div class="col-sm-12">
-                          <p style="margin: unset;"><b>Sede de Entrega:</b> ${datos[0].SEDE
-        }</p>
-                          <p style="margin: unset;"><b>Dirección:</b> ${datos[0].DIRECCION_SEDE
-        }</p>
-                          <p style="margin: unset;"><b>Cond. Pago:</b> ${datos[0].CondicionPago
-        }</p>
-                          <p style="margin: unset;"><b>% Anticipo:</b> ${datos[0]["NAT-ANTICIPO"]
-        }</p>
-                          <p style="margin: unset;"><b>Moneda:</b> ${datos[0].MonedaLetras
-        }</p>
+                          <p style="margin: unset;"><b>Sede de Entrega:</b> ${
+                            datos[0].SEDE
+                          }</p>
+                          <p style="margin: unset;"><b>Dirección:</b> ${
+                            datos[0].DIRECCION_SEDE
+                          }</p>
+                          <p style="margin: unset;"><b>Cond. Pago:</b> ${
+                            datos[0].CondicionPago
+                          }</p>
+                          <p style="margin: unset;"><b>% Anticipo:</b> ${
+                            datos[0]["NAT-ANTICIPO"]
+                          }</p>
+                          <p style="margin: unset;"><b>Moneda:</b> ${
+                            datos[0].MonedaLetras
+                          }</p>
                       </div>
                   </div>
               </dov>
@@ -318,12 +403,13 @@ function layoutPedido(docentry) {
                               <div class="col-sm-12" style="text-align: center;">
                                   <p><b>Solicitante</b></p>
                                   <p>${datos[0]["NAT-SOLICITANTE"] ?? "---"}</p>
-                                  <p><b>Fecha:</b> ${datos[0]["NAT-SOLICITANTE-FECHA"]
-          ? datos[0][
-            "NAT-SOLICITANTE-FECHA"
-          ].date.substring(0, 10)
-          : "---"
-        }</p>
+                                  <p><b>Fecha:</b> ${
+                                    datos[0]["NAT-SOLICITANTE-FECHA"]
+                                      ? datos[0][
+                                          "NAT-SOLICITANTE-FECHA"
+                                        ].date.substring(0, 10)
+                                      : "---"
+                                  }</p>
                               </div>
                           </div>
                       </div>
@@ -332,12 +418,13 @@ function layoutPedido(docentry) {
                               <div class="col-sm-12" style="text-align: center;">
                                   <p><b>Elaborado</b></p>
                                   <p>${datos[0]["NAT-ELABORADO"] ?? "---"}</p>
-                                  <p><b>Fecha:</b> ${datos[0]["NAT-ELABORADO-FECHA"]
-          ? datos[0][
-            "NAT-ELABORADO-FECHA"
-          ].date.substring(0, 10)
-          : "---"
-        }</p>
+                                  <p><b>Fecha:</b> ${
+                                    datos[0]["NAT-ELABORADO-FECHA"]
+                                      ? datos[0][
+                                          "NAT-ELABORADO-FECHA"
+                                        ].date.substring(0, 10)
+                                      : "---"
+                                  }</p>
                               </div>
                           </div>
                       </div>
@@ -346,12 +433,13 @@ function layoutPedido(docentry) {
                               <div class="col-sm-12" style="text-align: center;">
                                   <p><b>Aprobado</b></p>
                                   <p>${datos[0]["NAT-APROBADO"] ?? "---"}</p>
-                                  <p><b>Fecha:</b> ${datos[0]["NAT-APROBADO-FECHA"]
-          ? datos[0][
-            "NAT-APROBADO-FECHA"
-          ].date.substring(0, 10)
-          : "---"
-        }</p>
+                                  <p><b>Fecha:</b> ${
+                                    datos[0]["NAT-APROBADO-FECHA"]
+                                      ? datos[0][
+                                          "NAT-APROBADO-FECHA"
+                                        ].date.substring(0, 10)
+                                      : "---"
+                                  }</p>
                               </div>
                           </div>
                       </div>
@@ -602,9 +690,10 @@ function pdfPedido(data) {
   pdf.setFontType("normal");
   pdf.text(data[0]["NAT-SOLICITANTE"] ?? "---", 100, height + 40, "center");
   pdf.text(
-    `Fecha: ${data[0]["NAT-SOLICITANTE-FECHA"]
-      ? data[0]["NAT-SOLICITANTE-FECHA"].date.substring(0, 10)
-      : "---"
+    `Fecha: ${
+      data[0]["NAT-SOLICITANTE-FECHA"]
+        ? data[0]["NAT-SOLICITANTE-FECHA"].date.substring(0, 10)
+        : "---"
     }`,
     100,
     height + 45,
@@ -612,9 +701,10 @@ function pdfPedido(data) {
   );
   pdf.text(data[0]["NAT-ELABORADO"] ?? "---", 140, height + 40, "center");
   pdf.text(
-    `Fecha: ${data[0]["NAT-ELABORADO-FECHA"]
-      ? data[0]["NAT-ELABORADO-FECHA"].date.substring(0, 10)
-      : "---"
+    `Fecha: ${
+      data[0]["NAT-ELABORADO-FECHA"]
+        ? data[0]["NAT-ELABORADO-FECHA"].date.substring(0, 10)
+        : "---"
     }`,
     140,
     height + 45,
@@ -622,9 +712,10 @@ function pdfPedido(data) {
   );
   pdf.text(data[0]["NAT-APROBADO"] ?? "---", 180, height + 40, "center");
   pdf.text(
-    `Fecha: ${data[0]["NAT-APROBADO-FECHA"]
-      ? data[0]["NAT-APROBADO-FECHA"].date.substring(0, 10)
-      : "---"
+    `Fecha: ${
+      data[0]["NAT-APROBADO-FECHA"]
+        ? data[0]["NAT-APROBADO-FECHA"].date.substring(0, 10)
+        : "---"
     }`,
     180,
     height + 45,
@@ -635,7 +726,7 @@ function pdfPedido(data) {
   pdf.save(`Pedido N°${data[0].DocNum}`);
 }
 
-function actualizarPedido(
+async function actualizarPedido(
   docentry,
   sede,
   year,
@@ -664,14 +755,33 @@ function actualizarPedido(
     alert("::MENSAJE:\n[*] Debes subir al menos un archivo");
     return;
   }
+
+  let continuar = true;
   for (let i = 0; i < input.files.length; i++) {
     let size = input.files[i].size;
+    let valido = await validarSubidaDeArchivos(
+      input.files[i],
+      sede,
+      year,
+      mes,
+      proveedor,
+      fechaRecepcion
+    );
     if (size > maxFileSize) {
       alert(
         `::ERROR:\n[*] El archivo ${input.files[i].name} supera el tamaño permitido de ${maxFileSize}`
       );
-      return;
+      break;
     }
+    if (!valido.success) {
+      alert(`::ERROR:\n[*] ${valido.message}`);
+      continuar = false;
+      break;
+    }
+  }
+
+  if (!continuar) {
+    return;
   }
 
   if (conformidad === "00") {
@@ -787,9 +897,42 @@ function actualizarPedido(
   }
 }
 
+async function validarSubidaDeArchivos(
+  file,
+  sede,
+  year,
+  mes,
+  proveedoor,
+  fechaRecepcion
+) {
+  let response = null;
+  let formData = new FormData();
+  formData.append("file", file);
+  formData.append("task", 9);
+  formData.append("sede", sede);
+  formData.append("year", year);
+  formData.append("mes", mes);
+  formData.append("proveedor", proveedoor);
+  formData.append("fechaRecepcion", fechaRecepcion);
+  await $.ajax({
+    url: "../../controllers/PedidoController.php",
+    dataType: "text",
+    cache: false,
+    contentType: false,
+    processData: false,
+    data: formData,
+    type: "post",
+    success: function (success) {
+      let data = JSON.parse(success);
+      response = data;
+    },
+  });
+  return response;
+}
+
 function sendNotification(pedido, sede) {
   $.post(
-    "../../controllers/usuariosController.php",
+    "../../controllers/UsuarioController.php",
     {
       task: 4,
     },
@@ -819,12 +962,11 @@ function sendPushNotification(token, pedido, sede) {
       data: {
         title: "Pedido procesado",
         body: `El pedido N°${pedido} de la sede ${sede} ha sido procesado`,
-        link: "https://gestionalmacenes.3aamseq.com.pe/views/almacenes/pedidos.php",
       },
     }),
   };
 
-  $.ajax(settings).done(function (response) { });
+  $.ajax(settings).done(function () {});
 }
 
 function sendMailNotification(correo, pedido, sede) {
@@ -848,6 +990,6 @@ function sendMailNotification(correo, pedido, sede) {
       recipients: correo,
       subject: `SEDE: ${sede} | PEDIDO ${pedido}`,
     },
-    function () { }
+    function () {}
   );
 }

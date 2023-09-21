@@ -51,7 +51,7 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'], $_SESSION['ga-sedeUsu'
                                         <th>N° Pedido</th>
                                         <th>N° Entrada</th>
                                         <th>Proveedor</th>
-                                        <th>Fecha</th>
+                                        <th>Fecha de recepción</th>
                                         <th>Guía</th>
                                         <th>Código</th>
                                         <th>Adjuntos</th>

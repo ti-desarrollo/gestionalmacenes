@@ -22,12 +22,12 @@ class Pedido extends Conexion
 
     public function obtenerEstado(string $codigo): array
     {
-        return $this->returnQuery('SELECT U_AMQ_ESTADO_OC FROM UpgradeBPS_SBO_3AAMSEQ.dbo.OPOR WHERE DocEntry = ?', [$codigo]);
+        return $this->returnQuery('SELECT U_AMQ_ESTADO_OC FROM SBO_3AAMSEQ_OrdenVenta.dbo.OPOR WHERE DocEntry = ?', [$codigo]);
     }
 
     public function layout(string $codigo): array
     {
-        return $this->returnQuery('EXEC UpgradeBPS_SBO_3AAMSEQ.dbo.SYP_LYT_COMOC01 ?', [$codigo]);
+        return $this->returnQuery('EXEC SBO_3AAMSEQ_OrdenVenta.dbo.SYP_LYT_COMOC01 ?', [$codigo]);
     }
 
     public function listarPedidosAdm(string $inicio, string $fin): array
@@ -103,5 +103,22 @@ class Pedido extends Conexion
     {
         $this->simpleQuery("EXECUTE [10.2.3.30].msdb.dbo.sp_send_dbmail @profile_name = 'PerfilEnvioCorreos2023', @body = ?, @body_format ='HTML', @recipients = ?, @subject = ?;", [$body, $recipients, $subject]);
         return 1;
+    }
+
+    public function validateFilesnames(array $data, string $sede, string $year, string $mes, string $proveedor, string $fechaRecepcion): array
+    {
+        $directorio = "\\\amseq-files\ALMACEN - TIENDA\\$sede\RECEPCIÓN DE MERCADERÍA - ALMACÉN\\$year\\$mes\\COMPRAS NACIONALES\\$proveedor\\$fechaRecepcion";
+        $file = json_decode(json_encode($data));
+        $fileName = $file->name;
+        if (file_exists($directorio)) {
+            $files = array_diff(scandir($directorio), array('.', '..'));
+            foreach ($files as $x) {
+                if (substr($x, 16) === $fileName) {
+                    return ['success' => false, 'message' => "El archivo $fileName ya está cargado. Intenta con otro archivo"];
+                    break;
+                }
+            }
+        }
+        return ['success' => true, 'message' => "El archivo $fileName es válido"];
     }
 }

@@ -19,8 +19,8 @@ class EntradaMercancia extends Conexion
         return $this->returnQuery('EXEC sp_buscarEntradaMercancia ?, ?', [$sede, $codigo]);
     }
 
-    public function listarDocumentosPedido(string $pedido): array
+    public function listarDocumentosPedido(string $pedido, string $guia): array
     {
-        return $this->returnQuery('EXEC sp_listarDocumentosPedido ?', [$pedido]);
+        return $this->returnQuery('EXEC sp_listarDocumentosPedido ?, ?', [$pedido, "$guia.pdf"]);
     }
 }

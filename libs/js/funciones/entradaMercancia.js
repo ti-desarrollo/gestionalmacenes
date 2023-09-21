@@ -20,6 +20,7 @@ function listarEntradaMercancias() {
       let table = $("#tListaEntradas_EntradaMercancia");
       let tbody = $("#tbodyDetalleEntradas_EntradaMercancia");
       tbody.empty();
+      console.log(datos);
 
       $.each(datos, function (i) {
         tbody.append(
@@ -31,7 +32,7 @@ function listarEntradaMercancias() {
                 <td>${datos[i].fechaRecepcion}</td>
                 <td>${datos[i].guia}</td>
                 <td class="text-primary" onclick="listarEntradaMercanciasDeta(${datos[i].docentryEntrada})">${datos[i].docentryEntrada}</td>
-                <td id="files${datos[i].docentryPedido}"></td>
+                <td id="files${datos[i].docentryEntrada}"></td>
             </tr>
             `
         );
@@ -40,11 +41,12 @@ function listarEntradaMercancias() {
           {
             task: 3,
             pedido: datos[i].docentryPedido,
+            guia: datos[i].guia,
           },
           function (response) {
             let files = JSON.parse(response);
             $.each(files, function (a) {
-              $(`#files${datos[i].docentryPedido}`).append(
+              $(`#files${datos[i].docentryEntrada}`).append(
                 `<p style="margin: unset;"><a href="https://gestionalmacenes.3aamseq.com.pe/docs/pedidos/${files[a].carpeta}/RECEPCIÓN%20DE%20MERCADERÍA%20-%20ALMACÉN/${files[a].year}/${files[a].mes}/COMPRAS NACIONALES/${files[a].proveedor}/${files[a].fechaFormato}/${files[a].fileName}" target="_blank">${files[a].fileName}</a></p>`
               );
             });

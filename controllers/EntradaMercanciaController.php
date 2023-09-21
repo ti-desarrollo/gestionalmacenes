@@ -18,7 +18,7 @@ if (isset($_REQUEST, $_SESSION)) {
 
         case 3:
             // Lista los archivos de un pedido
-            echo json_encode($entrada->listarDocumentosPedido($_GET['pedido']));
+            echo json_encode($entrada->listarDocumentosPedido($_GET['pedido'], $_GET['guia']));
             break;
 
         default:

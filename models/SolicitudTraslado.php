@@ -22,7 +22,7 @@ class SolicitudTraslado extends Conexion
 
     public function obtenerEstado(string $codigo): array
     {
-        return $this->returnQuery('SELECT U_AMQ_ESTADO_ST FROM UpgradeBPS_SBO_3AAMSEQ.dbo.OWTQ WHERE DocEntry = ?', [$codigo]);
+        return $this->returnQuery('SELECT U_AMQ_ESTADO_ST FROM SBO_3AAMSEQ_OrdenVenta.dbo.OWTQ WHERE DocEntry = ?', [$codigo]);
     }
 
     public function actualizarDetalle(string $codigo, string $linea, string $itemcode, string $cantidad): int | false
@@ -32,7 +32,7 @@ class SolicitudTraslado extends Conexion
 
     public function actualizarCabecera($observacion, $conformidad, $codigo): int | bool
     {
-        return $this->simpleQuery("UPDATE UpgradeBPS_SBO_3AAMSEQ.dbo.OWTQ SET U_AMQ_ESTADO_ST = 'P', JrnlMemo = ?,  U_SYP_CONFORMIDAD= ? WHERE DocEntry = ?", [$observacion, $conformidad, $codigo]);
+        return $this->simpleQuery("UPDATE SBO_3AAMSEQ_OrdenVenta.dbo.OWTQ SET U_AMQ_ESTADO_ST = 'P', JrnlMemo = ?,  U_SYP_CONFORMIDAD= ? WHERE DocEntry = ?", [$observacion, $conformidad, $codigo]);
     }
 
     public function uploadFile(array $data): array

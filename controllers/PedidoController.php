@@ -12,7 +12,7 @@ if (isset($_REQUEST, $_SESSION)) {
 
         case 2:
             // Listar el detalle del pedido
-            echo json_encode($pedido->listarDetalle($_SESSION['ga-idSedeUsu'], $_POST['docentry']));
+            echo json_encode($pedido->listarDetalle($_POST['sede'] ?? $_SESSION['ga-idSedeUsu'], $_POST['docentry']));
             break;
 
         case 3:
@@ -64,6 +64,11 @@ if (isset($_REQUEST, $_SESSION)) {
         case 8:
             // Enviar correo para notificar procesamiento de un pedido
             echo json_encode($pedido->enviarCorreo($_POST['body'], $_POST['recipients'], $_POST['subject']));
+            break;
+
+        case 9:
+            // Validar si el archivo que está subiendo ya existe en la ruta
+            echo json_encode($pedido->validateFilesnames($_FILES['file'], $_POST['sede'], $_POST['year'], $_POST['mes'], $_POST['proveedor'], $_POST['fechaRecepcion']));
             break;
 
         default:
