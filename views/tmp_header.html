@@ -9,7 +9,7 @@
     <meta name="author" content="TIC 3AAMSEQ SA">
     <title>3AAMSEQ SA - Gestión de almacenes</title>
     <link href="../../media/logotipo.ico" rel="shortcut icon" type="image/ico">
-    
+
     <!-- Bootstrap core CSS -->
     <link href="../../libs/bootstrap-4.5.0-dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -17,9 +17,8 @@
     <link href="../../libs/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 
     <!-- Datatable for this template -->
-    <link href="../../libs/datatables/datatables.min.css" rel="stylesheet">
-    <link href="../../libs/datatables/jquery.datatables.min.css" rel="stylesheet">
-    <link href="../../libs/datatables/buttons.datatables.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.10.23/css/jquery.dataTables.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/buttons/1.6.5/css/buttons.dataTables.min.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
     <link href="../../libs/css/sb-admin.css" rel="stylesheet">
@@ -34,10 +33,14 @@
     <!-- Core plugin JavaScript -->
     <script src="../../libs/jquery-easing/jquery.easing.min.js"></script>
 
-    <!-- Datatable -->
-    <script src="../../libs/datatables/datatables.min.js"></script>
-    <script src="../../libs/datatables/jquery.datatables.min.js"></script>
-    <script src="../../libs/datatables/buttons.datatables.min.js"></script>
+    <!-- Datatable -->    
+    <script src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.5/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.html5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+
 
     <!-- Botones para el datatable -->
     <script src="../../libs/plugins/buttons.flash.min.js"></script>
@@ -78,36 +81,53 @@
                 </li>
 
                 <li class="nav-item" title="Tiendas">
-                    <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse"data-target="#collapseComponents1" href="#"><i class="fa fa-fw fa-list"></i><span class="nav-link-text"> Tiendas</span></a>
+                    <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse"
+                        data-target="#collapseComponents1" href="#"><i class="fa fa-fw fa-list"></i><span
+                            class="nav-link-text"> Tiendas</span></a>
                     <ul class="sidenav-second-level collapse" id="collapseComponents1" data-parent="#exampleAccordion">
                         <li>
-                            <a class="nav-link-collapse collapsed" data-toggle="collapse" data-target="#collapseMulti1"href="#"><span class="nav-link-text">Almacenes</span></a>
+                            <a class="nav-link-collapse collapsed" data-toggle="collapse" data-target="#collapseMulti1"
+                                href="#"><span class="nav-link-text">Almacenes</span></a>
                             <ul class="sidenav-third-level collapse" id="collapseMulti1"
                                 data-parent="#collapseComponents1">
-                                <li><a href="../../views/almacenes/solicitudtraslado.php"><span class="nav-link-text">Solicitudes de traslado</span></a></li>
-                                <li><a href="../../views/almacenes/transferenciastock.php"><span class="nav-link-text">Transferencias de stock</span></a></li>
-                                <li><a href="../../views/almacenes/pedido.php"><span class="nav-link-text">Pedidos</span></a></li>
-                                <li><a href="../../views/almacenes/entradamercancia.php"><span class="nav-link-text">Entrada de mercancías</span></a></li>
+                                <li><a href="../../views/almacenes/solicitudtraslado.php"><span
+                                            class="nav-link-text">Solicitudes de traslado</span></a></li>
+                                <li><a href="../../views/almacenes/transferenciastock.php"><span
+                                            class="nav-link-text">Transferencias de stock</span></a></li>
+                                <li><a href="../../views/almacenes/pedido.php"><span
+                                            class="nav-link-text">Pedidos</span></a></li>
+                                <li><a href="../../views/almacenes/entradamercancia.php"><span
+                                            class="nav-link-text">Entrada de mercancías</span></a></li>
                             </ul>
                         </li>
                     </ul>
                 </li>
 
                 <li class="nav-item" title="Administrativos">
-                    <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse"data-target="#collapseComponents2" href="#"><i class="fa fa-fw fa-building"></i><span class="nav-link-text"> Administrativos</span></a>
+                    <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse"
+                        data-target="#collapseComponents2" href="#"><i class="fa fa-fw fa-building"></i><span
+                            class="nav-link-text"> Administrativos</span></a>
                     <ul class="sidenav-second-level collapse" id="collapseComponents2" data-parent="#exampleAccordion">
                         <li>
-                            <a class="nav-link-collapse collapsed" data-toggle="collapse" data-target="#collapseMulti2"href="#"><span class="nav-link-text">Almacenes</span></a>
-                            <ul class="sidenav-third-level collapse" id="collapseMulti2"data-parent="#collapseComponents2">
-                                <li><a href="../../views/administrativos/pedido.php"><span class="nav-link-text">Pedidos</span></a></li>
-                                <li><a href="../../views/administrativos/solicitudtraslado.php"><span class="nav-link-text">Solicitudes de traslado</span></a></li>
+                            <a class="nav-link-collapse collapsed" data-toggle="collapse" data-target="#collapseMulti2"
+                                href="#"><span class="nav-link-text">Almacenes</span></a>
+                            <ul class="sidenav-third-level collapse" id="collapseMulti2"
+                                data-parent="#collapseComponents2">
+                                <li><a href="../../views/administrativos/pedido.php"><span
+                                            class="nav-link-text">Pedidos</span></a></li>
+                                <li><a href="../../views/administrativos/solicitudtraslado.php"><span
+                                            class="nav-link-text">Solicitudes de traslado</span></a></li>
                             </ul>
                         </li>
                         <li>
-                            <a class="nav-link-collapse collapsed" data-toggle="collapse" data-target="#collapseMulti3"href="#"><span class="nav-link-text">Mesa de partes</span></a>
-                            <ul class="sidenav-third-level collapse" id="collapseMulti3"data-parent="#collapseComponents2">
-                                <li><a href="../../views/administrativos/entradamercancia.php"><span class="nav-link-text">Entrada de mercancías</span></a></li>
-                                <li><a href="../../views/administrativos/transferenciastock.php"><span class="nav-link-text">Transferencias de stock</span></a></li>
+                            <a class="nav-link-collapse collapsed" data-toggle="collapse" data-target="#collapseMulti3"
+                                href="#"><span class="nav-link-text">Mesa de partes</span></a>
+                            <ul class="sidenav-third-level collapse" id="collapseMulti3"
+                                data-parent="#collapseComponents2">
+                                <li><a href="../../views/administrativos/entradamercancia.php"><span
+                                            class="nav-link-text">Entrada de mercancías</span></a></li>
+                                <li><a href="../../views/administrativos/transferenciastock.php"><span
+                                            class="nav-link-text">Transferencias de stock</span></a></li>
                             </ul>
                         </li>
                     </ul>

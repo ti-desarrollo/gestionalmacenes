@@ -137,25 +137,6 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'])) {
             <!-- Scroll to Top Button-->
             <a class="scroll-to-top rounded" href="#page-top"><i class="fa fa-angle-up"></i></a>
 
-            <!-- Logout Modal-->
-            <!-- <div class="modal fade" id="modalLogout" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">¿Estás seguro que deseas salir?</h5>
-                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">X</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">Selecciona "Salir" para cerrar la sesión actual.</div>
-                        <div class="modal-footer">
-                            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
-                            <button class="btn btn-primary" type="button" onclick="logoutI();">Salir</button>
-                        </div>
-                    </div>
-                </div>
-            </div> -->
-
             <!-- Custom scripts for all pages-->
             <script src="libs/js/sb-admin.min.js"></script>
             <script src="firebase-app.js"></script>

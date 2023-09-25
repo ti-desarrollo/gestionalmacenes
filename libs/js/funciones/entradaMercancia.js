@@ -1,4 +1,15 @@
+var tListaEntradas_EntradaMercanciaAdm = null;
+var tDetalle_EntradaMercanciaAdm = null;
+var tListaEntradas_EntradaMercancia = null;
+var tDetalle_EntradaMercancia = null;
+
 function listarEntradaMercanciasAdm() {
+  if (tListaEntradas_EntradaMercanciaAdm) {
+    tListaEntradas_EntradaMercanciaAdm.destroy();
+  }
+  let table = $("#tListaEntradas_EntradaMercanciaAdm");
+  let tbody = $("#tbodyDetalleEntradas_EntradaMercanciaAdm");
+  tbody.empty();
   $("#btnReportar_EntradaMercanciaAdm").html(
     '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Cargando'
   );
@@ -17,9 +28,6 @@ function listarEntradaMercanciasAdm() {
         '<i class="fa fa-play"></i> REPORTAR'
       );
       let datos = JSON.parse(response);
-      let table = $("#tListaEntradas_EntradaMercanciaAdm");
-      let tbody = $("#tbodyDetalleEntradas_EntradaMercanciaAdm");
-      tbody.empty();
 
       $.each(datos, function (i) {
         tbody.append(
@@ -56,22 +64,31 @@ function listarEntradaMercanciasAdm() {
         );
       });
 
-      if (!$.fn.DataTable.isDataTable(table)) {
-        table.DataTable({
-          dom: "Bfrtip",
-          buttons: ["excel"],
-          pageLength: 25,
-          order: [[0, "DESC"]],
-          language: { url: "../../libs/datatables/dt_spanish.json" },
-        });
-      }
-
-      
+      tListaEntradas_EntradaMercanciaAdm = table.DataTable({
+        dom: "Bftlp",
+        buttons: ["excelHtml5", "pdfHtml5"],
+        scrollCollapse: true,
+        paging: true,
+        language: {
+          lengthMenu: "Ver _MENU_ registros por página",
+          zeroRecords: "No se encontraron resultados",
+          info: "Página _PAGE_ of _PAGES_",
+          search: "Buscar pedido: ",
+          infoEmpty: "No hay registros disponibles",
+          infoFiltered: "(filtered from _MAX_ total records)",
+        },
+      });
     }
   );
 }
 
 function listarEntradaMercanciasDetaAdm(docentry, sede) {
+  if (tDetalle_EntradaMercanciaAdm) {
+    tDetalle_EntradaMercanciaAdm.destroy();
+  }
+  let table = $("#tDetalle_EntradaMercanciaAdm");
+  let tbody = $("#tbodyDetalle_EntradaMercanciaAdm");
+  tbody.empty();
   $("#divLista_EntradaMercanciaAdm").hide();
   $("#divDetalle_EntradaMercanciaAdm").show();
 
@@ -80,9 +97,6 @@ function listarEntradaMercanciasDetaAdm(docentry, sede) {
     { task: 2, docentry, sede },
     function (response) {
       let datos = JSON.parse(response);
-      let table = $("#tDetalle_EntradaMercanciaAdm");
-      let tbody = $("#tbodyDetalle_EntradaMercanciaAdm");
-      tbody.empty();
 
       if (datos.length > 0) {
         $("#txtNumGuia_EntradaMercanciaAdm").val(datos[0].guia);
@@ -101,20 +115,32 @@ function listarEntradaMercanciasDetaAdm(docentry, sede) {
           );
         });
 
-        if (!$.fn.DataTable.isDataTable(table)) {
-          table.DataTable({
-            dom: "Bfrtip",
-            buttons: ["excel"],
-            pageLength: 25,
-            language: { url: "../../libs/datatables/dt_spanish.json" },
-          });
-        }
+        tDetalle_EntradaMercanciaAdm = table.DataTable({
+          dom: "Bftlp",
+          buttons: ["excelHtml5", "pdfHtml5"],
+          scrollCollapse: true,
+          paging: true,
+          language: {
+            lengthMenu: "Ver _MENU_ registros por página",
+            zeroRecords: "No se encontraron resultados",
+            info: "Página _PAGE_ of _PAGES_",
+            search: "Buscar pedido: ",
+            infoEmpty: "No hay registros disponibles",
+            infoFiltered: "(filtered from _MAX_ total records)",
+          },
+        });
       }
     }
   );
 }
 
 function listarEntradaMercancias() {
+  if (tListaEntradas_EntradaMercancia) {
+    tListaEntradas_EntradaMercancia.destroy();
+  }
+  let table = $("#tListaEntradas_EntradaMercancia");
+  let tbody = $("#tbodyDetalleEntradas_EntradaMercancia");
+  tbody.empty();
   $("#btnReportar_EntradaMercancia").html(
     '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Cargando'
   );
@@ -133,9 +159,6 @@ function listarEntradaMercancias() {
         '<i class="fa fa-play"></i> REPORTAR'
       );
       let datos = JSON.parse(response);
-      let table = $("#tListaEntradas_EntradaMercancia");
-      let tbody = $("#tbodyDetalleEntradas_EntradaMercancia");
-      tbody.empty();
 
       $.each(datos, function (i) {
         tbody.append(
@@ -170,20 +193,31 @@ function listarEntradaMercancias() {
         );
       });
 
-      if (!$.fn.DataTable.isDataTable(table)) {
-        table.DataTable({
-          dom: "Bfrtip",
-          buttons: ["excel"],
-          pageLength: 25,
-          order: [[0, "DESC"]],
-          language: { url: "../../libs/datatables/dt_spanish.json" },
-        });
-      }
+      tListaEntradas_EntradaMercancia = table.DataTable({
+        dom: "Bftlp",
+        buttons: ["excelHtml5", "pdfHtml5"],
+        scrollCollapse: true,
+        paging: true,
+        language: {
+          lengthMenu: "Ver _MENU_ registros por página",
+          zeroRecords: "No se encontraron resultados",
+          info: "Página _PAGE_ of _PAGES_",
+          search: "Buscar pedido: ",
+          infoEmpty: "No hay registros disponibles",
+          infoFiltered: "(filtered from _MAX_ total records)",
+        },
+      });
     }
   );
 }
 
 function listarEntradaMercanciasDeta(docentry) {
+  if (tDetalle_EntradaMercancia) {
+    tDetalle_EntradaMercancia.destroy();
+  }
+  let table = $("#tDetalle_EntradaMercancia");
+  let tbody = $("#tbodyDetalle_EntradaMercancia");
+  tbody.empty();
   $("#divLista_EntradaMercancia").hide();
   $("#divDetalle_EntradaMercancia").show();
 
@@ -192,9 +226,6 @@ function listarEntradaMercanciasDeta(docentry) {
     { task: 2, docentry },
     function (response) {
       let datos = JSON.parse(response);
-      let table = $("#tDetalle_EntradaMercancia");
-      let tbody = $("#tbodyDetalle_EntradaMercancia");
-      tbody.empty();
 
       if (datos.length > 0) {
         $("#txtNumGuia_EntradaMercancia").val(datos[0].guia);
@@ -213,14 +244,20 @@ function listarEntradaMercanciasDeta(docentry) {
           );
         });
 
-        if (!$.fn.DataTable.isDataTable(table)) {
-          table.DataTable({
-            dom: "Bfrtip",
-            buttons: ["excel"],
-            pageLength: 25,
-            language: { url: "../../libs/datatables/dt_spanish.json" },
-          });
-        }
+        tDetalle_EntradaMercancia = table.DataTable({
+          dom: "Bftlp",
+          buttons: ["excelHtml5", "pdfHtml5"],
+          scrollCollapse: true,
+          paging: true,
+          language: {
+            lengthMenu: "Ver _MENU_ registros por página",
+            zeroRecords: "No se encontraron resultados",
+            info: "Página _PAGE_ of _PAGES_",
+            search: "Buscar pedido: ",
+            infoEmpty: "No hay registros disponibles",
+            infoFiltered: "(filtered from _MAX_ total records)",
+          },
+        });
       }
     }
   );

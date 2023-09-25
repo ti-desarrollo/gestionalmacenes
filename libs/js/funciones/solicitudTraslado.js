@@ -1,4 +1,15 @@
+var tListaSolicitudes_SolicitudTrasladoAdm = null;
+var tDetalle_SolicitudTrasladoAdm = null;
+var tListaSolicitudes_SolicitudTraslado = null;
+var tDetalle_SolicitudTraslado = null;
+
 function listarSolicitudesAdm() {
+  if (tListaSolicitudes_SolicitudTrasladoAdm) {
+    tListaSolicitudes_SolicitudTrasladoAdm.destroy();
+  }
+  let table = $("#tListaSolicitudes_SolicitudTrasladoAdm");
+  let tbody = $("#tbodyLista_SolicitudTrasladoAdm");
+  tbody.empty();
   $("#btnReportar_SolicitudTrasladoAdm").html(
     '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Cargando'
   );
@@ -17,9 +28,6 @@ function listarSolicitudesAdm() {
         '<i class="fa fa-play"></i> REPORTAR'
       );
       let datos = JSON.parse(response);
-      let table = $("#tListaSolicitudes_SolicitudTrasladoAdm");
-      let tbody = $("#tbodyLista_SolicitudTrasladoAdm");
-      tbody.empty();
 
       $.each(datos, function (i) {
         tbody.append(
@@ -39,20 +47,31 @@ function listarSolicitudesAdm() {
         );
       });
 
-      if (!$.fn.DataTable.isDataTable(table)) {
-        table.DataTable({
-          dom: "Bfrtip",
-          buttons: ["excel"],
-          pageLength: 25,
-          order: [[0, "DESC"]],
-          language: { url: "../../libs/datatables/dt_spanish.json" },
-        });
-      }
+      tListaSolicitudes_SolicitudTrasladoAdm = table.DataTable({
+        dom: "Bftlp",
+        buttons: ["excelHtml5", "pdfHtml5"],
+        scrollCollapse: true,
+        paging: true,
+        language: {
+          lengthMenu: "Ver _MENU_ registros por página",
+          zeroRecords: "No se encontraron resultados",
+          info: "Página _PAGE_ of _PAGES_",
+          search: "Buscar solicitud: ",
+          infoEmpty: "No hay registros disponibles",
+          infoFiltered: "(filtered from _MAX_ total records)",
+        },
+      });
     }
   );
 }
 
 function listarDetalleSolicitudAdm(docentry, sede) {
+  if (tDetalle_SolicitudTrasladoAdm) {
+    tDetalle_SolicitudTrasladoAdm.destroy();
+  }
+  let table = $("#tDetalle_SolicitudTrasladoAdm");
+  let tbody = $("#tbodyDetalle_SolicitudTrasladoAdm");
+  tbody.empty();
   $("#divLista_SolicitudTrasladoAdm").hide();
   $("#divDetalle_SolicitudTrasladoAdm").show();
 
@@ -61,9 +80,6 @@ function listarDetalleSolicitudAdm(docentry, sede) {
     { task: 2, docentry, sede },
     function (response) {
       let datos = JSON.parse(response);
-      let table = $("#tDetalle_SolicitudTrasladoAdm");
-      let tbody = $("#tbodyDetalle_SolicitudTrasladoAdm");
-      tbody.empty();
 
       if (datos.length > 0) {
         $("#txtNumGuia_SolicitudTrasladoAdm").val(datos[0].guia);
@@ -89,20 +105,32 @@ function listarDetalleSolicitudAdm(docentry, sede) {
           );
         });
 
-        if (!$.fn.DataTable.isDataTable(table)) {
-          table.DataTable({
-            dom: "Bfrtip",
-            buttons: ["excel"],
-            pageLength: 25,
-            language: { url: "../../libs/datatables/dt_spanish.json" },
-          });
-        }
+        tDetalle_SolicitudTrasladoAdm = table.DataTable({
+          dom: "Bftlp",
+          buttons: ["excelHtml5", "pdfHtml5"],
+          scrollCollapse: true,
+          paging: true,
+          language: {
+            lengthMenu: "Ver _MENU_ registros por página",
+            zeroRecords: "No se encontraron resultados",
+            info: "Página _PAGE_ of _PAGES_",
+            search: "Buscar solicitud: ",
+            infoEmpty: "No hay registros disponibles",
+            infoFiltered: "(filtered from _MAX_ total records)",
+          },
+        });
       }
     }
   );
 }
 
 function listarSolicitudes() {
+  if (tListaSolicitudes_SolicitudTraslado) {
+    tListaSolicitudes_SolicitudTraslado.destroy();
+  }
+  let table = $("#tListaSolicitudes_SolicitudTraslado");
+  let tbody = $("#tbodyLista_SolicitudTraslado");
+  tbody.empty();
   $("#btnReportar_SolicitudTraslado").html(
     '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Cargando'
   );
@@ -121,9 +149,6 @@ function listarSolicitudes() {
         '<i class="fa fa-play"></i> REPORTAR'
       );
       let datos = JSON.parse(response);
-      let table = $("#tListaSolicitudes_SolicitudTraslado");
-      let tbody = $("#tbodyLista_SolicitudTraslado");
-      tbody.empty();
 
       $.each(datos, function (i) {
         tbody.append(
@@ -140,20 +165,31 @@ function listarSolicitudes() {
         );
       });
 
-      if (!$.fn.DataTable.isDataTable(table)) {
-        table.DataTable({
-          dom: "Bfrtip",
-          buttons: ["excel"],
-          pageLength: 25,
-          order: [[0, "DESC"]],
-          language: { url: "../../libs/datatables/dt_spanish.json" },
-        });
-      }
+      tListaSolicitudes_SolicitudTraslado = table.DataTable({
+        dom: "Bftlp",
+        buttons: ["excelHtml5", "pdfHtml5"],
+        scrollCollapse: true,
+        paging: true,
+        language: {
+          lengthMenu: "Ver _MENU_ registros por página",
+          zeroRecords: "No se encontraron resultados",
+          info: "Página _PAGE_ of _PAGES_",
+          search: "Buscar solicitud: ",
+          infoEmpty: "No hay registros disponibles",
+          infoFiltered: "(filtered from _MAX_ total records)",
+        },
+      });
     }
   );
 }
 
 function listarDetalleSolicitud(docentry) {
+  if (tDetalle_SolicitudTraslado) {
+    tDetalle_SolicitudTraslado.destroy();
+  }
+  let table = $("#tDetalle_SolicitudTraslado");
+  let tbody = $("#tbodyDetalle_SolicitudTraslado");
+  tbody.empty();
   $("#divLista_SolicitudTraslado").hide();
   $("#divDetalle_SolicitudTraslado").show();
 
@@ -162,9 +198,6 @@ function listarDetalleSolicitud(docentry) {
     { task: 2, docentry },
     function (response) {
       let datos = JSON.parse(response);
-      let table = $("#tDetalle_SolicitudTraslado");
-      let tbody = $("#tbodyDetalle_SolicitudTraslado");
-      tbody.empty();
 
       if (datos.length > 0) {
         $("#txtNumGuia_SolicitudTraslado").val(datos[0].guia);
@@ -208,14 +241,20 @@ function listarDetalleSolicitud(docentry) {
           );
         });
 
-        if (!$.fn.DataTable.isDataTable(table)) {
-          table.DataTable({
-            dom: "Bfrtip",
-            buttons: ["excel"],
-            pageLength: 25,
-            language: { url: "../../libs/datatables/dt_spanish.json" },
-          });
-        }
+        tDetalle_SolicitudTraslado = table.DataTable({
+          dom: "Bftlp",
+          buttons: ["excelHtml5", "pdfHtml5"],
+          scrollCollapse: true,
+          paging: true,
+          language: {
+            lengthMenu: "Ver _MENU_ registros por página",
+            zeroRecords: "No se encontraron resultados",
+            info: "Página _PAGE_ of _PAGES_",
+            search: "Buscar solicitud: ",
+            infoEmpty: "No hay registros disponibles",
+            infoFiltered: "(filtered from _MAX_ total records)",
+          },
+        });
       }
     }
   );

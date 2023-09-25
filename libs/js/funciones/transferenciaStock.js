@@ -1,4 +1,15 @@
+var tListaTransferencias_TransferenciaStockAdm = null;
+var tDetalle_TransferenciaStockAdm = null;
+var tListaTransferencias_TransferenciaStock = null;
+var tDetalle_TransferenciaStock = null;
+
 function listarTransferenciasAdm() {
+  if (tListaTransferencias_TransferenciaStockAdm) {
+    tListaTransferencias_TransferenciaStockAdm.destroy();
+  }
+  let table = $("#tListaTransferencias_TransferenciaStockAdm");
+  let tbody = $("#tbodyTransferencias_TransferenciaStockAdm");
+  tbody.empty();
   $("#btnReportar_TransferenciaStockAdm").html(
     '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Cargando'
   );
@@ -17,9 +28,6 @@ function listarTransferenciasAdm() {
         '<i class="fa fa-play"></i> REPORTAR'
       );
       let datos = JSON.parse(response);
-      let table = $("#tListaTransferencias_TransferenciaStockAdm");
-      let tbody = $("#tbodyTransferencias_TransferenciaStockAdm");
-      tbody.empty();
 
       $.each(datos, function (i) {
         tbody.append(
@@ -53,20 +61,31 @@ function listarTransferenciasAdm() {
         );
       });
 
-      if (!$.fn.DataTable.isDataTable(table)) {
-        table.DataTable({
-          dom: "Bfrtip",
-          buttons: ["excel"],
-          pageLength: 25,
-          order: [[0, "DESC"]],
-          language: { url: "../../libs/datatables/dt_spanish.json" },
-        });
-      }
+      tListaTransferencias_TransferenciaStockAdm = table.DataTable({
+        dom: "Bftlp",
+        buttons: ["excelHtml5", "pdfHtml5"],
+        scrollCollapse: true,
+        paging: true,
+        language: {
+          lengthMenu: "Ver _MENU_ registros por página",
+          zeroRecords: "No se encontraron resultados",
+          info: "Página _PAGE_ of _PAGES_",
+          search: "Buscar solicitud: ",
+          infoEmpty: "No hay registros disponibles",
+          infoFiltered: "(filtered from _MAX_ total records)",
+        },
+      });
     }
   );
 }
 
 function listarDetalleTransferenciaAdm(docentry, sede) {
+  if (tDetalle_TransferenciaStockAdm) {
+    tDetalle_TransferenciaStockAdm.destroy();
+  }
+  let table = $("#tDetalle_TransferenciaStockAdm");
+  let tbody = $("#tbodyDetalle_TransferenciaStockAdm");
+  tbody.empty();
   $("#divLista_TransferenciaStockAdm").hide();
   $("#divDetalle_TransferenciaStockAdm").show();
 
@@ -75,9 +94,6 @@ function listarDetalleTransferenciaAdm(docentry, sede) {
     { task: 2, docentry, sede },
     function (response) {
       let datos = JSON.parse(response);
-      let table = $("#tDetalle_TransferenciaStockAdm");
-      let tbody = $("#tbodyDetalle_TransferenciaStockAdm");
-      tbody.empty();
 
       if (datos.length > 0) {
         $("#txtNumGuia_TransferenciaStockAdm").val(datos[0].guia);
@@ -96,21 +112,32 @@ function listarDetalleTransferenciaAdm(docentry, sede) {
           );
         });
 
-        if (!$.fn.DataTable.isDataTable(table)) {
-          table.DataTable({
-            dom: "Bfrtip",
-            buttons: ["excel"],
-            pageLength: 25,
-            order: [[0, "DESC"]],
-            language: { url: "../../libs/datatables/dt_spanish.json" },
-          });
-        }
+        tDetalle_TransferenciaStockAdm = table.DataTable({
+          dom: "Bftlp",
+          buttons: ["excelHtml5", "pdfHtml5"],
+          scrollCollapse: true,
+          paging: true,
+          language: {
+            lengthMenu: "Ver _MENU_ registros por página",
+            zeroRecords: "No se encontraron resultados",
+            info: "Página _PAGE_ of _PAGES_",
+            search: "Buscar solicitud: ",
+            infoEmpty: "No hay registros disponibles",
+            infoFiltered: "(filtered from _MAX_ total records)",
+          },
+        });
       }
     }
   );
 }
 
 function listarTransferencias() {
+  if (tListaTransferencias_TransferenciaStock) {
+    tListaTransferencias_TransferenciaStock.destroy();
+  }
+  let table = $("#tListaTransferencias_TransferenciaStock");
+  let tbody = $("#tbodyTransferencias_TransferenciaStock");
+  tbody.empty();
   $("#btnReportar_TransferenciaStock").html(
     '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Cargando'
   );
@@ -129,9 +156,6 @@ function listarTransferencias() {
         '<i class="fa fa-play"></i> REPORTAR'
       );
       let datos = JSON.parse(response);
-      let table = $("#tListaTransferencias_TransferenciaStock");
-      let tbody = $("#tbodyTransferencias_TransferenciaStock");
-      tbody.empty();
 
       $.each(datos, function (i) {
         tbody.append(
@@ -163,20 +187,31 @@ function listarTransferencias() {
         );
       });
 
-      if (!$.fn.DataTable.isDataTable(table)) {
-        table.DataTable({
-          dom: "Bfrtip",
-          buttons: ["excel"],
-          pageLength: 25,
-          order: [[0, "DESC"]],
-          language: { url: "../../libs/datatables/dt_spanish.json" },
-        });
-      }
+      tListaTransferencias_TransferenciaStock = table.DataTable({
+        dom: "Bftlp",
+        buttons: ["excelHtml5", "pdfHtml5"],
+        scrollCollapse: true,
+        paging: true,
+        language: {
+          lengthMenu: "Ver _MENU_ registros por página",
+          zeroRecords: "No se encontraron resultados",
+          info: "Página _PAGE_ of _PAGES_",
+          search: "Buscar solicitud: ",
+          infoEmpty: "No hay registros disponibles",
+          infoFiltered: "(filtered from _MAX_ total records)",
+        },
+      });
     }
   );
 }
 
 function listarDetalleTransferencia(docentry) {
+  if (tDetalle_TransferenciaStock) {
+    tDetalle_TransferenciaStock.destroy();
+  }
+  let table = $("#tDetalle_TransferenciaStock");
+  let tbody = $("#tbodyDetalle_TransferenciaStock");
+  tbody.empty();
   $("#divLista_TransferenciaStock").hide();
   $("#divDetalle_TransferenciaStock").show();
 
@@ -185,9 +220,6 @@ function listarDetalleTransferencia(docentry) {
     { task: 2, docentry },
     function (response) {
       let datos = JSON.parse(response);
-      let table = $("#tDetalle_TransferenciaStock");
-      let tbody = $("#tbodyDetalle_TransferenciaStock");
-      tbody.empty();
 
       if (datos.length > 0) {
         $("#txtNumGuia_TransferenciaStock").val(datos[0].guia);
@@ -209,15 +241,20 @@ function listarDetalleTransferencia(docentry) {
           );
         });
 
-        if (!$.fn.DataTable.isDataTable(table)) {
-          table.DataTable({
-            dom: "Bfrtip",
-            buttons: ["excel"],
-            pageLength: 25,
-            order: [[0, "DESC"]],
-            language: { url: "../../libs/datatables/dt_spanish.json" },
-          });
-        }
+        tDetalle_TransferenciaStock = table.DataTable({
+          dom: "Bftlp",
+          buttons: ["excelHtml5", "pdfHtml5"],
+          scrollCollapse: true,
+          paging: true,
+          language: {
+            lengthMenu: "Ver _MENU_ registros por página",
+            zeroRecords: "No se encontraron resultados",
+            info: "Página _PAGE_ of _PAGES_",
+            search: "Buscar solicitud: ",
+            infoEmpty: "No hay registros disponibles",
+            infoFiltered: "(filtered from _MAX_ total records)",
+          },
+        });
       }
     }
   );
