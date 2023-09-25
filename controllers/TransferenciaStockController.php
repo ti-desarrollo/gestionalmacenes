@@ -8,17 +8,22 @@ if (isset($_REQUEST, $_SESSION)) {
     switch ($_REQUEST['task']) {
         case 1:
             // Listar las transferencias
-            echo json_encode($transferencia->listarTransferencias($_SESSION['ga-idSedeUsu'], $_GET['fechaI'], $_GET['fechaF']));
+            echo json_encode($transferencia->listarTransferencias($_SESSION['ga-idSedeUsu'], $_POST['fechaI'], $_POST['fechaF']));
             break;
 
         case 2:
             // Listar los detalles de una transferencia
-            echo json_encode($transferencia->listarDetalle($_SESSION['ga-idSedeUsu'], $_GET['docentry']));
+            echo json_encode($transferencia->listarDetalle($_POST['sede'] ?? $_SESSION['ga-idSedeUsu'], $_POST['docentry']));
             break;
 
         case 3:
             // Listar los archivos de la solicitud asociada a la transferencia
-            echo json_encode($transferencia->listaFiles($_GET['solicitud']));
+            echo json_encode($transferencia->listaFiles($_POST['solicitud']));
+            break;
+
+        case 4:
+            // Listar las transferencias
+            echo json_encode($transferencia->listarTransferenciasAdm($_POST['fechaI'], $_POST['fechaF']));
             break;
 
         default:

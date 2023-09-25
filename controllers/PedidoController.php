@@ -22,22 +22,23 @@ if (isset($_REQUEST, $_SESSION)) {
             $estado = $pedido->obtenerEstado($_POST['docentry']);
             $lastId = 0;
             if ($estado[0]['U_AMQ_ESTADO_OC'] <> 'R') {
-                $lastId = $pedido->actualizarCabecera($_POST['docentry'], $_POST['guia'], $_POST['estado'], $_POST['comentarios'], $_POST['conformidad']);
+                $lastId = $pedido->actualizarCabecera($_POST['docentry'], $_POST['guia'], $_POST['estado'], $_POST['comentarios'], $_POST['conformidad'], $_SESSION['ga-usuario']);
                 if ($lastId > 0) {
                     foreach ($_POST['items'] as $filaItem) {
                         $aux = $pedido->actualizarDetalle($lastId, $_POST['docentry'], $filaItem['item'], $filaItem['cantidadPendienteRecibida']);
                         $i = $i + $aux;
                     }
-                    $response['message'] = '::MENSAJE:\n[*] Pedido procesado';
+                    $response = ['success' => true, 'message' => '::MENSAJE:\n[*] Pedido procesado'];
                 } else {
-                    $response['message'] = '::ERROR:\n[*] Hubo error al procesar el pedido. Por favor comunicarse con sistemas';
+                    $response = ['success' => false, 'message' => '::ERROR:\n[*] Hubo error al procesar el pedido. Por favor comunicarse con sistemas'];
                 }
             } else {
-                $response['message'] = '::ERROR:\n[*] Este pedido ya fue procesado';
+                $response = ['success' => false, 'message' => '::ERROR:\n[*] Este pedido ya fue procesado'];
             }
 
             $response['valor'] = $i;
             $response['lastId'] =  $lastId;
+            $response['usuario'] = $_SESSION['ga-naUsu'];
             echo json_encode($response);
             break;
 

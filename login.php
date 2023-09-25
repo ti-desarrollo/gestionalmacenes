@@ -49,7 +49,7 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'])) {
                             <label for="txtClave">Contraseña</label>
                             <input class="form-control form-control-sm" id="txtClave" name="txtClave" type="password" placeholder="Ingrese su contraseña">
                         </div>
-                        <button type="button" id="btnLogin" class="btn btn-primary btn-block" onclick="login()"><i class="fa fa-fw fa-sign-in"></i>INGRESAR</button>
+                        <button type="button" id="btnLogin" class="btn btn-primary btn-block btn-sm" onclick="login()"><i class="fa fa-fw fa-sign-in"></i>INGRESAR</button>
                     </form>
                     <div class="text-center">
                         <br><b>Nota:</b> El acceso al sistema está disponible desde las 7:30am hasta las 6:00pm

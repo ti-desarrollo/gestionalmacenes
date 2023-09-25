@@ -49,6 +49,7 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'], $_SESSION['ga-sedeUsu'
                                     <th>Código</th>
                                     <th>Estado</th>
                                     <th>Conformidad</th>
+                                    <th>Usuario</th>
                                     <th>N° Pedido</th>
                                     <th>N° Guía</th>
                                     <th>Proveedor</th>
@@ -59,7 +60,7 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'], $_SESSION['ga-sedeUsu'
                                 </thead>
                                 <tbody id="tbodyPedidos_PedidoAdm">
                                     <tr>
-                                        <td colspan="10"><i class="fa fa-spinner fa-2x fa-spin"></i></td>
+                                        <td colspan="11"><i class="fa fa-spinner fa-2x fa-spin"></i></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -117,7 +118,7 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'], $_SESSION['ga-sedeUsu'
                                         <th>UM</th>
                                         <th>Cantidad pedida</th>
                                         <th>Cantidad recibida</th>
-                                        <th>Cantidad pendiente recepcionada</th>
+                                        <th>Cantidad pendiente</th>
                                     </tr>
                                 </thead>
                                 <tbody id="tbodyDetalle_PedidoAdm">

@@ -10,6 +10,11 @@ class TransferenciaStock extends Conexion
         parent::__construct();
     }
 
+    public function listarTransferenciasAdm(string $inicio, string $fin): array
+    {
+        return $this->returnQuery('EXEC sp_listarTransfStockAdm ?, ?', [$inicio, $fin]);
+    }
+    
     public function listarTransferencias(string $sede, string $inicio, string $fin): array
     {
         return $this->returnQuery('EXEC sp_listarTransfStock ?, ?, ?', [$sede, $inicio, $fin]);

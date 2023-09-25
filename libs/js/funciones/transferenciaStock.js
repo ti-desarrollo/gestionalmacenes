@@ -1,3 +1,115 @@
+function listarTransferenciasAdm() {
+  $("#btnReportar_TransferenciaStockAdm").html(
+    '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Cargando'
+  );
+  $("#divLista_TransferenciaStockAdm").show();
+  $("#divDetalle_TransferenciaStockAdm").hide();
+
+  $.post(
+    "../../controllers/TransferenciaStockController.php",
+    {
+      task: 4,
+      fechaI: $("#txtFechaInicio_TransferenciaStockAdm").val(),
+      fechaF: $("#txtFechaFin_TransferenciaStockAdm").val(),
+    },
+    function (response) {
+      $("#btnReportar_TransferenciaStockAdm").html(
+        '<i class="fa fa-play"></i> REPORTAR'
+      );
+      let datos = JSON.parse(response);
+      let table = $("#tListaTransferencias_TransferenciaStockAdm");
+      let tbody = $("#tbodyTransferencias_TransferenciaStockAdm");
+      tbody.empty();
+
+      $.each(datos, function (i) {
+        tbody.append(
+          `<tr>
+            <td class="text-primary" onclick="listarDetalleTransferenciaAdm(${datos[i].docentry}, '${datos[i].codigoSede}')">${datos[i].docentry}</td>
+            <td>${datos[i].almacenero}</td>
+            <td>${datos[i].solicitante}</td>
+            <td>${datos[i].guia}</td>
+            <td>${datos[i].fecha}</td>
+            <td>${datos[i].tipo}</td>
+            <td>${datos[i].origen}</td>
+            <td>${datos[i].transportista}</td>
+            <td id="files_${datos[i].docentry}"></td>
+            <td id="tdDownload_${datos[i].docentry}" onclick="layoutTransferencia(${datos[i].docentry}, '${datos[i].codigoSede}')"><i class="fa fa-download" aria-hidden="true" style="color: #4caf50;"></i></td>
+            </tr>`
+        );
+        $.post(
+          "../../controllers/TransferenciaStockController.php",
+          {
+            task: 3,
+            solicitud: datos[i].solicitud,
+          },
+          function (response) {
+            let adjuntos = JSON.parse(response);
+            $.each(adjuntos, function (a) {
+              $(`#files_${datos[i].docentry}`).append(
+                `<p style="margin: unset;"><a class="text-primary" href="../../docs/solicitudTraslado/${adjuntos[a].ds_documento}" target="_blank">${adjuntos[a].ds_documento}</a></p>`
+              );
+            });
+          }
+        );
+      });
+
+      if (!$.fn.DataTable.isDataTable(table)) {
+        table.DataTable({
+          dom: "Bfrtip",
+          buttons: ["excel"],
+          pageLength: 25,
+          order: [[0, "DESC"]],
+          language: { url: "../../libs/datatables/dt_spanish.json" },
+        });
+      }
+    }
+  );
+}
+
+function listarDetalleTransferenciaAdm(docentry, sede) {
+  $("#divLista_TransferenciaStockAdm").hide();
+  $("#divDetalle_TransferenciaStockAdm").show();
+
+  $.post(
+    "../../controllers/TransferenciaStockController.php",
+    { task: 2, docentry, sede },
+    function (response) {
+      let datos = JSON.parse(response);
+      let table = $("#tDetalle_TransferenciaStockAdm");
+      let tbody = $("#tbodyDetalle_TransferenciaStockAdm");
+      tbody.empty();
+
+      if (datos.length > 0) {
+        $("#txtNumGuia_TransferenciaStockAdm").val(datos[0].guia);
+        $("#txtNumDoc_TransferenciaStockAdm").val(datos[0].docnum);
+        $("#txtFechaDoc_TransferenciaStockAdm").val(datos[0].fecha);
+        $("#txtTipo_TransferenciaStockAdm").val(datos[0].tipo);
+
+        $.each(datos, function (i) {
+          tbody.append(
+            ` <tr>
+                <td>${i + 1}</td>
+                <td>${datos[i].itemcode}</td>
+                <td>${datos[i].descripcion}</td>
+                <td>${datos[i].cantidad}</td>
+              </tr>`
+          );
+        });
+
+        if (!$.fn.DataTable.isDataTable(table)) {
+          table.DataTable({
+            dom: "Bfrtip",
+            buttons: ["excel"],
+            pageLength: 25,
+            order: [[0, "DESC"]],
+            language: { url: "../../libs/datatables/dt_spanish.json" },
+          });
+        }
+      }
+    }
+  );
+}
+
 function listarTransferencias() {
   $("#btnReportar_TransferenciaStock").html(
     '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Cargando'
@@ -5,7 +117,7 @@ function listarTransferencias() {
   $("#divLista_TransferenciaStock").show();
   $("#divDetalle_TransferenciaStock").hide();
 
-  $.get(
+  $.post(
     "../../controllers/TransferenciaStockController.php",
     {
       task: 1,
@@ -30,12 +142,11 @@ function listarTransferencias() {
             <td>${datos[i].tipo}</td>
             <td>${datos[i].origen}</td>
             <td>${datos[i].transportista}</td>
-            <td>${datos[i].placa}</td>
-            <td></td>
             <td id="files_${datos[i].docentry}"></td>
+            <td id="tdDownload_${datos[i].docentry}" onclick='layoutTransferencia(${datos[i].docentry})'><i class="fa fa-download" aria-hidden="true" style="color: #4caf50;"></i></td>
             </tr>`
         );
-        $.get(
+        $.post(
           "../../controllers/TransferenciaStockController.php",
           {
             task: 3,
@@ -54,7 +165,7 @@ function listarTransferencias() {
 
       if (!$.fn.DataTable.isDataTable(table)) {
         table.DataTable({
-          dom: "Bfrtp",
+          dom: "Bfrtip",
           buttons: ["excel"],
           pageLength: 25,
           order: [[0, "DESC"]],
@@ -69,9 +180,9 @@ function listarDetalleTransferencia(docentry) {
   $("#divLista_TransferenciaStock").hide();
   $("#divDetalle_TransferenciaStock").show();
 
-  $.get(
+  $.post(
     "../../controllers/TransferenciaStockController.php",
-    { task: 2, docentry: docentry },
+    { task: 2, docentry },
     function (response) {
       let datos = JSON.parse(response);
       let table = $("#tDetalle_TransferenciaStock");
@@ -84,7 +195,7 @@ function listarDetalleTransferencia(docentry) {
         $("#txtFechaDoc_TransferenciaStock").val(datos[0].fecha);
         $("#txtTipo_TransferenciaStock").val(datos[0].tipo);
         $("#btnLayout_TransferenciaStock").html(
-          `<button type="button" class="btn btn-primary" onclick="layoutTransferencia(${docentry});"><i class="fa fa-fw fa-eye"></i> Layout</button>`
+          `<button type="button" class="btn btn-primary btn-sm" onclick="layoutTransferencia(${docentry});"><i class="fa fa-fw fa-eye"></i> Layout</button>`
         );
 
         $.each(datos, function (i) {
@@ -100,7 +211,7 @@ function listarDetalleTransferencia(docentry) {
 
         if (!$.fn.DataTable.isDataTable(table)) {
           table.DataTable({
-            dom: "Bfrtp",
+            dom: "Bfrtip",
             buttons: ["excel"],
             pageLength: 25,
             order: [[0, "DESC"]],
@@ -112,56 +223,19 @@ function listarDetalleTransferencia(docentry) {
   );
 }
 
-function layoutTransferencia(docentry) {
-  let divLayout = $("#layout_TransferenciaStock");
-  $.get(
+function layoutTransferencia(docentry, sede) {
+  $(`#tdDownload_${docentry}`).html(
+    '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>'
+  );
+
+  $.post(
     "../../controllers/TransferenciaStockController.php",
-    { task: 2, docentry: docentry },
+    { task: 2, docentry, sede },
     function (response) {
       let datos = JSON.parse(response);
-      divLayout.html(`
-        <h3 style="text-align: center;">Nota de Transferencia N° ${datos[0].docnum}</h3>
-        <div>
-            <div class="row" style="border: 1px solid; border-radius: 10px;">
-                <div class="col-sm-9"><p><b>Responsable: </b> ${datos[0].almacenero}</p></div>
-                <div class="col-sm-3"><p><b>Fecha: </b>${datos[0].fecha}</p></div>
-                <div class="col-sm-12"><p><b>Área solicitante: </b>${datos[0].solicitante}</p></div>
-                <div class="col-sm-12"><p><b>Motivo de traslado:</b> ${datos[0].motivoTraslado}</p></div>
-            </div>
-        </div>
-        <hr style="border: 1px solid;" />
-        <table class="table table-bordered">
-            <thead>
-                <th>Código</th>
-                <th>Descripción</th>
-                <th>Almacen origen</th>
-                <th>Almacen destino</th>
-                <th>UM</th>
-                <th>Cantidad</th>
-            </thead>
-            <tbody id="tablaLayout"></tbody>
-        </table>
-        <hr style="border: 1px solid;" />
-        <p><b>COMENTARIOS</b></p>
-        <p>${datos[0].comentarios ?? ""}</p>
-        <button type="button" class="btn btn-primary" onclick='pdfTransferencia(${JSON.stringify(datos)});'><i class="fa fa-fw fa-print"></i> Descargar PDF</button>`);
-
-      let tablaLayout = $("#tablaLayout");
-      $.each(datos, function (i) {
-        tablaLayout.append(
-          `<tr>
-                <td>${datos[i].itemcode}</td>
-                <td>${datos[i].descripcion}</td>
-                <td>${datos[i].almacenOrigen}</td>
-                <td>${datos[i].almacenDestino}</td>
-                <td>${datos[i].um}</td>
-                <td>${datos[i].cantidad}</td>
-            </tr>`
-        );
-      });
+      pdfTransferencia(datos);
     }
   );
-  $("#mdlLayout_TransferenciaStock").modal("toggle");
 }
 
 function pdfTransferencia(data) {
@@ -219,5 +293,11 @@ function pdfTransferencia(data) {
   pdf.setFontType("normal");
   pdf.text(data[0].comentarios ?? "", 12, height + 10);
 
+  // Guardas el PDF
   pdf.save(`Nota de Transferencia N°${data[0].docnum}`);
+
+  // Regresamos el botón a su estado inicial
+  $(`#tdDownload_${data[0].docentry}`).html(
+    '<i class="fa fa-download" aria-hidden="true" style="color: #4caf50;"></i>'
+  );
 }

@@ -118,7 +118,7 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'], $_SESSION['ga-sedeUsu'
                                         <th>UM</th>
                                         <th>Cantidad pedida</th>
                                         <th>Cantidad recibida</th>
-                                        <th>Cantidad pendiente recepcionada</th>
+                                        <th>Cantidad pendiente de recepción</th>
                                     </tr>
                                 </thead>
                                 <tbody id="tbodyDetalle_Pedido">

@@ -51,14 +51,14 @@ class Pedido extends Conexion
         return $this->simpleQuery('EXEC sp_actualizarDetallePedido ?, ?, ?, ?', [$cabecera, $codigo, $itemcode, $cantidad]);
     }
 
-    public function actualizarCabecera(string $codigo, string $guia, string $estado, string $comentarios, string $conformidad): int | bool
+    public function actualizarCabecera(string $codigo, string $guia, string $estado, string $comentarios, string $conformidad, string $usuario): int | bool
     {
         // Actualizamos la cebecera en SAP
         $guiaDatos = explode('-', $guia);
         $this->simpleQuery('EXEC sp_actualizarCabeceraPedido ?, ?, ?, ?, ?, ?, ?', [$codigo, $guiaDatos[0], $guiaDatos[1], $guiaDatos[2], $estado, $comentarios, $conformidad]);
 
         // Insertamos en el aplicativo
-        $this->simpleQuery("INSERT INTO recepcion_pedido_cabecera(rpc_pedido, rpc_conformidad) VALUES({$codigo}, '{$conformidad}');", []);
+        $this->simpleQuery("INSERT INTO recepcion_pedido_cabecera(rpc_pedido, rpc_conformidad, rpc_usuario) VALUES($codigo, '$conformidad', '$usuario');", []);
 
         // Obtenemos el id insertado
         $lastID = $this->lastId();

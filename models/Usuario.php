@@ -26,7 +26,7 @@ class Usuario extends Conexion
                      ELSE 'Jefe de almacén '
                   END AS perfil
                FROM usuarios T0
-               INNER JOIN sedes T1 ON t0.idSede = T1.id
+               INNER JOIN sedes T1 ON T0.idSede = T1.id
                WHERE 
                   T0.usuario = ? COLLATE Latin1_General_CS_AS AND 
                   T0.password = ? COLLATE Latin1_General_CS_AS AND

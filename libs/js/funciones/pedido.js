@@ -22,9 +22,10 @@ function listarPedidosAdm() {
           <tr>
               <td class="text-primary" onclick="listarDetallePedidoAdm(${
                 datos[i].codigo
-              }, ${datos[i].sedeCodigo})">${datos[i].codigo}</td>
+              }, '${datos[i].sedeCodigo}')">${datos[i].codigo}</td>
               <td>${datos[i].estado}</td>
               <td>${datos[i].conformidad}</td>
+              <td>${datos[i].usuario}</td>
               <td>${datos[i].pedido}</td>
               <td>${datos[i].guia}</td>
               <td>${datos[i].proveedor}</td>
@@ -40,7 +41,7 @@ function listarPedidosAdm() {
 
       if (!$.fn.DataTable.isDataTable(table)) {
         table.DataTable({
-          dom: "Bfrtp",
+          dom: "Bfrtip",
           buttons: ["excel"],
           pageLength: 25,
           order: [[0, "DESC"]],
@@ -96,7 +97,7 @@ function listarDetallePedidoAdm(docentry, sede) {
 
         if (!$.fn.DataTable.isDataTable(table)) {
           table.DataTable({
-            dom: "Bfrtp",
+            dom: "Bfrtip",
             buttons: ["excel"],
             pageLength: 25,
             language: { url: "../../libs/datatables/dt_spanish.json" },
@@ -142,7 +143,7 @@ function listarPedidos() {
 
       if (!$.fn.DataTable.isDataTable(table)) {
         table.DataTable({
-          dom: "Bfrtp",
+          dom: "Bfrtip",
           buttons: ["excel"],
           pageLength: 25,
           order: [[0, "DESC"]],
@@ -175,13 +176,13 @@ function listarDetallePedido(docentry) {
         $("#selConformidad_Pedido").change();
         $("#txtComentario_Pedido").val(datos[0].observacion);
         $("#btnLayout_Pedido").html(
-          `<button type="button" class="btn btn-primary btn-small" onclick='layoutPedido(${docentry});'><i class="fa fa-fw fa-eye"></i> Ver layout</button>`
+          `<button type="button" class="btn btn-primary btn-sm" onclick='layoutPedido(${docentry});'><i class="fa fa-fw fa-eye"></i> Ver layout</button>`
         );
         if (datos[0].estado !== "RECEPCIONADO") {
           $("#divArchivos_Pedido")
             .html(`<div style="display: flex; justify-content: center; align-items: center; border: 1px solid; padding: 10px; border-radius: 10px;">
                       <input allowClear type="file" id="inputFile" accept="application/pdf" multiple style="font-size: 10px; margin: 5px;" />
-                      <button type="button" class="btn btn-success btn-small" onclick="actualizarPedido('${datos[0].codigo}', '${datos[0].carpeta}', '${datos[0].year}', '${datos[0].mes}', '${datos[0].proveedor}', '${datos[0].fechaFormato}');" style="font-size: 10px; margin: 5px;"><i class="fa fa-fw fa-upload"></i> Cargar archivos</button>
+                      <button type="button" class="btn btn-success btn-sm" onclick="actualizarPedido('${datos[0].codigo}', '${datos[0].carpeta}', '${datos[0].year}', '${datos[0].mes}', '${datos[0].proveedor}', '${datos[0].fechaFormato}');" style="font-size: 10px; margin: 5px;"><i class="fa fa-fw fa-upload"></i> Cargar archivos</button>
                   </div>`);
           $("#selConformidad_Pedido").prop("disabled", false);
           $("#txtGuia_Pedido").prop("disabled", false);
@@ -219,7 +220,7 @@ function listarDetallePedido(docentry) {
 
         if (!$.fn.DataTable.isDataTable(table)) {
           table.DataTable({
-            dom: "Bfrtp",
+            dom: "Bfrtip",
             buttons: ["excel"],
             pageLength: 25,
             language: { url: "../../libs/datatables/dt_spanish.json" },
@@ -237,6 +238,7 @@ function habilitarComentariosPedido() {
       $("#txtComentario_Pedido").prop("disabled", true);
     } else {
       $("#txtComentario_Pedido").prop("disabled", false);
+      $("#txtComentario_Pedido").val("");
     }
   }
 }
@@ -245,7 +247,7 @@ function layoutPedido(docentry) {
   let divLayout = $("#layout_Pedido");
   $.post(
     "../../controllers/PedidoController.php",
-    { task: 4, docentry: docentry },
+    { task: 4, docentry },
     function (response) {
       let datos = JSON.parse(response);
       divLayout.html(`
@@ -447,7 +449,7 @@ function layoutPedido(docentry) {
               </div>
           </div>
         </div>
-        <button type="button" class="btn btn-primary" onclick='pdfPedido(${JSON.stringify(
+        <button type="button" class="btn btn-primary btn-sm" onclick='pdfPedido(${JSON.stringify(
           datos
         )});'><i class="fa fa-fw fa-print"></i> Descargar PDF</button>
         `);
@@ -736,7 +738,7 @@ async function actualizarPedido(
 ) {
   const maxFileSize = 2 * 1024 * 1024;
   const patron = /09-\w{4}-\d+/;
-  const pedido = $("#txtNumDoc_Pedido").val();
+  let pedido = $("#txtNumDoc_Pedido").val();
   let guia = $("#txtGuia_Pedido").val();
   let comentarios = $("#txtComentario_Pedido").val();
   let conformidad = $("#selConformidad_Pedido").val();
@@ -813,7 +815,7 @@ async function actualizarPedido(
       });
     });
 
-    items.forEach((item, index) => {
+    items.forEach((item, _) => {
       if (
         item.cantidadPedida !==
         item.cantidadRecibida + item.cantidadPendienteRecibida
@@ -836,61 +838,68 @@ async function actualizarPedido(
       },
       function (response) {
         let data = JSON.parse(response);
-        let lastId = data.lastId;
-        if (data.valor === items.length) {
-          for (let i = 0; i < input.files.length; i++) {
-            let formData = new FormData();
-            formData.append("file", input.files[i]);
-            formData.append("task", 5);
-            formData.append("sede", sede);
-            formData.append("year", year);
-            formData.append("mes", mes);
-            formData.append("proveedor", proveedor);
-            formData.append("fechaRecepcion", fechaRecepcion);
-            $.ajax({
-              url: "../../controllers/PedidoController.php",
-              dataType: "text",
-              cache: false,
-              contentType: false,
-              processData: false,
-              data: formData,
-              type: "post",
-              success: function (success) {
-                let data = JSON.parse(success);
-                if (data.success) {
-                  $.post(
-                    "../../controllers/PedidoController.php",
-                    {
-                      task: 6,
-                      archivo: data.message,
-                      pedido: lastId,
-                    },
-                    function (response) {
-                      if (response !== "1") {
-                        alert(
-                          "::ERROR:\n[*] Error al guardar archivo. Por favor comunicarse con sistemas"
-                        );
-                        return;
+        if (data.success) {
+          let lastId = data.lastId;
+          let usuario = data.usuario;
+          if (data.valor === items.length) {
+            for (let i = 0; i < input.files.length; i++) {
+              let formData = new FormData();
+              formData.append("file", input.files[i]);
+              formData.append("task", 5);
+              formData.append("sede", sede);
+              formData.append("year", year);
+              formData.append("mes", mes);
+              formData.append("proveedor", proveedor);
+              formData.append("fechaRecepcion", fechaRecepcion);
+              $.ajax({
+                url: "../../controllers/PedidoController.php",
+                dataType: "text",
+                cache: false,
+                contentType: false,
+                processData: false,
+                data: formData,
+                type: "post",
+                success: function (success) {
+                  let data = JSON.parse(success);
+                  if (data.success) {
+                    $.post(
+                      "../../controllers/PedidoController.php",
+                      {
+                        task: 6,
+                        archivo: data.message,
+                        pedido: lastId,
+                      },
+                      function (response) {
+                        if (response !== "1") {
+                          alert(
+                            "::ERROR:\n[*] Error al guardar archivo. Por favor comunicarse con sistemas"
+                          );
+                          return;
+                        }
                       }
-                    }
-                  );
-                } else {
-                  alert(
-                    "::ERROR:\n[*] Error al subir archivo. Por favor comunicarse con sistemas"
-                  );
-                  return;
-                }
-              },
-            });
+                    );
+                  } else {
+                    alert(
+                      "::ERROR:\n[*] Error al subir archivo. Por favor comunicarse con sistemas"
+                    );
+                    return;
+                  }
+                },
+              });
+            }
+            listarPedidos();
+            sendNotification(
+              pedido,
+              sede,
+              usuario,
+              proveedor,
+              guia,
+              conformidad
+            );
           }
-          listarPedidos();
-          alert(data.message);
-          sendNotification(pedido, sede);
+
           $("#divLoading_Pedido").css("display", "none");
-        } else {
-          alert(
-            "::MENSAJE:\n[*] Hubo un error al procesar el pedido, por favor comunicarse con sistemas"
-          );
+          alert(data.message);
         }
       }
     );
@@ -930,7 +939,7 @@ async function validarSubidaDeArchivos(
   return response;
 }
 
-function sendNotification(pedido, sede) {
+function sendNotification(pedido, sede, usuario, proveedor, guia, conformidad) {
   $.post(
     "../../controllers/UsuarioController.php",
     {
@@ -940,7 +949,15 @@ function sendNotification(pedido, sede) {
       let rpta = $.parseJSON(response);
       rpta.forEach((data) => {
         sendPushNotification(data.tokenfcm, pedido, sede);
-        sendMailNotification(data.correo, pedido, sede);
+        sendMailNotification(
+          data.correo,
+          pedido,
+          sede,
+          usuario,
+          proveedor,
+          guia,
+          conformidad
+        );
       });
     }
   );
@@ -961,7 +978,7 @@ function sendPushNotification(token, pedido, sede) {
       notification: {},
       data: {
         title: "Pedido procesado",
-        body: `El pedido N°${pedido} de la sede ${sede} ha sido procesado`,
+        body: `RECEPCIÓN DE MERCADERÍA SEDE: ${sede} | PEDIDO ${pedido}`,
       },
     }),
   };
@@ -969,7 +986,15 @@ function sendPushNotification(token, pedido, sede) {
   $.ajax(settings).done(function () {});
 }
 
-function sendMailNotification(correo, pedido, sede) {
+function sendMailNotification(
+  correo,
+  pedido,
+  sede,
+  usuario,
+  proveedor,
+  guia,
+  conformidad
+) {
   $.post(
     "../../controllers/PedidoController.php",
     {
@@ -979,16 +1004,22 @@ function sendMailNotification(correo, pedido, sede) {
         <head>
           <meta charset="UTF-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-          <title>Pedido N°${pedido}</title>
+          <title>PRUEBA - RECEPCIÓN DE MERCADERÍA SEDE: ${sede} | PEDIDO ${pedido}</title>
         </head>
         <body>
           <div>
-            <p>El pedido N°${pedido} de la sede ${sede} ha sido procesado</p>
+            <p>Usuario: <b>${usuario}</b></p>
+            <p>N° Pedido: <b>${pedido}</b></p>
+            <p>Proveedor: <b>${proveedor}</b></p>
+            <p>N° Guía: <b>${guia}</b></p>
+            <p>Conformidad: <b>${
+              conformidad === "01" ? "CONFORME" : "NO CONFORME"
+            }</b></p>
           </div>
         </body>
       </html>`,
       recipients: correo,
-      subject: `SEDE: ${sede} | PEDIDO ${pedido}`,
+      subject: `PRUEBA - RECEPCIÓN DE MERCADERÍA SEDE: ${sede} | PEDIDO ${pedido}`,
     },
     function () {}
   );
