@@ -52,6 +52,7 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'], $_SESSION['ga-sedeUsu'
                                         <th>Nº Guía</th>
                                         <th>Fecha</th>
                                         <th>Origen</th>
+                                        <th>Categoría de vehículo</th>
                                         <th>Modalidad de traslado</th>
                                         <th>Transportista</th>
                                         <th>Peso</th>
@@ -60,7 +61,7 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'], $_SESSION['ga-sedeUsu'
                                 </thead>
                                 <tbody id="tbodyLista_SolicitudTraslado">
                                     <tr>
-                                        <td colspan="8"><i class="fa fa-spinner fa-2x fa-spin"></i></td>
+                                        <td colspan="9"><i class="fa fa-spinner fa-2x fa-spin"></i></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -91,7 +92,7 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'], $_SESSION['ga-sedeUsu'
                             </div>
                             <div class="form-group col-xs-12 col-sm-6 col-md-2 col-lg-2 col-xl-1 col-xxl-1 mb-3">
                                 <label for="txtNumGuiaT_SolicitudTraslado">N° Guía GRT</label>
-                                <input type="text" class="form-control form-control-sm" id="txtNumGuiaT_SolicitudTraslado">
+                                <input type="text" class="form-control form-control-sm" id="txtNumGuiaT_SolicitudTraslado" autocomplete="off">
                             </div>
                             <div class="form-group col-xs-12 col-sm-6 col-md-4 col-lg-4 col-xl-2 col-xxl-2 mb-3">
                                 <label for="txtNumDoc_SolicitudTraslado">N° Documento</label>

@@ -37,8 +37,9 @@ function listarTransferenciasAdm() {
             <td>${datos[i].solicitante}</td>
             <td>${datos[i].guia}</td>
             <td>${datos[i].fecha}</td>
-            <td>${datos[i].tipo}</td>
             <td>${datos[i].origen}</td>
+            <td>${datos[i].categoriaVehiculo}</td>
+            <td>${datos[i].modalidadTraslado}</td>
             <td>${datos[i].transportista}</td>
             <td id="files_${datos[i].docentry}"></td>
             <td id="tdDownload_${datos[i].docentry}" onclick="layoutTransferencia(${datos[i].docentry}, '${datos[i].codigoSede}')"><i class="fa fa-download" aria-hidden="true" style="color: #4caf50;"></i></td>
@@ -163,8 +164,9 @@ function listarTransferencias() {
             <td class="text-primary" onclick="listarDetalleTransferencia(${datos[i].docentry})">${datos[i].docentry}</td>
             <td>${datos[i].guia}</td>
             <td>${datos[i].fecha}</td>
-            <td>${datos[i].tipo}</td>
             <td>${datos[i].origen}</td>
+            <td>${datos[i].categoriaVehiculo}</td>
+            <td>${datos[i].modalidadTraslado}</td>
             <td>${datos[i].transportista}</td>
             <td id="files_${datos[i].docentry}"></td>
             <td id="tdDownload_${datos[i].docentry}" onclick='layoutTransferencia(${datos[i].docentry})'><i class="fa fa-download" aria-hidden="true" style="color: #4caf50;"></i></td>

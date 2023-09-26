@@ -39,6 +39,7 @@ function listarSolicitudesAdm() {
               <td>${datos[i].usuario}</td>
               <td>${datos[i].origen}</td>
               <td>${datos[i].destino}</td>
+              <td>${datos[i].categoriaVehiculo}</td>
               <td>${datos[i].modalidadTraslado}</td>
               <td>${datos[i].transportista}</td>
               <td>${datos[i].pesoTotal}</td>
@@ -157,6 +158,7 @@ function listarSolicitudes() {
               <td>${datos[i].guia}</td>
               <td>${datos[i].fecha}</td>
               <td>${datos[i].origen}</td>
+              <td>${datos[i].categoriaVehiculo}</td>
               <td>${datos[i].modalidadTraslado}</td>
               <td>${datos[i].transportista}</td>
               <td>${datos[i].pesoTotal}</td>
@@ -209,12 +211,17 @@ function listarDetalleSolicitud(docentry) {
         $("#selConformidad_SolicitudTraslado").val(datos[0].conformidad);
         $("#selConformidad_SolicitudTraslado").change();
 
-        if (datos[0].estado !== "Procesada") {
+        if (datos[0].archivos <= 0) {
           $("#divArchivos_SolicitudTraslado").html(
-            `<div style="display: flex; justify-content: center; align-items: center; border: 1px solid; padding: 10px; border-radius: 10px;"><input allowClear type="file" id="inputFileST" accept="application/pdf" multiple style="font-size: 10px; margin: 5px;" /><button type="button" class="btn btn-success btn-small" onclick="subirFilesSolicitudes(${datos[0].docentry});" style="font-size: 10px; margin: 5px;"><i class="fa fa-fw fa-upload"></i> Cargar archivos</button></div>`
+            `<div style="display: flex; justify-content: center; align-items: center; border: 1px solid; padding: 10px; border-radius: 10px;"><input allowClear type="file" id="inputFileST" accept="image/jpeg,image/jpg,image/png,application/pdf" multiple style="font-size: 10px; margin: 5px;" /><button type="button" class="btn btn-success btn-small" onclick="subirFilesSolicitudes(${datos[0].docentry});" style="font-size: 10px; margin: 5px;"><i class="fa fa-fw fa-upload"></i> Cargar archivos</button></div>`
           );
+        } else {
+          $("#divArchivos_SolicitudTraslado").html("");
+        }
+
+        if (datos[0].estado !== "Procesada") {
           $("#btnProcesar_SolicitudTraslado").html(
-            `<div class="pull-right mt-3 mb-3 text-center" style="width: 100%"><button type="button" class="btn btn-sm btn-success" onclick="procesarSolicitud(${datos[0].docentry}, ${datos[0].docnum}, '${datos[0].sede}', '${datos[0].origen}', '${datos[0].destino}', '${datos[0].modalidadTraslado}', '${datos[0].guia}');">Procesar</button></div>`
+            `<div class="pull-right mt-3 mb-3 text-center" style="width: 100%"><button type="button" class="btn btn-sm btn-success" onclick="procesarSolicitud(${datos[0].docentry}, ${datos[0].docnum}, '${datos[0].sede}', '${datos[0].origen}', '${datos[0].destino}', '${datos[0].modalidadTraslado}', '${datos[0].guia}', ${datos[0].archivos});">Procesar</button></div>`
           );
           $("#selConformidad_SolicitudTraslado").prop("disabled", false);
           $("#txtNumGuiaT_SolicitudTraslado").prop("disabled", false);
@@ -279,8 +286,14 @@ function procesarSolicitud(
   origen,
   destino,
   modalidad,
-  guia
+  guia,
+  archivos
 ) {
+  if (archivos <= 0) {
+    alert("::MENSAJE:\n[*] No adjuntaste tus guías");
+    return;
+  }
+
   const patron = /31-\w{4}-\d+/;
   let guiaT = $("#txtNumGuiaT_SolicitudTraslado").val();
   let conformidad = $("#selConformidad_SolicitudTraslado").val();
@@ -296,19 +309,32 @@ function procesarSolicitud(
     alert("::MENSAJE:\n[*] Selecciona si está conforme o no conforme");
     return;
   }
+
+  $("input.inputsNmb").each(function (i, item) {
+    items[i] = [
+      $(this).attr("id"),
+      $(this).parents("tr").find("td").eq(1).text(),
+      parseFloat(item.value),
+    ];
+  });
+
+  let continuar = false;
+  for (let i = 0; i < items.length; i++) {
+    if (items[i][2] > 0) {
+      continuar = true;
+      break;
+    }
+  }
+  if (!continuar) {
+    alert("::MENSAJE:\n[*] Debes indicar la cantidad recepcionada");
+    return;
+  }
+
   if (
     confirm(
-      "::MENSAJE:\n[*] Recuerda que las guías procesadas no pueden modificarse."
+      "::MENSAJE:\n[*] ¿Está seguro de procesare la guía? Recuerda que las guías procesadas no pueden modificarse."
     )
   ) {
-    $("input.inputsNmb").each(function (i, item) {
-      items[i] = [
-        $(this).attr("id"),
-        $(this).parents("tr").find("td").eq(1).text(),
-        parseFloat(item.value),
-      ];
-    });
-
     $.post(
       "../../controllers/SolicitudTrasladoController.php",
       {
@@ -340,8 +366,8 @@ function procesarSolicitud(
   }
 }
 
-function subirFilesSolicitudes(docentry) {
-  const maxFileSize = 2 * 1024 * 1024;
+async function subirFilesSolicitudes(docentry) {
+  const maxFileSize = 5 * 1024 * 1024;
   let input = document.getElementById("inputFileST");
   if (input.files.length >= 1) {
     if (
@@ -361,7 +387,7 @@ function subirFilesSolicitudes(docentry) {
         let formData = new FormData();
         formData.append("file", input.files[i]);
         formData.append("task", 5);
-        $.ajax({
+        await $.ajax({
           url: "../../controllers/SolicitudTrasladoController.php",
           dataType: "text",
           cache: false,
@@ -399,8 +425,8 @@ function subirFilesSolicitudes(docentry) {
           },
         });
       }
+      listarDetalleSolicitud(docentry);
       alert("::MENSAJE:\n[*] Archivos guardados");
-      listarSolicitudes();
     }
   } else {
     alert("::ERROR:\n[*] Debes subir al menos un archivo");

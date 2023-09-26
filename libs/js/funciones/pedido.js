@@ -210,7 +210,7 @@ function listarDetallePedido(docentry) {
         if (datos[0].estado !== "RECEPCIONADO") {
           $("#divArchivos_Pedido")
             .html(`<div style="display: flex; justify-content: center; align-items: center; border: 1px solid; padding: 10px; border-radius: 10px;">
-                      <input allowClear type="file" id="inputFile" accept="application/pdf" multiple style="font-size: 10px; margin: 5px;" />
+                      <input allowClear type="file" id="inputFile" accept="image/jpeg,image/jpg,image/png,application/pdf" multiple style="font-size: 10px; margin: 5px;" />
                       <button type="button" class="btn btn-success btn-sm" onclick="actualizarPedido('${datos[0].codigo}', '${datos[0].carpeta}', '${datos[0].year}', '${datos[0].mes}', '${datos[0].proveedor}', '${datos[0].fechaFormato}');" style="font-size: 10px; margin: 5px;"><i class="fa fa-fw fa-upload"></i> Cargar archivos</button>
                   </div>`);
           $("#selConformidad_Pedido").prop("disabled", false);
@@ -741,7 +741,7 @@ async function actualizarPedido(
   proveedor,
   fechaRecepcion
 ) {
-  const maxFileSize = 2 * 1024 * 1024;
+  const maxFileSize = 5 * 1024 * 1024;
   const patron = /09-\w{4}-\d+/;
   let pedido = $("#txtNumDoc_Pedido").val();
   let guia = $("#txtGuia_Pedido").val();
