@@ -290,7 +290,7 @@ function pdfEntradaMercancia(data) {
   pdf.setFontSize(12);
   pdf.setFontType("bold");
   pdf.text(
-    `NOTA DE REPECIÓN DE MERCADERÍA N° ${data[0].DocNum}`,
+    `NOTA DE RECEPCIÓN DE MERCADERÍA N° ${data[0].DocNum}`,
     105,
     20,
     "center"

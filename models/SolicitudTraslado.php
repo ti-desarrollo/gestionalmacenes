@@ -54,7 +54,7 @@ class SolicitudTraslado extends Conexion
         $name = date('Ymd_his_') . str_replace(' ', '_', $file->name);
         $location = $directorio . '/' . $name;
         $file_extension = strtolower(pathinfo($location, PATHINFO_EXTENSION));
-        $extensions = ['pdf'];
+        $extensions = ['pdf', 'png', 'jpg', 'jpeg'];
         if (is_dir($directorio . '/') && is_writable($directorio . '/')) {
             if (in_array($file_extension, $extensions)) {
                 if (move_uploaded_file($file->tmp_name, $location)) {

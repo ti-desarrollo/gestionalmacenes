@@ -72,7 +72,7 @@ class Pedido extends Conexion
         $name = date('Ymd_his_') . str_replace(' ', '_', $file->name);
         $location = $directorio . '/' . $name;
         $file_extension = strtolower(pathinfo($location, PATHINFO_EXTENSION));
-        $extensions = ['pdf'];
+        $extensions = ['pdf', 'png', 'jpg', 'jpeg'];
         // Verificar si la ruta de destino existe
         if (!file_exists($directorio)) {
             // Si no existe, intenta crearla
