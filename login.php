@@ -37,7 +37,7 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'])) {
         <div class="container">
             <div class="card card-login mx-auto mt-5">
                 <div class="card-header text-center">
-                    <h3>Gestión de almacences</h3>
+                    <h3>Gestión de almacenes</h3>
                 </div>
                 <div class="card-body">
                     <form id="formSesion">

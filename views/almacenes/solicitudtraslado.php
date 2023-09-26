@@ -128,7 +128,7 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'], $_SESSION['ga-sedeUsu'
                                         <th>Código</th>
                                         <th>Descripción</th>
                                         <th>Cantidad</th>
-                                        <th width="10%">Recibido</th>
+                                        <th width="10%">Cantidad por Recepcionar</th>
                                     </tr>
                                 </thead>
                                 <tbody id="tbodyDetalle_SolicitudTraslado"></tbody>
