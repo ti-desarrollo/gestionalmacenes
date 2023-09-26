@@ -8,11 +8,11 @@ if (isset($_REQUEST, $_SESSION)) {
     switch ($_REQUEST['task']) {
         case 1:
             // Listar las transferencias
-            if (in_array($_SESSION['ga-idPerfilUsu'], [1, 2])) {
-                echo json_encode($transferencia->listarTransferenciasAdm($_POST['fechaI'], $_POST['fechaF']));
-            } else {
-                echo json_encode($transferencia->listarTransferencias($_SESSION['ga-idSedeUsu'], $_POST['fechaI'], $_POST['fechaF']));
-            }
+            // if (in_array($_SESSION['ga-idPerfilUsu'], [1, 2])) {
+            //     echo json_encode($transferencia->listarTransferenciasAdm($_POST['fechaI'], $_POST['fechaF']));
+            // } else {
+            echo json_encode($transferencia->listarTransferencias($_SESSION['ga-idSedeUsu'], $_POST['fechaI'], $_POST['fechaF']));
+            // }
             break;
 
         case 2:
