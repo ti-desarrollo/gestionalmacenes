@@ -44,7 +44,23 @@ function listarSolicitudesAdm() {
               <td>${datos[i].transportista}</td>
               <td>${datos[i].pesoTotal}</td>
               <td>${datos[i].estado}</td>
+              <td id="filesSTAdm_${datos[i].docentry}"></td>
             </tr>`
+        );
+        $.post(
+          "../../controllers/SolicitudTrasladoController.php",
+          {
+            task: 9,
+            solicitud: datos[i].docentry,
+          },
+          function (response) {
+            let adjuntos = JSON.parse(response);
+            $.each(adjuntos, function (a) {
+              $(`#filesSTAdm_${datos[i].docentry}`).append(
+                `<p style="margin: unset;"><a class="text-primary" href="../../docs/solicitudTraslado/${adjuntos[a].ds_documento}" target="_blank">${adjuntos[a].ds_documento}</a></p>`
+              );
+            });
+          }
         );
       });
 
@@ -89,7 +105,9 @@ function listarDetalleSolicitudAdm(docentry, sede) {
         $("#txtFechaDoc_SolicitudTrasladoAdm").val(datos[0].fecha);
         $("#txtEstado_SolicitudTrasladoAdm").val(datos[0].estado);
         $("#txtComentario_SolicitudTrasladoAdm").val(datos[0].comentarios);
-        $("#txtConformidad_SolicitudTrasladoAdm").val(datos[0].conformidad);
+        $("#txtConformidad_SolicitudTrasladoAdm").val(
+          datos[0].conformidad === "01" ? "CONFORME" : "NO CONFORME"
+        );
         $.each(datos, function (i) {
           tbody.append(
             `<tr>
@@ -163,7 +181,24 @@ function listarSolicitudes() {
               <td>${datos[i].transportista}</td>
               <td>${datos[i].pesoTotal}</td>
               <td>${datos[i].estado}</td>
+              <td id="filesST_${datos[i].docentry}"></td>
             </tr>`
+        );
+
+        $.post(
+          "../../controllers/SolicitudTrasladoController.php",
+          {
+            task: 9,
+            solicitud: datos[i].docentry,
+          },
+          function (response) {
+            let adjuntos = JSON.parse(response);
+            $.each(adjuntos, function (a) {
+              $(`#filesST_${datos[i].docentry}`).append(
+                `<p style="margin: unset;"><a class="text-primary" href="../../docs/solicitudTraslado/${adjuntos[a].ds_documento}" target="_blank">${adjuntos[a].ds_documento}</a></p>`
+              );
+            });
+          }
         );
       });
 

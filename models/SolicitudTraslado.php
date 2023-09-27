@@ -72,6 +72,11 @@ class SolicitudTraslado extends Conexion
         return $this->simpleQuery('INSERT INTO documentos_solicitud VALUES(?, ?)', [$solicitud, $archivo]);
     }
 
+    public function listaFiles(string $solicitud): array
+    {
+        return $this->returnQuery('EXEC sp_listarDocumentosSolicitud ?', [$solicitud]);
+    }
+
     public function enviarCorreo(string $body, string $recipients, string $subject): int | bool
     {
         $this->simpleQuery("EXECUTE [10.2.3.30].msdb.dbo.sp_send_dbmail @profile_name = 'PerfilEnvioCorreos2023', @body = ?, @body_format ='HTML', @recipients = ?, @subject = ?;", [$body, $recipients, $subject]);

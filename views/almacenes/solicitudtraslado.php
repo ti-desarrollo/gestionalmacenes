@@ -4,7 +4,7 @@ date_default_timezone_set('America/Lima');
 session_start();
 if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'], $_SESSION['ga-sedeUsu'])) {
     include('../tmp_header.html');
-    if (in_array($_SESSION['ga-idPerfilUsu'], [1, 2, 3])) {
+    if (in_array($_SESSION['ga-idPerfilUsu'], [1, 2, 3]) or in_array($_SESSION['ga-usuario'], ['amq-alm-02'])) {
 ?>
         <script type="text/javascript">
             $(document).ready(
@@ -57,11 +57,12 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'], $_SESSION['ga-sedeUsu'
                                         <th>Transportista</th>
                                         <th>Peso</th>
                                         <th>Estado</th>
+                                        <th>Adjunto</th>
                                     </tr>
                                 </thead>
                                 <tbody id="tbodyLista_SolicitudTraslado">
                                     <tr>
-                                        <td colspan="9"><i class="fa fa-spinner fa-2x fa-spin"></i></td>
+                                        <td colspan="10"><i class="fa fa-spinner fa-2x fa-spin"></i></td>
                                     </tr>
                                 </tbody>
                             </table>

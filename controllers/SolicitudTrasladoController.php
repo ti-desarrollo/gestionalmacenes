@@ -13,7 +13,7 @@ if (isset($_REQUEST, $_SESSION)) {
 
         case 2:
             // Listar los detalles de una solicitud
-            echo json_encode($solicitud->listarDetalle($_POST['sede'] ??$_SESSION['ga-idSedeUsu'], $_POST['docentry']));
+            echo json_encode($solicitud->listarDetalle($_POST['sede'] ?? $_SESSION['ga-idSedeUsu'], $_POST['docentry']));
             break;
 
         case 3:
@@ -61,6 +61,11 @@ if (isset($_REQUEST, $_SESSION)) {
         case 8:
             // Listar las solicitudes para administrativos
             echo json_encode($solicitud->listarSolicitudesAdm($_POST['fechaI'], $_POST['fechaF']));
+            break;
+
+        case 9:
+            // Listar archivos de las solicitudes
+            echo json_encode($solicitud->listaFiles($_POST['solicitud']));
             break;
 
         default:
