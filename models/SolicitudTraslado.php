@@ -26,7 +26,7 @@ class SolicitudTraslado extends Conexion
 
     public function obtenerEstado(string $codigo): array
     {
-        return $this->returnQuery('SELECT U_AMQ_ESTADO_ST FROM SBO_3AAMSEQ_OrdenVenta.dbo.OWTQ WHERE DocEntry = ?', [$codigo]);
+        return $this->returnQuery('SELECT U_AMQ_ESTADO_ST FROM SBO_3AAMSEQ.dbo.OWTQ WHERE DocEntry = ?', [$codigo]);
     }
 
     public function actualizarDetalle(string $codigo, string $linea, string $itemcode, string $cantidad, string $cabecera): int | false
@@ -37,7 +37,7 @@ class SolicitudTraslado extends Conexion
     public function actualizarCabecera(string $observacion, string $conformidad, string $codigo, string $guia, string $usuario): int | bool
     {
         // Actualizamos la cebecera en SAP
-        $this->simpleQuery("UPDATE SBO_3AAMSEQ_OrdenVenta.dbo.OWTQ SET U_AMQ_ESTADO_ST = 'P', JrnlMemo = ?,  U_SYP_CONFORMIDAD= ? WHERE DocEntry = ?", [$observacion, $conformidad, $codigo]);
+        $this->simpleQuery("UPDATE SBO_3AAMSEQ.dbo.OWTQ SET U_AMQ_ESTADO_ST = 'P', JrnlMemo = ?,  U_SYP_CONFORMIDAD= ? WHERE DocEntry = ?", [$observacion, $conformidad, $codigo]);
 
         // Insertamos los datos en el aplicativo
         $this->simpleQuery("INSERT INTO recepcion_solicitud_traslado_cabecera(rstc_solicitud, rstc_guia, rstc_usuario) VALUES($codigo, '$guia', '$usuario');", []);
