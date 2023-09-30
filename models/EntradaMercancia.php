@@ -31,6 +31,6 @@ class EntradaMercancia extends Conexion
 
     public function layout(string $docentry,): array
     {
-        return $this->returnQuery('EXEC SBO_3AAMSEQ.dbo.USP_ME_NOTARECEPCION ?', [$docentry]);
+        return $this->returnQuery('EXEC SBO_3AAMSEQ_OrdenVenta.dbo.USP_ME_NOTARECEPCION ?', [$docentry]);
     }
 }

@@ -45,6 +45,6 @@ class Usuario extends Conexion
 
    public function leerToken(): array
    {
-      return $this->returnQuery('SELECT tokenfcm, correo FROM usuarios WHERE tokenfcm IS NOT NULL', []);
+      return $this->returnQuery("SELECT ISNULL(tokenfcm, '') AS tokenfcm, correo FROM usuarios WHERE correo IS NOT NULL AND idPerfil = 4", []);
    }
 }

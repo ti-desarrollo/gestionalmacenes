@@ -22,12 +22,12 @@ class Pedido extends Conexion
 
     public function obtenerEstado(string $codigo): array
     {
-        return $this->returnQuery('SELECT U_AMQ_ESTADO_OC FROM SBO_3AAMSEQ.dbo.OPOR WHERE DocEntry = ?', [$codigo]);
+        return $this->returnQuery('SELECT U_AMQ_ESTADO_OC FROM SBO_3AAMSEQ_OrdenVenta.dbo.OPOR WHERE DocEntry = ?', [$codigo]);
     }
 
     public function layout(string $codigo): array
     {
-        return $this->returnQuery('EXEC SBO_3AAMSEQ.dbo.SYP_LYT_COMOC01 ?', [$codigo]);
+        return $this->returnQuery('EXEC SBO_3AAMSEQ_OrdenVenta.dbo.SYP_LYT_COMOC01 ?', [$codigo]);
     }
 
     public function listarPedidosAdm(string $inicio, string $fin): array
