@@ -335,9 +335,11 @@ function procesarSolicitud(
   let observacion = $.trim($("#txtComentario_SolicitudTraslado").val());
   let items = [];
 
-  if (!patron.test(guiaT)) {
-    alert("::MENSAJE:\n[*] El número de guía no es válido");
-    return;
+  if (guiaT.length > 0) {
+    if (!patron.test(guiaT)) {
+      alert("::MENSAJE:\n[*] El número de guía no es válido");
+      return;
+    }
   }
 
   if (conformidad === "00") {
