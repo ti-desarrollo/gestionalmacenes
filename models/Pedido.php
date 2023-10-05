@@ -67,7 +67,7 @@ class Pedido extends Conexion
 
     public function uploadFile(array $data, string $sede, string $year, string $mes, string $proveedor, string $fechaRecepcion): array
     {
-        $directorio = "\\\amseq-files\ALMACEN - TIENDA\\$sede\RECEPCIÓN DE MERCADERÍA - ALMACÉN\\$year\\$mes\\COMPRAS NACIONALES\\$proveedor\\$fechaRecepcion";
+        $directorio = "\\\amseq-files\\ALMACEN - TIENDA\\$sede\RECEPCIÓN DE MERCADERÍA - ALMACÉN\\$year\\$mes\\COMPRAS NACIONALES\\$proveedor\\$fechaRecepcion";
         $file = json_decode(json_encode($data));
         $name = date('Ymd_his_') . str_replace(' ', '_', $file->name);
         $location = $directorio . '/' . $name;

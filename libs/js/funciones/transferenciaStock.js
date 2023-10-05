@@ -41,7 +41,7 @@ function listarTransferenciasAdm() {
             <td>${datos[i].categoriaVehiculo}</td>
             <td>${datos[i].modalidadTraslado}</td>
             <td>${datos[i].transportista}</td>
-            <td id="files_${datos[i].docentry}"></td>
+            <td id="files_${datos[i].solicitud}"></td>
             <td id="tdDownload_${datos[i].docentry}" onclick="layoutTransferencia(${datos[i].docentry}, '${datos[i].codigoSede}')"><i class="fa fa-download" aria-hidden="true" style="color: #4caf50;"></i></td>
             </tr>`
         );
@@ -54,7 +54,7 @@ function listarTransferenciasAdm() {
           function (response) {
             let adjuntos = JSON.parse(response);
             $.each(adjuntos, function (a) {
-              $(`#files_${datos[i].docentry}`).append(
+              $(`#files_${datos[i].solicitud}`).append(
                 `<p style="margin: unset;"><a class="text-primary" href="../../docs/solicitudTraslado/${adjuntos[a].ds_documento}" target="_blank">${adjuntos[a].ds_documento}</a></p>`
               );
             });
@@ -66,7 +66,7 @@ function listarTransferenciasAdm() {
         dom: "Bftlp",
         buttons: ["excelHtml5", "pdfHtml5"],
         scrollCollapse: true,
-        paging: true,
+        paging: false,
         language: {
           lengthMenu: "Ver _MENU_ registros por página",
           zeroRecords: "No se encontraron resultados",
@@ -117,7 +117,7 @@ function listarDetalleTransferenciaAdm(docentry, sede) {
           dom: "Bftlp",
           buttons: ["excelHtml5", "pdfHtml5"],
           scrollCollapse: true,
-          paging: true,
+          paging: false,
           language: {
             lengthMenu: "Ver _MENU_ registros por página",
             zeroRecords: "No se encontraron resultados",
@@ -193,7 +193,7 @@ function listarTransferencias() {
         dom: "Bftlp",
         buttons: ["excelHtml5", "pdfHtml5"],
         scrollCollapse: true,
-        paging: true,
+        paging: false,
         language: {
           lengthMenu: "Ver _MENU_ registros por página",
           zeroRecords: "No se encontraron resultados",
@@ -247,7 +247,7 @@ function listarDetalleTransferencia(docentry) {
           dom: "Bftlp",
           buttons: ["excelHtml5", "pdfHtml5"],
           scrollCollapse: true,
-          paging: true,
+          paging: false,
           language: {
             lengthMenu: "Ver _MENU_ registros por página",
             zeroRecords: "No se encontraron resultados",

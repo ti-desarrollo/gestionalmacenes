@@ -52,7 +52,7 @@ function listarPedidosAdm() {
         dom: "Bftlp",
         buttons: ["excelHtml5", "pdfHtml5"],
         scrollCollapse: true,
-        paging: true,
+        paging: false,
         language: {
           lengthMenu: "Ver _MENU_ registros por página",
           zeroRecords: "No se encontraron resultados",
@@ -116,7 +116,7 @@ function listarDetallePedidoAdm(docentry, sede) {
           dom: "Bftlp",
           buttons: ["excelHtml5", "pdfHtml5"],
           scrollCollapse: true,
-          paging: true,
+          paging: false,
           language: {
             lengthMenu: "Ver _MENU_ registros por página",
             zeroRecords: "No se encontraron resultados",
@@ -170,7 +170,7 @@ function listarPedidos() {
         dom: "Bftlp",
         buttons: ["excelHtml5", "pdfHtml5"],
         scrollCollapse: true,
-        paging: true,
+        paging: false,
         language: {
           lengthMenu: "Ver _MENU_ registros por página",
           zeroRecords: "No se encontraron resultados",
@@ -255,7 +255,7 @@ function listarDetallePedido(docentry) {
           dom: "Bftlp",
           buttons: ["excelHtml5", "pdfHtml5"],
           scrollCollapse: true,
-          paging: true,
+          paging: false,
           language: {
             lengthMenu: "Ver _MENU_ registros por página",
             zeroRecords: "No se encontraron resultados",

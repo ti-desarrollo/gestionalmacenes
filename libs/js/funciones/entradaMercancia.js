@@ -68,7 +68,7 @@ function listarEntradaMercanciasAdm() {
         dom: "Bftlp",
         buttons: ["excelHtml5", "pdfHtml5"],
         scrollCollapse: true,
-        paging: true,
+        paging: false,
         language: {
           lengthMenu: "Ver _MENU_ registros por página",
           zeroRecords: "No se encontraron resultados",
@@ -119,7 +119,7 @@ function listarEntradaMercanciasDetaAdm(docentry, sede) {
           dom: "Bftlp",
           buttons: ["excelHtml5", "pdfHtml5"],
           scrollCollapse: true,
-          paging: true,
+          paging: false,
           language: {
             lengthMenu: "Ver _MENU_ registros por página",
             zeroRecords: "No se encontraron resultados",
@@ -197,7 +197,7 @@ function listarEntradaMercancias() {
         dom: "Bftlp",
         buttons: ["excelHtml5", "pdfHtml5"],
         scrollCollapse: true,
-        paging: true,
+        paging: false,
         language: {
           lengthMenu: "Ver _MENU_ registros por página",
           zeroRecords: "No se encontraron resultados",
@@ -248,7 +248,7 @@ function listarEntradaMercanciasDeta(docentry) {
           dom: "Bftlp",
           buttons: ["excelHtml5", "pdfHtml5"],
           scrollCollapse: true,
-          paging: true,
+          paging: false,
           language: {
             lengthMenu: "Ver _MENU_ registros por página",
             zeroRecords: "No se encontraron resultados",
