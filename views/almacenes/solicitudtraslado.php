@@ -113,6 +113,7 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'], $_SESSION['ga-sedeUsu'
                                     <option value="00" selected>Selecciona</option>
                                     <option value="01">Conforme</option>
                                     <option value="02">No conforme</option>
+                                    <option value="03">Observado</option>
                                 </select>
                             </div>
                             <div class="form-group col-xs-12 col-sm-6 col-md-4 col-lg-4 col-xl-2 col-xxl-2 mb-3">
