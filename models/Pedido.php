@@ -58,7 +58,7 @@ class Pedido extends Conexion
         $this->simpleQuery('EXEC sp_actualizarCabeceraPedido ?, ?, ?, ?, ?, ?, ?', [$codigo, $guiaDatos[0], $guiaDatos[1], $guiaDatos[2], $estado, $comentarios, $conformidad]);
 
         // Insertamos en el aplicativo
-        $this->simpleQuery("INSERT INTO recepcion_pedido_cabecera(rpc_pedido, rpc_conformidad, rpc_usuario) VALUES($codigo, '$conformidad', '$usuario');", []);
+        $this->simpleQuery("INSERT INTO recepcion_pedido_cabecera(rpc_pedido, rpc_conformidad, rpc_guia_grr, rpc_usuario) VALUES($codigo, '$conformidad', '$guia', '$usuario');", []);
 
         // Obtenemos el id insertado
         $lastID = $this->lastId();
