@@ -15,9 +15,9 @@ class Pedido extends Conexion
         return $this->returnQuery('EXEC sp_listarPedidos ?, ?, ?', [$sede, $inicio, $fin]);
     }
 
-    public function listarDetalle(string $sede, string $codigo): array
+    public function listarDetalle(string $sede, string $codigo, string $guia): array
     {
-        return $this->returnQuery('EXEC sp_buscarPedido ?, ?', [$sede, $codigo]);
+        return $this->returnQuery('EXEC sp_buscarPedido ?, ?, ?', [$sede, $codigo, $guia]);
     }
 
     public function obtenerEstado(string $codigo): array
@@ -58,7 +58,7 @@ class Pedido extends Conexion
         $this->simpleQuery('EXEC sp_actualizarCabeceraPedido ?, ?, ?, ?, ?, ?, ?', [$codigo, $guiaDatos[0], $guiaDatos[1], $guiaDatos[2], $estado, $comentarios, $conformidad]);
 
         // Insertamos en el aplicativo
-        $this->simpleQuery("INSERT INTO recepcion_pedido_cabecera(rpc_pedido, rpc_conformidad, rpc_guia_grr, rpc_usuario) VALUES($codigo, '$conformidad', '$guia', '$usuario');", []);
+        $this->simpleQuery("INSERT INTO recepcion_pedido_cabecera(rpc_pedido, rpc_conformidad, rpc_usuario, rpc_guia_grr, rpc_estado, rpc_comentario) VALUES($codigo, '$conformidad', '$usuario', '$guia', '$estado', '$comentarios');", []);
 
         // Obtenemos el id insertado
         $lastID = $this->lastId();

@@ -31,7 +31,7 @@ function listarPedidosAdm() {
           <tr>
               <td class="text-primary" onclick="listarDetallePedidoAdm(${
                 datos[i].codigo
-              }, '${datos[i].sedeCodigo}')">${datos[i].codigo}</td>
+              }, '${datos[i].sedeCodigo}', '${datos[i].guia}')">${datos[i].codigo}</td>
               <td>${datos[i].estado}</td>
               <td>${datos[i].conformidad}</td>
               <td>${datos[i].usuario}</td>
@@ -66,7 +66,7 @@ function listarPedidosAdm() {
   );
 }
 
-function listarDetallePedidoAdm(docentry, sede) {
+function listarDetallePedidoAdm(docentry, sede, guia) {
   if (tDetalle_PedidoAdm) {
     tDetalle_PedidoAdm.destroy();
   }
@@ -78,7 +78,7 @@ function listarDetallePedidoAdm(docentry, sede) {
 
   $.post(
     "../../controllers/PedidoController.php",
-    { task: 2, docentry, sede },
+    { task: 2, docentry, sede, guia },
     function (response) {
       let datos = JSON.parse(response);
 
@@ -87,10 +87,16 @@ function listarDetallePedidoAdm(docentry, sede) {
         $("#txtNumDoc_PedidoAdm").val(datos[0].documento);
         $("#txtFechaDoc_PedidoAdm").val(datos[0].fecha);
         $("#txtEstado_PedidoAdm").val(datos[0].estado);
-        $("#txtConformidad_PedidoAdm").val(datos[0].conformidad);
+        $("#txtConformidad_PedidoAdm").val(
+          datos[0].conformidad === "01" ? "CONFORME" : "NO CONFORME"
+        );
         $("#txtComentario_PedidoAdm").val(datos[0].observacion);
 
         $.each(datos, function (i) {
+          let color =
+            datos[i].cantidadPedida === datos[i].cantidadRecibida
+              ? "#4caf50"
+              : "#f44336";
           tbody.append(
             `
             <tr>
@@ -98,15 +104,15 @@ function listarDetallePedidoAdm(docentry, sede) {
                 <td style="vertical-align: middle">${datos[i].item}</td>
                 <td style="vertical-align: middle">${datos[i].descripcion}</td>
                 <td style="vertical-align: middle">${datos[i].um}</td>
-                <td style="vertical-align: middle">${
-                  datos[i].cantidadPedida
-                }</td>
-                <td style="vertical-align: middle">${
-                  datos[i].cantidadRecibida
-                }</td>
-                <td style="vertical-align: middle">${
-                  datos[i].cantidadRecepcionada
-                }</td>
+                <td style="vertical-align: middle"><div style="background: ${color}; border-radius: 10px; color: white;  font-weight: bold;">${
+              datos[i].cantidadPedida
+            }</div></td>
+                <td style="vertical-align: middle"><div style="background: ${color}; border-radius: 10px; color: white;  font-weight: bold;">${
+              datos[i].cantidadRecibida
+            }</div></td>
+                <td style="vertical-align: middle"><div style="background: ${color}; border-radius: 10px; color: white;  font-weight: bold;">${
+              datos[i].cantidadRecepcionada
+            }</div></td>
             </tr>
             `
           );
@@ -121,7 +127,7 @@ function listarDetallePedidoAdm(docentry, sede) {
             lengthMenu: "Ver _MENU_ registros por página",
             zeroRecords: "No se encontraron resultados",
             info: "Página _PAGE_ of _PAGES_",
-            search: "Buscar pedido: ",
+            search: "Buscar artículo: ",
             infoEmpty: "No hay registros disponibles",
             infoFiltered: "(filtered from _MAX_ total records)",
           },
@@ -157,7 +163,7 @@ function listarPedidos() {
       $.each(datos, function (i) {
         tbody.append(`
             <tr>
-                <td class="text-primary" onclick="listarDetallePedido(${datos[i].codigo})">${datos[i].codigo}</td>
+                <td class="text-primary" onclick="listarDetallePedido(${datos[i].codigo}, '${datos[i].guia}')">${datos[i].codigo}</td>
                 <td>${datos[i].estado}</td>
                 <td>${datos[i].pedido}</td>
                 <td>${datos[i].proveedor}</td>
@@ -184,7 +190,7 @@ function listarPedidos() {
   );
 }
 
-function listarDetallePedido(docentry) {
+function listarDetallePedido(docentry, guia) {
   if (tDetalle_Pedido) {
     tDetalle_Pedido.destroy();
   }
@@ -196,7 +202,7 @@ function listarDetallePedido(docentry) {
 
   $.post(
     "../../controllers/PedidoController.php",
-    { task: 2, docentry },
+    { task: 2, docentry, guia },
     function (response) {
       let datos = JSON.parse(response);
 
@@ -260,7 +266,7 @@ function listarDetallePedido(docentry) {
             lengthMenu: "Ver _MENU_ registros por página",
             zeroRecords: "No se encontraron resultados",
             info: "Página _PAGE_ of _PAGES_",
-            search: "Buscar pedido: ",
+            search: "Buscar artículo: ",
             infoEmpty: "No hay registros disponibles",
             infoFiltered: "(filtered from _MAX_ total records)",
           },

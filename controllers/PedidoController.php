@@ -12,7 +12,7 @@ if (isset($_REQUEST, $_SESSION)) {
 
         case 2:
             // Listar el detalle del pedido
-            echo json_encode($pedido->listarDetalle($_POST['sede'] ?? $_SESSION['ga-idSedeUsu'], $_POST['docentry']));
+            echo json_encode($pedido->listarDetalle($_POST['sede'] ?? $_SESSION['ga-idSedeUsu'], $_POST['docentry'], $_POST['guia']));
             break;
 
         case 3:
