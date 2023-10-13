@@ -51,6 +51,9 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'], $_SESSION['ga-sedeUsu'
                                         <th>Sede</th>
                                         <th>Usuario</th>
                                         <th>N° Pedido</th>
+                                        <th>RUC de transportista</th>
+                                        <th>Nombre de transportista</th>
+                                        <th>Forma de envío</th>
                                         <th>N° Entrada</th>
                                         <th>Proveedor</th>
                                         <th>Fecha de recepción</th>
@@ -62,7 +65,7 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'], $_SESSION['ga-sedeUsu'
                                 </thead>
                                 <tbody id="tbodyDetalleEntradas_EntradaMercanciaAdm">
                                     <tr>
-                                        <td colspan="10"><i class="fa fa-spinner fa-2x fa-spin"></i></td>
+                                        <td colspan="13"><i class="fa fa-spinner fa-2x fa-spin"></i></td>
                                     </tr>
                                 </tbody>
                             </table>

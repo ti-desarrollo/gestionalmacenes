@@ -36,6 +36,9 @@ function listarEntradaMercanciasAdm() {
                 <td>${datos[i].sede}</td>
                 <td>${datos[i].usuario}</td>
                 <td>${datos[i].pedido}</td>
+                <td>${datos[i].rucTransportista}</td>
+                <td>${datos[i].rzTransportista}</td>
+                <td>${datos[i].formaEnvio}</td>
                 <td>${datos[i].entrada}</td>
                 <td>${datos[i].proveedor}</td>
                 <td>${datos[i].fechaRecepcion}</td>
