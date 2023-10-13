@@ -37,6 +37,9 @@ function listarPedidosAdm() {
               <td>${datos[i].usuario}</td>
               <td>${datos[i].pedido}</td>
               <td>${datos[i].guia}</td>
+              <td>${datos[i].rucTransportista}</td>
+              <td>${datos[i].rzTransportista}</td>
+              <td>${datos[i].formaEnvio}</td>
               <td>${datos[i].proveedor}</td>
               <td>${datos[i].fechaEntrega}</td>
               <td>${datos[i].fechaRecepcion}</td>
@@ -166,6 +169,9 @@ function listarPedidos() {
                 <td class="text-primary" onclick="listarDetallePedido(${datos[i].codigo}, '${datos[i].guia}')">${datos[i].codigo}</td>
                 <td>${datos[i].estado}</td>
                 <td>${datos[i].pedido}</td>
+                <td>${datos[i].rucTransportista}</td>
+                <td>${datos[i].rzTransportista}</td>
+                <td>${datos[i].formaEnvio}</td>
                 <td>${datos[i].proveedor}</td>
                 <td>${datos[i].fechaEntrega}</td>
             </tr>

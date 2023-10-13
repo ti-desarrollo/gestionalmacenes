@@ -49,12 +49,15 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'], $_SESSION['ga-sedeUsu'
                                     <th>Código</th>
                                     <th>Estado</th>
                                     <th>N° Pedido</th>
+                                    <th>RUC de transportista</th>
+                                    <th>Nombre de transportista</th>
+                                    <th>Forma de envío</th>
                                     <th>Proveedor</th>
                                     <th>Fecha de entrega</th>
                                 </thead>
                                 <tbody id="tbodyListaPedidos_Pedido">
                                     <tr>
-                                        <td colspan="5"><i class="fa fa-spinner fa-2x fa-spin"></i></td>
+                                        <td colspan="8"><i class="fa fa-spinner fa-2x fa-spin"></i></td>
                                     </tr>
                                 </tbody>
                             </table>
