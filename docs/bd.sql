@@ -79,3 +79,6 @@ GO
 
 ALTER TABLE [dbo].[recepcion_solicitud_traslado_detalle] ADD  DEFAULT (getdate()) FOR [rstd_fecha]
 GO
+
+
+-- INSERT INTO usuarios(usuario, password, naUsuario, idSede, estado, idPerfil) VALUES('amq-log-01', 'IRGfsh', 'Ivon Reyes Garcia', 99, 1, 6);
