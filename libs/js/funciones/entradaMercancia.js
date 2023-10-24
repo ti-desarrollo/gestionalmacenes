@@ -1,37 +1,107 @@
+const LIMIT = 20;
+var CURRENT_PAGE = 1;
+var LOAD = true;
+
 var tListaEntradas_EntradaMercanciaAdm = null;
 var tDetalle_EntradaMercanciaAdm = null;
 var tListaEntradas_EntradaMercancia = null;
 var tDetalle_EntradaMercancia = null;
 
-function listarEntradaMercanciasAdm() {
+/** FUNCIONES PARA ADMINISTRATIVOS */
+function paginacionEntradasMercanciaAdm(inicio, fin, totalPages, direction) {
+  if (!LOAD) {
+    if (direction === "forward" && CURRENT_PAGE < totalPages) {
+      CURRENT_PAGE = CURRENT_PAGE + 1;
+    }
+    if (direction === "reverse" && CURRENT_PAGE > 1) {
+      CURRENT_PAGE = CURRENT_PAGE - 1;
+    }
+    if (direction === "first") {
+      CURRENT_PAGE = 1;
+    }
+    if (direction === "last") {
+      CURRENT_PAGE = totalPages;
+    }
+    listarEntradaMercanciasAdm(inicio, fin, CURRENT_PAGE, LIMIT);
+  }
+  $(`#paginationEntradasAdm`).html(`      
+    <p id="pages">Página ${CURRENT_PAGE} de ${totalPages}</p>
+    <nav aria-label="Paginación">
+      <ul class="pagination justify-content-start">
+        <li class="page-item ${CURRENT_PAGE === 1 ? "disabled" : ""}" onclick="${CURRENT_PAGE === 1 ? "" : `paginacionEntradasMercanciaAdm('${inicio}', '${fin}', ${totalPages}, 'first')`}"><a class="page-link" href="#" aria-label="Previous">Primero</a></li>
+        <li class="page-item ${CURRENT_PAGE === 1 ? "disabled" : ""}" onclick="${CURRENT_PAGE === 1 ? "" : `paginacionEntradasMercanciaAdm('${inicio}', '${fin}', ${totalPages}, 'reverse')`}"><a class="page-link" href="#">&lt;</a></li>              
+        <li class="page-item ${CURRENT_PAGE === totalPages ? "disabled" : ""}" onclick="${CURRENT_PAGE === totalPages ? "" : `paginacionEntradasMercanciaAdm('${inicio}', '${fin}', ${totalPages}, 'forward')`}"><a class="page-link" href="#">&gt;</a></li>
+        <li class="page-item ${CURRENT_PAGE === totalPages ? "disabled" : ""}" onclick="${CURRENT_PAGE === totalPages ? "" : `paginacionEntradasMercanciaAdm('${inicio}', '${fin}', ${totalPages}, 'last')`}"><a class="page-link" href="#" aria-label="Next">Último</a>
+        </li>
+      </ul>
+    </nav>
+  `);
+}
+
+function paginationEntradasAdm() {
+  let inicio = $("#txtFechaInicio_EntradaMercanciaAdm").val();
+  let fin = $("#txtFechaFin_EntradaMercanciaAdm").val();
+  $.post(
+    "../../controllers/EntradaMercanciaController.php",
+    {
+      task: 5,
+      fechaI: inicio,
+      fechaF: fin,
+    },
+    function (response) {
+      let totalItems = parseInt(response === 0 ? 1 : response);
+      let totalPages = Math.ceil(totalItems / LIMIT);
+
+      // Carga inicial
+      listarEntradaMercanciasAdm(inicio, fin, 1, LIMIT);
+
+      // Configuramos la paginación
+      if (totalPages > 1) {
+        paginacionEntradasMercanciaAdm(
+          inicio,
+          fin,
+          totalPages,
+          ""
+        );
+      }
+    }
+  );
+}
+
+function listarEntradaMercanciasAdm(inicio, fin, page, limit) {
+  LOAD = true;
   if (tListaEntradas_EntradaMercanciaAdm) {
     tListaEntradas_EntradaMercanciaAdm.destroy();
   }
   let table = $("#tListaEntradas_EntradaMercanciaAdm");
   let tbody = $("#tbodyDetalleEntradas_EntradaMercanciaAdm");
-  tbody.empty();
+  tbody.html(
+    `<tr><td colspan="13"><i class="fa fa-spinner fa-2x fa-spin"></i></td></tr>`
+  );
+
   $("#btnReportar_EntradaMercanciaAdm").html(
     '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Cargando'
   );
-  $("#divLista_EntradaMercanciaAdm").show();
-  $("#divDetalle_EntradaMercanciaAdm").hide();
 
   $.post(
     "../../controllers/EntradaMercanciaController.php",
     {
-      task: 5,
-      fechaI: $("#txtFechaInicio_EntradaMercanciaAdm").val(),
-      fechaF: $("#txtFechaFin_EntradaMercanciaAdm").val(),
+      task: 4,
+      fechaI: inicio,
+      fechaF: fin,
+      page: page,
+      limit: limit,
     },
     function (response) {
+      tbody.empty();
       $("#btnReportar_EntradaMercanciaAdm").html(
         '<i class="fa fa-play"></i> REPORTAR'
       );
       let datos = JSON.parse(response);
-
-      $.each(datos, function (i) {
-        tbody.append(
-          `
+      if (datos.length > 0) {
+        $.each(datos, function (i) {
+          tbody.append(
+            `
             <tr>
                 <td>${datos[i].sede}</td>
                 <td>${datos[i].usuario}</td>
@@ -44,43 +114,29 @@ function listarEntradaMercanciasAdm() {
                 <td>${datos[i].fechaRecepcion}</td>
                 <td>${datos[i].guia}</td>
                 <td class="text-primary" onclick="listarEntradaMercanciasDetaAdm(${datos[i].docentryEntrada}, '${datos[i].codigoSede}')">${datos[i].docentryEntrada}</td>
-                <td id="files${datos[i].docentryEntrada}"></td>
+                <td id="files${datos[i].docentryEntrada}">${datos[i].adjuntos}</td>
                 <td id="tdDownload_${datos[i].docentryEntrada}" onclick='layoutEntradaMercancia(${datos[i].docentryEntrada})'><i class="fa fa-download" aria-hidden="true" style="color: #4caf50;"></i></td>
             </tr>
             `
-        );
-        $.post(
-          "../../controllers/EntradaMercanciaController.php",
-          {
-            task: 3,
-            pedido: datos[i].docentryPedido,
-            guia: datos[i].guia,
-          },
-          function (response) {
-            let files = JSON.parse(response);
-            $.each(files, function (a) {
-              $(`#files${datos[i].docentryEntrada}`).append(
-                `<p style="margin: unset;"><a href="https://gestionalmacenes.3aamseq.com.pe/docs/pedidos/${files[a].carpeta}/RECEPCIÓN%20DE%20MERCADERÍA%20-%20ALMACÉN/${files[a].year}/${files[a].mes}/COMPRAS NACIONALES/${files[a].proveedor}/${files[a].fechaFormato}/${files[a].fileName}" target="_blank">${files[a].fileName}</a></p>`
-              );
-            });
-          }
-        );
-      });
+          );
+        });
 
-      tListaEntradas_EntradaMercanciaAdm = table.DataTable({
-        dom: "Bftlp",
-        buttons: ["excelHtml5", "pdfHtml5"],
-        scrollCollapse: true,
-        paging: false,
-        language: {
-          lengthMenu: "Ver _MENU_ registros por página",
-          zeroRecords: "No se encontraron resultados",
-          info: "Página _PAGE_ of _PAGES_",
-          search: "Buscar pedido: ",
-          infoEmpty: "No hay registros disponibles",
-          infoFiltered: "(filtered from _MAX_ total records)",
-        },
-      });
+        tListaEntradas_EntradaMercanciaAdm = table.DataTable({
+          dom: "Bftlp",
+          buttons: ["excelHtml5", "pdfHtml5"],
+          scrollCollapse: true,
+          paging: false,
+          language: {
+            lengthMenu: "Ver _MENU_ registros por página",
+            zeroRecords: "No se encontraron resultados",
+            info: "Página _PAGE_ of _PAGES_",
+            search: "Buscar pedido: ",
+            infoEmpty: "No hay registros disponibles",
+            infoFiltered: "(filtered from _MAX_ total records)",
+          },
+        });
+        LOAD = false;
+      }
     }
   );
 }
@@ -127,7 +183,7 @@ function listarEntradaMercanciasDetaAdm(docentry, sede) {
             lengthMenu: "Ver _MENU_ registros por página",
             zeroRecords: "No se encontraron resultados",
             info: "Página _PAGE_ of _PAGES_",
-            search: "Buscar pedido: ",
+            search: "Buscar artículo: ",
             infoEmpty: "No hay registros disponibles",
             infoFiltered: "(filtered from _MAX_ total records)",
           },
@@ -136,6 +192,13 @@ function listarEntradaMercanciasDetaAdm(docentry, sede) {
     }
   );
 }
+
+function visibilidadEntradasAdm() {
+  $("#divLista_EntradaMercanciaAdm").show();
+  $("#divDetalle_EntradaMercanciaAdm").hide();
+}
+
+/** FUNCIONES PARA TIENDAS */
 
 function listarEntradaMercancias() {
   if (tListaEntradas_EntradaMercancia) {
@@ -273,7 +336,7 @@ function layoutEntradaMercancia(docentry) {
 
   $.post(
     "../../controllers/EntradaMercanciaController.php",
-    { task: 4, docentry },
+    { task: 3, docentry },
     function (response) {
       let datos = JSON.parse(response);
       pdfEntradaMercancia(datos);

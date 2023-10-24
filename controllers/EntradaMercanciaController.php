@@ -17,18 +17,18 @@ if (isset($_REQUEST, $_SESSION)) {
             break;
 
         case 3:
-            // Lista los archivos de un pedido
-            echo json_encode($entrada->listarDocumentosPedido($_POST['pedido'], $_POST['guia']));
-            break;
-
-        case 4:
             // Listar datos para layout de entrada
             echo json_encode($entrada->layout($_POST['docentry']));
             break;
 
-        case 5:
+        case 4:
             // Listar las entradas de mercancía para administrativos
-            echo json_encode($entrada->listarEntradasAdm($_POST['fechaI'], $_POST['fechaF']));
+            echo json_encode($entrada->listarEntradasAdm($_POST['fechaI'], $_POST['fechaF'], $_POST['page'], $_POST['limit']));
+            break;
+
+        case 5:
+            // Listar las entradas de mercancía por sede
+            echo json_encode($entrada->paginationAdm($_POST['fechaI'], $_POST['fechaF']));
             break;
 
         default:

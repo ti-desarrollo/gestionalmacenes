@@ -9,7 +9,7 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'], $_SESSION['ga-sedeUsu'
         <script type="text/javascript">
             $(document).ready(
                 function() {
-                    listarEntradaMercanciasAdm();
+                    paginationEntradasAdm();
                 }
             );
         </script>
@@ -39,12 +39,13 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'], $_SESSION['ga-sedeUsu'
                                 <div class="form-group mx-2">
                                     <input type="date" class="form-control" id="txtFechaFin_EntradaMercanciaAdm" value="<?php echo date("Y-m-d") ?>">
                                 </div>
-                                <button type="button" class="btn btn-primary" id="btnReportar_EntradaMercanciaAdm" onclick="listarEntradaMercanciasAdm()">
+                                <button type="button" class="btn btn-primary" id="btnReportar_EntradaMercanciaAdm" onclick="paginationEntradasAdm()">
                                     <i class="fa fa-play"></i> REPORTAR
                                 </button>
                             </form>
                         </div>
                         <div class="table-responsive">
+                            <div id="paginationEntradasAdm" class="mt-2"></div>
                             <table id="tListaEntradas_EntradaMercanciaAdm" class="table table-bordered table-striped">
                                 <thead class="table-dark">
                                     <tr>
@@ -83,7 +84,7 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'], $_SESSION['ga-sedeUsu'
                     <div class="card-header">
                         <b>Datos de la entrada de mercancía</b>
                         <div class="pull-right">
-                            <a href="#" onclick="listarEntradaMercanciasAdm()">Ver lista</a>
+                            <a href="#" onclick="visibilidadEntradasAdm()">Ver lista</a>
                         </div>
                     </div>
                     <div class="card-body">
