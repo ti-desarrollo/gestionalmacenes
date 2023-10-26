@@ -6,13 +6,9 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'], $_SESSION['ga-sedeUsu'
     include('../tmp_header.html');
     if (in_array($_SESSION['ga-idPerfilUsu'], [1, 2, 3])) {
 ?>
-        <script type="text/javascript">
-            $(document).ready(
-                function() {
-                    listarEntradaMercancias();
-                }
-            );
-        </script>
+
+        <!-- Importamos el archivo js -->
+        <script src="../../libs/js/funciones/almacenes/entradaMercancia.js"></script>
 
         <!-- Breadcrumbs-->
         <ol class="breadcrumb">
@@ -25,7 +21,7 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'], $_SESSION['ga-sedeUsu'
 
         <div class="row">
             <!-- Lista de entradas de mercancías -->
-            <div class="col-lg-12" id="divLista_EntradaMercancia">
+            <div class="col-lg-12" id="dl">
                 <div class="card mt-3">
                     <div class="card-header">
                         <b>Lista de entradas de mercancías</b>
@@ -34,18 +30,33 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'], $_SESSION['ga-sedeUsu'
                         <div class="pull-right" style="padding-bottom: 10px;">
                             <form class="form-inline">
                                 <div class="form-group">
-                                    <input type="date" class="form-control" id="txtFechaInicio_EntradaMercancia" value="<?php echo date("Y-m-d") ?>">
+                                    <label for="txtSearch">Buscar entrada (o guía): &nbsp;</label>
+                                    <input type="text" class="form-control" id="txtSearch" placeholder="">
                                 </div>
                                 <div class="form-group mx-2">
-                                    <input type="date" class="form-control" id="txtFechaFin_EntradaMercancia" value="<?php echo date("Y-m-d") ?>">
+                                    <input type="date" class="form-control" id="txtFechaI" value="<?php echo date("Y-m-d") ?>">
                                 </div>
-                                <button type="button" class="btn btn-primary" id="btnReportar_EntradaMercancia" onclick="listarEntradaMercancias()">
+                                <div class="form-group mx-2">
+                                    <input type="date" class="form-control" id="txtFechaF" value="<?php echo date("Y-m-d") ?>">
+                                </div>
+                                <button type="button" class="btn btn-primary" id="btnR" onclick="listarEntradaMercancias()">
                                     <i class="fa fa-play"></i> REPORTAR
                                 </button>
                             </form>
                         </div>
                         <div class="table-responsive">
-                            <table id="tListaEntradas_EntradaMercancia" class="table table-bordered table-striped">
+                            <div class="container row">
+                                <div id="divPag" class="col-xs-12"></div>
+                            </div>
+                            <div class="container row">
+                                <div class="col-xs-12">
+                                    <div class="form-group">
+                                        <label for="txtFilter">Buscar en tabla: &nbsp;</label>
+                                        <input type="text" class="form-control" id="txtFilter">
+                                    </div>
+                                </div>
+                            </div>
+                            <table class="table table-bordered table-striped">
                                 <thead class="table-dark">
                                     <tr>
                                         <th>N° Pedido</th>
@@ -58,7 +69,7 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'], $_SESSION['ga-sedeUsu'
                                         <th>Nota de recepción</th>
                                     </tr>
                                 </thead>
-                                <tbody id="tbodyDetalleEntradas_EntradaMercancia">
+                                <tbody id="tbdl">
                                     <tr>
                                         <td colspan="8"><i class="fa fa-spinner fa-2x fa-spin"></i></td>
                                     </tr>
@@ -67,43 +78,43 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'], $_SESSION['ga-sedeUsu'
                         </div>
                     </div>
                     <div class="card-footer">
-                        :: La lista solo contiene las entradas de mercancías que pertenecen a la misma sede del usuario en sesión.<br>
-                        :: Para ver los productos que contiene una entrada debes hacer clic en el número del documento.
+                        :: La lista solo contiene las entradas de mercancías que pertenecen a la misma sede del usuario en sesión<br>
+                        :: Para ver los productos que contiene una entrada debes hacer clic en el número del documento
                     </div>
                 </div>
             </div>
 
             <!-- Detalle de la entrada de mercancía -->
-            <div class="col-lg-12" id="divDetalle_EntradaMercancia" style="display: none;">
+            <div class="col-lg-12" id="dd" style="display: none;">
                 <div class="card mt-3">
                     <div class="card-header">
                         <b>Datos de la entrada de mercancía</b>
                         <div class="pull-right">
-                            <a href="#" onclick="listarEntradaMercancias()">Ver lista</a>
+                            <a href="#" id="closeDetalle">Ver lista</a>
                         </div>
                     </div>
                     <div class="card-body">
                         <div class="form-group row">
                             <div class="form-group col-xs-12 col-sm-6 col-md-3 col-lg-3 col-xl-3 col-xxl-3 mb-3">
-                                <label for="txtNumGuia_EntradaMercancia">N° Guía</label>
-                                <input type="text" class="form-control form-control-sm" id="txtNumGuia_EntradaMercancia" disabled>
+                                <label for="txtNumGuia">N° Guía</label>
+                                <input type="text" class="form-control form-control-sm" id="txtNumGuia" disabled>
                             </div>
                             <div class="form-group col-xs-12 col-sm-6 col-md-3 col-lg-3 col-xl-3 col-xxl-3 mb-3">
-                                <label for="txtNumDoc_EntradaMercancia">N° Documento</label>
-                                <input type="text" class="form-control form-control-sm" id="txtNumDoc_EntradaMercancia" disabled>
+                                <label for="txtNumDoc">N° Documento</label>
+                                <input type="text" class="form-control form-control-sm" id="txtNumDoc" disabled>
                             </div>
                             <div class="form-group col-xs-12 col-sm-6 col-md-3 col-lg-3 col-xl-3 col-xxl-3 mb-3">
-                                <label for="txtFechaDoc_EntradaMercancia">Fecha</label>
-                                <input type="text" class="form-control form-control-sm" id="txtFechaDoc_EntradaMercancia" disabled>
+                                <label for="txtFechaDoc">Fecha</label>
+                                <input type="text" class="form-control form-control-sm" id="txtFechaDoc" disabled>
                             </div>
                             <div class="form-group col-xs-12 col-sm-6 col-md-3 col-lg-3 col-xl-3 col-xxl-3 mb-3">
-                                <label for="txtTipo_EntradaMercancia">Tipo</label>
-                                <input type="text" class="form-control form-control-sm" id="txtTipo_EntradaMercancia" disabled>
+                                <label for="txtTipo">Tipo</label>
+                                <input type="text" class="form-control form-control-sm" id="txtTipo" disabled>
                             </div>
                         </div>
                         <div class="table-responsive">
-                            <table id='tDetalle_EntradaMercancia' class='table table-bordered table-striped'>
-                                <thead class='thead-dark'>
+                            <table id="tDetalle" class="table table-bordered table-striped">
+                                <thead class="thead-dark">
                                     <tr>
                                         <th>#</th>
                                         <th>Código</th>
@@ -111,7 +122,7 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'], $_SESSION['ga-sedeUsu'
                                         <th>Cantidad</th>
                                     </tr>
                                 </thead>
-                                <tbody id='tbodyDetalle_EntradaMercancia'></tbody>
+                                <tbody id="tbd"></tbody>
                             </table>
                         </div>
                     </div>

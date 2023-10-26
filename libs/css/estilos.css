@@ -10,11 +10,8 @@ body {
 
 ::-webkit-scrollbar-thumb {
   background: rgb(0, 21, 41, 1) !important;
+  border-radius: 10px;
   cursor: pointer !important;
-}
-
-::-webkit-scrollbar-track {
-  border-radius: 20px !important;
 }
 
 table {
@@ -63,4 +60,22 @@ a:active {
 }
 .col-form-label {
   font-size: 13px;
+}
+
+.blob {
+  animation: pulse 2s ease-out infinite;
+}
+
+@keyframes pulse {
+  0% {
+    background: #007bff;
+  }
+
+  70% {
+    background: #007bff8a;
+  }
+
+  100% {
+    background: #007bff1d;
+  }
 }

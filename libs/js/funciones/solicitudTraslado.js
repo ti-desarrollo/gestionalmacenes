@@ -329,7 +329,7 @@ function procesarSolicitud(
     return;
   }
 
-  const patron = /31-\w{4}-\d+/;
+  const patron = /31-EG\w{2}-\d+/;
   let guiaT = $("#txtNumGuiaT_SolicitudTraslado").val();
   let conformidad = $("#selConformidad_SolicitudTraslado").val();
   let observacion = $.trim($("#txtComentario_SolicitudTraslado").val());

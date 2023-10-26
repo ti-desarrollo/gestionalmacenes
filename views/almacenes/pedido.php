@@ -82,8 +82,8 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'], $_SESSION['ga-sedeUsu'
                     <div class="card-body">
                         <div class="form-group row">
                             <div class="form-group col-xs-12 col-sm-6 col-md-4 col-lg-4 col-xl-2 col-xxl-2 mb-3">
-                                <label for="txtGuia_Pedido">N° Guía</label>
-                                <input type="text" class="form-control form-control-sm" id="txtGuia_Pedido">
+                                <label for="txtGuia_Pedido">N° Guía Remisión Remitente</label>
+                                <input type="text" class="form-control form-control-sm" id="txtGuia_Pedido" autocomplete="off">
                             </div>
                             <div class="form-group col-xs-12 col-sm-6 col-md-4 col-lg-4 col-xl-2 col-xxl-2 mb-3">
                                 <label for="txtNumDoc_Pedido">N° Documento</label>
@@ -107,7 +107,7 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'], $_SESSION['ga-sedeUsu'
                             </div>
                             <div class="form-group col-xs-12 col-sm-6 col-md-4 col-lg-4 col-xl-2 col-xxl-2 mb-3">
                                 <label for="txtComentario_Pedido">Comentarios</label>
-                                <input type="text" class="form-control form-control-sm" id="txtComentario_Pedido" disabled>
+                                <input type="text" class="form-control form-control-sm" id="txtComentario_Pedido" disabled autocomplete="off">
                             </div>
                         </div>
 

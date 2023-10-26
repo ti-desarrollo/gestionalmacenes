@@ -231,6 +231,8 @@ function listarDetallePedido(docentry, guia) {
                   </div>`);
           $("#selConformidad_Pedido").prop("disabled", false);
           $("#txtGuia_Pedido").prop("disabled", false);
+          $("#selConformidad_Pedido").val("");
+          $("#txtGuia_Pedido").val("");
         } else {
           $("#divArchivos_Pedido").html("");
           $("#selConformidad_Pedido").prop("disabled", true);
@@ -788,9 +790,28 @@ async function actualizarPedido(
   fechaRecepcion
 ) {
   const maxFileSize = 5 * 1024 * 1024;
-  const patron = /09-\w{4}-\d+/;
+  // const patron = /09-T\w{3}-\d+/;
+  // if (!patron.test(guia)) {
+  //   alert("::MENSAJE:\n[*] El número de guía no es válido");
+  //   return;
+  // }
   let pedido = $("#txtNumDoc_Pedido").val();
   let guia = $("#txtGuia_Pedido").val();
+  let infoGuia = guia.split("-");
+  if (infoGuia.length !== 3) {
+    alert("::MENSAJE:\n[*] El número de guía no es válido");
+    return;
+  }
+  let tipo = infoGuia[0];
+  let serieGuia = infoGuia[1];
+  if (tipo !== "09") {
+    alert("::MENSAJE:\n[*] El tipo de guía no es válido");
+    return;
+  }
+  if (serieGuia.substring(0, 1) === "E" || serieGuia.substring(1, 1) === "G") {
+    alert("::MENSAJE:\n[*] La serie de guía no es válida");
+    return;
+  }
   let comentarios = $("#txtComentario_Pedido").val();
   let conformidad = $("#selConformidad_Pedido").val();
   let input = document.getElementById("inputFile");
@@ -798,11 +819,6 @@ async function actualizarPedido(
   let items = [];
   let itemsPedidos = [];
   let itemsRecibidos = [];
-
-  if (!patron.test(guia)) {
-    alert("::MENSAJE:\n[*] El número de guía no es válido");
-    return;
-  }
 
   if (input.files.length < 1) {
     alert("::MENSAJE:\n[*] Debes subir al menos un archivo");
