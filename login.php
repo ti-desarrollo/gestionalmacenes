@@ -17,7 +17,7 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'])) {
         <title>3AAMSEQ SA - Gestión de Almacén</title>
         <link href="media/logotipo.ico" rel="shortcut icon" type="image/ico">
         <!-- Bootstrap core CSS-->
-        <link href="libs/bootstrap-4.5.0-dist/css/bootstrap.min.css" rel="stylesheet">
+        <link href="libs/bootstrap/css/bootstrap.min.css" rel="stylesheet">
         <!-- Custom fonts for this template-->
         <link href="libs/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
         <!-- Custom styles for this template-->
@@ -26,7 +26,7 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'])) {
 
         <!-- Bootstrap core JavaScript-->
         <script src="libs/jquery/jquery.min.js"></script>
-        <script src="libs/bootstrap-4.5.0-dist/js/bootstrap.min.js"></script>
+        <script src="libs/bootstrap/js/bootstrap.min.js"></script>
         <!-- Core plugin JavaScript-->
         <script src="libs/jquery-easing/jquery.easing.min.js"></script>
 

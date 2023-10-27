@@ -16,7 +16,7 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'])) {
         <link href="media/logotipo.ico" rel="shortcut icon" type="image/ico">
 
         <!-- Bootstrap CSS -->
-        <link href="libs/bootstrap-4.5.0-dist/css/bootstrap.min.css" rel="stylesheet">
+        <link href="libs/bootstrap/css/bootstrap.min.css" rel="stylesheet">
         <!-- Íconos -->
         <link href="libs/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 
@@ -27,7 +27,7 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'])) {
         <!-- JQuery -->
         <script src="libs/jquery/jquery.min.js"></script>
         <!-- Bootstrap JS-->
-        <script src="libs/bootstrap-4.5.0-dist/js/bootstrap.min.js"></script>
+        <script src="libs/bootstrap/js/bootstrap.min.js"></script>
 
         <!-- Easing JS -->
         <script src="libs/jquery-easing/jquery.easing.min.js"></script>

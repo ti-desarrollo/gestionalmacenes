@@ -11,17 +11,13 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("closeDetalle").onclick = () => {
     document.getElementById("dl").style.display = "block";
     document.getElementById("dd").style.display = "none";
-    document.getElementById("txtNumGuia").value = "";
-    document.getElementById("txtNumDoc").value = "";
-    document.getElementById("txtFechaDoc").value = "";
-    document.getElementById("txtTipo").value = "";
   };
 
   // Traemos los datos
   initLoad();
 });
 
-const controller = "../../controllers/TransferenciaStockController.php";
+const controllerTS_A = "../../controllers/TransferenciaStockController.php";
 const limit = 20;
 var currentPage = 1;
 var currentTS = null;
@@ -33,9 +29,9 @@ function initLoad() {
   const flag = 1;
   let fechaI = document.getElementById("txtFechaI").value;
   let fechaF = document.getElementById("txtFechaF").value;
-  let search = document.getElementById("txtSearch").value;
+  let search = document.getElementById("txtSearch").value.trim();
   $.post(
-    controller,
+    controllerTS_A,
     {
       task,
       fechaI,
@@ -81,7 +77,7 @@ function listar(fechaI, fechaF, search, page, limit) {
     '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Cargando';
 
   $.post(
-    controller,
+    controllerTS_A,
     {
       task,
       fechaI,
@@ -131,7 +127,7 @@ function verDetalle(docentry, sede) {
   document.getElementById("dl").style.display = "none";
   document.getElementById("dd").style.display = "block";
 
-  $.post(controller, { task, docentry, sede }, function (response) {
+  $.post(controllerTS_A, { task, docentry, sede }, function (response) {
     const datos = JSON.parse(response);
     document.getElementById("txtNumGuia").value = datos[0].guia;
     document.getElementById("txtNumDoc").value = datos[0].transferencia;
@@ -154,7 +150,7 @@ function layout(docentry, sede) {
     '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
   const task = 4;
 
-  $.post(controller, { task, docentry, sede }, function (response) {
+  $.post(controllerTS_A, { task, docentry, sede }, function (response) {
     const datos = JSON.parse(response);
     pdf(datos);
   });

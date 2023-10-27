@@ -12,11 +12,11 @@ class EntradaMercancia extends Conexion
     public function paginacion(string $inicio, string $fin, string $search, string | null $sede): int
     {
         $total = 0;
-        $sedeFilter = $sede ? " AND SBO_3AAMSEQ.dbo.sededeAlmacen((SELECT TOP 1 X.WhsCode FROM SBO_3AAMSEQ.dbo.PDN1 X WHERE T0.DocEntry = X.DocEntry)) = '$sede' " : "";
+        $sedeFilter = $sede ? " AND SBO_3AAMSEQ_OrdenVenta.dbo.sededeAlmacen((SELECT TOP 1 X.WhsCode FROM SBO_3AAMSEQ_OrdenVenta.dbo.PDN1 X WHERE T0.DocEntry = X.DocEntry)) = '$sede' " : "";
         
         $result = $this->returnQuery("SELECT 
                 COUNT(T0.DocEntry) count 
-            FROM SBO_3AAMSEQ.dbo.OPDN T0 WITH(NOLOCK) 
+            FROM SBO_3AAMSEQ_OrdenVenta.dbo.OPDN T0 WITH(NOLOCK) 
             WHERE 
                 T0.CANCELED = 'N' AND 
                 T0.CreateDate BETWEEN CONVERT(DATE, ?) AND CONVERT(DATE, ?) AND
@@ -75,6 +75,6 @@ class EntradaMercancia extends Conexion
 
     public function layout(string $docentry,): array
     {
-        return $this->returnQuery('EXEC SBO_3AAMSEQ.dbo.USP_ME_NOTARECEPCION ?', [$docentry]);
+        return $this->returnQuery('EXEC SBO_3AAMSEQ_OrdenVenta.dbo.USP_ME_NOTARECEPCION ?', [$docentry]);
     }
 }

@@ -11,17 +11,13 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("closeDetalle").onclick = () => {
     document.getElementById("dl").style.display = "block";
     document.getElementById("dd").style.display = "none";
-    document.getElementById("txtNumGuia").value = "";
-    document.getElementById("txtNumDoc").value = "";
-    document.getElementById("txtFechaDoc").value = "";
-    document.getElementById("txtTipo").value = "";
   };
 
   // Traemos los datos
   initLoad();
 });
 
-const controller = "../../controllers/EntradaMercanciaController.php";
+const controllerEM = "../../controllers/EntradaMercanciaController.php";
 const limit = 20;
 var currentPage = 1;
 var currentEM = null;
@@ -33,9 +29,9 @@ function initLoad() {
   const flag = 0;
   let fechaI = document.getElementById("txtFechaI").value;
   let fechaF = document.getElementById("txtFechaF").value;
-  let search = document.getElementById("txtSearch").value;
+  let search = document.getElementById("txtSearch").value.trim();
   $.post(
-    controller,
+    controllerEM,
     {
       task,
       fechaI,
@@ -81,7 +77,7 @@ function listar(fechaI, fechaF, search, page, limit) {
 
   const task = 3;
   $.post(
-    controller,
+    controllerEM,
     {
       task,
       fechaI,
@@ -98,12 +94,12 @@ function listar(fechaI, fechaF, search, page, limit) {
         datos.forEach((element) => {
           tbody.innerHTML += `
             <tr id="row${element.docentryEntrada}">
+                <td class="text-primary" onclick="verDetalle(${element.docentryEntrada})">${element.docentryEntrada}</td>
                 <td>${element.pedido}</td>
                 <td>${element.entrada}</td>
                 <td>${element.proveedor}</td>
                 <td>${element.fechaRecepcion}</td>
                 <td>${element.guia}</td>
-                <td class="text-primary" onclick="verDetalle(${element.docentryEntrada})">${element.docentryEntrada}</td>
                 <td>${element.adjuntos}</td>
                 <td id="tdDownload_${element.docentryEntrada}" onclick='layout(${element.docentryEntrada})'><i class="fa fa-download" aria-hidden="true" style="color: #4caf50;"></i></td>
             </tr>
@@ -127,7 +123,7 @@ function verDetalle(docentry) {
   tbody.innerHTML = "";
   document.getElementById("dl").style.display = "none";
   document.getElementById("dd").style.display = "block";
-  $.post(controller, { task, docentry }, function (response) {
+  $.post(controllerEM, { task, docentry }, function (response) {
     const datos = JSON.parse(response);
     document.getElementById("txtNumGuia").value = datos[0].guia;
     document.getElementById("txtNumDoc").value = datos[0].entrada;
@@ -149,7 +145,7 @@ function layout(docentry) {
   document.getElementById(`tdDownload_${docentry}`).innerHTML =
     '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
   const task = 5;
-  $.post(controller, { task, docentry }, function (response) {
+  $.post(controllerEM, { task, docentry }, function (response) {
     const datos = JSON.parse(response);
     pdf(datos);
   });

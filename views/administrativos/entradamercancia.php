@@ -60,6 +60,7 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'], $_SESSION['ga-sedeUsu'
                                 <table class="table table-bordered table-striped">
                                     <thead class="table-dark">
                                         <tr>
+                                            <th>Código</th>
                                             <th>Sede</th>
                                             <th>Usuario</th>
                                             <th>N° Pedido</th>
@@ -70,7 +71,6 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'], $_SESSION['ga-sedeUsu'
                                             <th>Proveedor</th>
                                             <th>Fecha de recepción</th>
                                             <th>Guía</th>
-                                            <th>Código</th>
                                             <th>Adjuntos</th>
                                             <th>Nota de recepción</th>
                                         </tr>
@@ -118,7 +118,7 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'], $_SESSION['ga-sedeUsu'
                                 </div>
                             </div>
                             <div class="table-responsive">
-                                <table id="tDetalle_EntradaMercanciaAdm" class="table table-bordered table-striped">
+                                <table class="table table-bordered table-striped">
                                     <thead class="thead-dark">
                                         <tr>
                                             <th>#</th>

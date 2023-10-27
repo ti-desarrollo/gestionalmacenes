@@ -1,17 +1,24 @@
+const controller = "controllers/UsuarioController.php";
+
 function login() {
-  $("#btnLogin").html(
-    '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Cargando'
-  );
+  const button = document.getElementById("btnLogin");
+  button.innerHTML =
+    '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Cargando';
+
+  const usuario = document.getElementById("txtUsuario").value.trim();
+  const password = document.getElementById("txtClave").value.trim();
+  const task = 1;
+
   $.post(
-    "controllers/UsuarioController.php",
+    controller,
     {
-      task: 1,
-      usuario: $("#txtUsuario").val(),
-      password: $("#txtClave").val(),
+      task,
+      usuario,
+      password,
     },
     function (response) {
-      $("#btnLogin").html('<i class="fa fa-fw fa-sign-in"></i>INGRESAR');
-      let data = $.parseJSON(response);
+      button.innerHTML = '<i class="fa fa-fw fa-sign-in"></i>INGRESAR';
+      const data = JSON.parse(response);
       if (data.success) {
         guardarToken(tokenFCM);
         location.reload();
@@ -23,24 +30,22 @@ function login() {
 }
 
 function logout() {
+  const task = 2;
   if (
     confirm("::CONFIRMACIÓN:\n[*] ¿Está seguro que desea cerrar su sesión?")
   ) {
-    $.post(
-      "../../controllers/UsuarioController.php",
-      { task: 2 },
-      function () {
-        location.reload();
-      }
-    );
+    $.post(`../../${controller}`, { task }, function () {
+      location.reload();
+    });
   }
 }
 
 function guardarToken(token) {
+  const task = 3;
   $.post(
-    "controllers/UsuarioController.php",
+    controller,
     {
-      task: 3,
+      task,
       token,
     },
     function (_) {}

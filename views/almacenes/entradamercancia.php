@@ -60,12 +60,12 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'], $_SESSION['ga-sedeUsu'
                                 <table class="table table-bordered table-striped">
                                     <thead class="table-dark">
                                         <tr>
+                                            <th>Código</th>
                                             <th>N° Pedido</th>
                                             <th>N° Entrada</th>
                                             <th>Proveedor</th>
                                             <th>Fecha de recepción</th>
                                             <th>Guía</th>
-                                            <th>Código</th>
                                             <th>Adjuntos</th>
                                             <th>Nota de recepción</th>
                                         </tr>
@@ -114,7 +114,7 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'], $_SESSION['ga-sedeUsu'
                                 </div>
                             </div>
                             <div class="table-responsive">
-                                <table id="tDetalle" class="table table-bordered table-striped">
+                                <table class="table table-bordered table-striped">
                                     <thead class="thead-dark">
                                         <tr>
                                             <th>#</th>

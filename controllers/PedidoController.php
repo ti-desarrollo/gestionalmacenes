@@ -5,71 +5,44 @@ if (isset($_REQUEST, $_SESSION)) {
     $pedido = new Pedido();
 
     switch ($_REQUEST['task']) {
+
         case 1:
+            // Listar los pedidos para administrativos
+            echo json_encode($pedido->listarPedidos_A($_POST['fechaI'], $_POST['fechaF']));
+            break;
+
+        case 2:
             // Listar los pedidos por sede
             echo json_encode($pedido->listarPedidos($_SESSION['ga-idSedeUsu'],  $_POST['fechaI'], $_POST['fechaF']));
             break;
 
-        case 2:
-            // Listar el detalle del pedido
-            echo json_encode($pedido->listarDetalle($_POST['sede'] ?? $_SESSION['ga-idSedeUsu'], $_POST['docentry'], $_POST['guia']));
-            break;
-
         case 3:
-            // Actualizar un pedido
-            $response = [];
-            $i = 0;
-            $estado = $pedido->obtenerEstado($_POST['docentry']);
-            $lastId = 0;
-            if ($estado[0]['U_AMQ_ESTADO_OC'] <> 'R') {
-                $lastId = $pedido->actualizarCabecera($_POST['docentry'], $_POST['guia'], $_POST['estado'], $_POST['comentarios'], $_POST['conformidad'], $_SESSION['ga-usuario']);
-                if ($lastId > 0) {
-                    foreach ($_POST['items'] as $filaItem) {
-                        $aux = $pedido->actualizarDetalle($lastId, $_POST['docentry'], $filaItem['item'], $filaItem['cantidadPendienteRecibida']);
-                        $i = $i + $aux;
-                    }
-                    $response = ['success' => true, 'message' => '::MENSAJE:\n[*] Pedido procesado'];
-                } else {
-                    $response = ['success' => false, 'message' => '::ERROR:\n[*] Hubo error al procesar el pedido. Por favor comunicarse con sistemas'];
-                }
-            } else {
-                $response = ['success' => false, 'message' => '::ERROR:\n[*] Este pedido ya fue procesado'];
-            }
-
-            $response['valor'] = $i;
-            $response['lastId'] =  $lastId;
-            $response['usuario'] = $_SESSION['ga-naUsu'];
-            echo json_encode($response);
+            // Listar el detalle del pedido
+            echo json_encode($pedido->buscarDetalle($_POST['sede'] ?? $_SESSION['ga-idSedeUsu'], $_POST['docentry'], $_POST['guia']));
             break;
 
         case 4:
-            // Mostrar datos para el layout
-            echo json_encode($pedido->layout($_POST['docentry']));
+            // Procesamos el pedido
+            echo json_encode($pedido->procesarPedido($_POST['codigo'], $_POST['guia'], $_POST['estado'], $_POST['comentarios'], $_POST['conformidad'], $_SESSION['ga-usuario'], $_POST['items']));
             break;
 
         case 5:
             // Subir archivo
-            echo json_encode($pedido->uploadFile($_FILES['file'], $_POST['sede'], $_POST['year'], $_POST['mes'], $_POST['proveedor'], $_POST['fechaRecepcion']));
+            echo json_encode($pedido->uploadFile($_POST['cabecera'], $_POST['dir'], $_FILES['file']));
             break;
 
         case 6:
-            // Insertar archivo
-            echo json_encode($pedido->insertarFile($_POST['archivo'], $_POST['pedido']));
+            // Mostrar datos para el layout
+            echo json_encode($pedido->layout($_POST['docentry']));
             break;
 
         case 7:
-            // Listar los Pedidos para administrativos
-            echo json_encode($pedido->listarPedidosAdm($_POST['fechaI'], $_POST['fechaF']));
-            break;
-
-        case 8:
             // Enviar correo para notificar procesamiento de un pedido
             echo json_encode($pedido->enviarCorreo($_POST['body'], $_POST['recipients'], $_POST['subject']));
             break;
 
         case 9:
-            // Validar si el archivo que está subiendo ya existe en la ruta
-            echo json_encode($pedido->validateFilesnames($_FILES['file'], $_POST['sede'], $_POST['year'], $_POST['mes'], $_POST['proveedor'], $_POST['fechaRecepcion']));
+            echo json_encode($pedido->rollbackPedido($_POST['pedido']));
             break;
 
         default:
