@@ -15,7 +15,7 @@ class EntradaMercancia extends Conexion
         $sedeFilter = $sede ? " AND SBO_3AAMSEQ.dbo.sededeAlmacen((SELECT TOP 1 X.WhsCode FROM SBO_3AAMSEQ.dbo.PDN1 X WHERE T0.DocEntry = X.DocEntry)) = '$sede' " : "";
         
         $result = $this->returnQuery("SELECT 
-            COUNT(T0.DocEntry) count 
+                COUNT(T0.DocEntry) count 
             FROM SBO_3AAMSEQ.dbo.OPDN T0 WITH(NOLOCK) 
             WHERE 
                 T0.CANCELED = 'N' AND 

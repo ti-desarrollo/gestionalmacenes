@@ -7,27 +7,21 @@ if (isset($_REQUEST, $_SESSION)) {
 
     switch ($_REQUEST['task']) {
         case 1:
-            // Listar las transferencias
-            // if (in_array($_SESSION['ga-idPerfilUsu'], [1, 2])) {
-            //     echo json_encode($transferencia->listarTransferenciasAdm($_POST['fechaI'], $_POST['fechaF']));
-            // } else {
-            echo json_encode($transferencia->listarTransferencias($_SESSION['ga-idSedeUsu'], $_POST['fechaI'], $_POST['fechaF']));
-            // }
+            echo json_encode($transferencia->paginacion($_POST['fechaI'], $_POST['fechaF'], $_POST['search'], $_POST['flag'] === "0" ? $_SESSION['ga-idSedeUsu'] : null));
             break;
 
         case 2:
-            // Listar los detalles de una transferencia
-            echo json_encode($transferencia->listarDetalle($_POST['sede'] ?? $_SESSION['ga-idSedeUsu'], $_POST['docentry']));
+            echo json_encode($transferencia->listarTransferencias_A($_POST['fechaI'], $_POST['fechaF'], $_POST['search'], $_POST['page'], $_POST['limit']));
             break;
 
         case 3:
-            // Listar los archivos de la solicitud asociada a la transferencia
-            echo json_encode($transferencia->listaFiles($_POST['solicitud']));
+            // Listar los detalles de una transferencia
+            echo json_encode($transferencia->listarTransferencias($_SESSION['ga-idSedeUsu'], $_POST['fechaI'], $_POST['fechaF'], $_POST['search'], $_POST['page'], $_POST['limit']));
             break;
 
         case 4:
-            // Listar las transferencias
-            echo json_encode($transferencia->listarTransferenciasAdm($_POST['fechaI'], $_POST['fechaF']));
+            // Listar los archivos de la solicitud asociada a la transferencia
+            echo json_encode($transferencia->buscarDetalle($_POST['sede'] ?? $_SESSION['ga-idSedeUsu'],  $_POST['docentry']));
             break;
 
         default:

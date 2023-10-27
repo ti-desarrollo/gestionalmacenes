@@ -8,7 +8,7 @@ if (isset($_REQUEST, $_SESSION)) {
     switch ($_REQUEST['task']) {
         case 1:
             // Paginación
-            echo json_encode($entrada->paginacion($_POST['fechaI'], $_POST['fechaF'], $_POST['search'], in_array($_SESSION['ga-idPerfilUsu'], [2, 3]) ? $_SESSION['ga-idSedeUsu']: null));
+            echo json_encode($entrada->paginacion($_POST['fechaI'], $_POST['fechaF'], $_POST['search'], $_POST['flag'] === "0" ? $_SESSION['ga-idSedeUsu'] : null));
             break;
 
         case 2:

@@ -23,3 +23,15 @@ function filterTable(filter, table) {
     }
   }
 }
+
+/**Fila visitada */
+function rowSelected(id) {
+  const tbdl = document.getElementById("tbdl");
+  let rows = tbdl.getElementsByTagName("tr");
+  for (let i = 0; i < rows.length; i++) {
+    const row = rows[i];
+    const idRow = row.getAttribute("id");
+    const shouldAddClass = idRow === `row${id}`;
+    row.classList.toggle("blob", shouldAddClass);
+  }
+}

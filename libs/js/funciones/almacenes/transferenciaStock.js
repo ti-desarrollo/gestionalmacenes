@@ -21,10 +21,10 @@ document.addEventListener("DOMContentLoaded", () => {
   initLoad();
 });
 
-const controller = "../../controllers/EntradaMercanciaController.php";
+const controller = "../../controllers/TransferenciaStockController.php";
 const limit = 20;
 var currentPage = 1;
-var currentEM = null;
+var currentTS = null;
 
 /**FUNCIONES PARA ADMINISTRATIVOS */
 function initLoad() {
@@ -41,7 +41,7 @@ function initLoad() {
       fechaI,
       fechaF,
       search,
-      flag,
+      flag
     },
     function (response) {
       let totalItems = parseInt(response === 0 ? 1 : response);
@@ -73,13 +73,13 @@ function initLoad() {
 }
 
 function listar(fechaI, fechaF, search, page, limit) {
+  const task = 3;
   const tbody = document.getElementById("tbdl");
   const button = document.getElementById("btnR");
-  tbody.innerHTML = `<tr><td colspan="13"><i class="fa fa-spinner fa-2x fa-spin"></i></td></tr>`;
+  tbody.innerHTML = `<tr><td colspan="9"><i class="fa fa-spinner fa-2x fa-spin"></i></td></tr>`;
   button.innerHTML =
     '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Cargando';
 
-  const task = 3;
   $.post(
     controller,
     {
@@ -96,21 +96,20 @@ function listar(fechaI, fechaF, search, page, limit) {
 
       if (datos.length > 0) {
         datos.forEach((element) => {
-          tbody.innerHTML += `
-            <tr id="row${element.docentryEntrada}">
-                <td>${element.pedido}</td>
-                <td>${element.entrada}</td>
-                <td>${element.proveedor}</td>
-                <td>${element.fechaRecepcion}</td>
-                <td>${element.guia}</td>
-                <td class="text-primary" onclick="verDetalle(${element.docentryEntrada})">${element.docentryEntrada}</td>
-                <td>${element.adjuntos}</td>
-                <td id="tdDownload_${element.docentryEntrada}" onclick='layout(${element.docentryEntrada})'><i class="fa fa-download" aria-hidden="true" style="color: #4caf50;"></i></td>
-            </tr>
-            `;
+          tbody.innerHTML += `<tr id="row${element.docentry}">
+          <td class="text-primary" onclick="verDetalle(${element.docentry})">${element.docentry}</td>
+          <td>${element.guia}</td>
+          <td>${element.fecha}</td>
+          <td>${element.origen}</td>
+          <td>${element.categoriaVehiculo}</td>
+          <td>${element.modalidadTraslado}</td>
+          <td>${element.transportista}</td>
+          <td>${element.adjuntos}</td>
+          <td id="tdDownload_${element.docentry}" onclick='layoutTransferencia(${element.docentry})'><i class="fa fa-download" aria-hidden="true" style="color: #4caf50;"></i></td>
+          </tr>`;
         });
       } else {
-        tbody.innerHTML = `<tr><td colspan="13">Sin resultados</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="9">Sin resultados</td></tr>`;
       }
 
       button.innerHTML = '<i class="fa fa-play"></i> REPORTAR';
@@ -118,20 +117,21 @@ function listar(fechaI, fechaF, search, page, limit) {
   );
 }
 
-function verDetalle(docentry) {
+function verDetalle(docentry, sede) {
   /**Agregar clase para saber que fila fue la que abrimos */
   rowSelected(docentry);
-
   const task = 4;
+
   const tbody = document.getElementById("tbd");
   tbody.innerHTML = "";
   document.getElementById("dl").style.display = "none";
   document.getElementById("dd").style.display = "block";
-  $.post(controller, { task, docentry }, function (response) {
+
+  $.post(controller, { task, docentry, sede }, function (response) {
     const datos = JSON.parse(response);
     document.getElementById("txtNumGuia").value = datos[0].guia;
-    document.getElementById("txtNumDoc").value = datos[0].entrada;
-    document.getElementById("txtFechaDoc").value = datos[0].fechaRecepcion;
+    document.getElementById("txtNumDoc").value = datos[0].transferencia;
+    document.getElementById("txtFechaDoc").value = datos[0].fecha;
     document.getElementById("txtTipo").value = datos[0].tipo;
 
     datos.forEach((element, index) => {
@@ -145,11 +145,12 @@ function verDetalle(docentry) {
   });
 }
 
-function layout(docentry) {
+function layout(docentry, sede) {
   document.getElementById(`tdDownload_${docentry}`).innerHTML =
     '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
-  const task = 5;
-  $.post(controller, { task, docentry }, function (response) {
+  const task = 4;
+
+  $.post(controller, { task, docentry, sede }, function (response) {
     const datos = JSON.parse(response);
     pdf(datos);
   });
@@ -158,82 +159,63 @@ function layout(docentry) {
 function pdf(data) {
   let pdf = new jsPDF();
 
-  // Logo
-  pdf.setFontSize(12);
+  pdf.setFontSize(14);
   pdf.setFontType("bold");
-  pdf.text("3AAMSEQ S.A", 180, 10, "right");
+  pdf.text(`Nota de Transferencia N°${data[0].docnum}`, 105, 10, "center");
 
-  // Titulo
-  pdf.setFontSize(12);
-  pdf.setFontType("bold");
-  pdf.text(
-    `NOTA DE RECEPCIÓN DE MERCADERÍA N° ${data[0].DocNum}`,
-    105,
-    20,
-    "center"
-  );
+  // Cuadro cabecera
+  pdf.setLineWidth(0.25);
+  pdf.line(10, 20, 200, 20); // Arriba
+  pdf.line(10, 38, 200, 38); // Abajo
+  pdf.line(10, 20, 10, 38); // Izquierda
+  pdf.line(200, 20, 200, 38); // Derecha
 
-  // Información leyenda
-  // Derecha
+  // Información cabecera
   pdf.setFontSize(10);
-  pdf.setFontType("bold");
-  // Primera línea
-  pdf.text("Empresa:", 10, 35);
-  pdf.text("RUC:", 100, 35);
-  // Segunda línea
-  pdf.text("Creado por:", 10, 40);
-  pdf.text("Fecha de recepción:", 100, 40);
-  pdf.text("N° Pedido:", 160, 40);
-  // Tercera línea
-  pdf.text("Almacén entrada:", 10, 45);
-  pdf.text("Fecha de registro:", 100, 45);
-  pdf.text("Guía:", 160, 45);
-
-  // Información datos
-  // Primera línea
-  pdf.setFontSize(9);
   pdf.setFontType("normal");
-  pdf.text(data[0].NOM_CLIENTE, 27, 35);
-  pdf.text(data[0]["RUC/DNI"], 110, 35);
-  // Segunda línea
-  pdf.text(data[0].Usuario, 31, 40);
-  pdf.text(data[0].fechaRecepcion, 135, 40);
-  pdf.text(`${data[0].docnumPedido}`, 179, 40);
-  // Tercera línea
-  pdf.text(data[0]["sede entrada"], 41, 45);
-  pdf.text(data[0].fechaRegistro, 132, 45);
-  pdf.text(
-    `${data[0].TipoDoc}-${data[0].SerieDoc}-${data[0].CorreDoc}`,
-    170,
-    45
-  );
+  pdf.text(`Responsable: ${data[0].almacenero}`, 12, 25);
+  pdf.text(`Fecha: ${data[0].fecha}`, 168, 25);
+  pdf.text(`Área solicitante: ${data[0].solicitante}`, 12, 30);
+  pdf.text(`Motivo de traslado: ${data[0].motivoTraslado}`, 12, 35);
 
   // Cabecera de tabla
-  pdf.setFontSize(10);
-  pdf.setFontType("bold");
-  pdf.text("NRO", 10, 60);
-  pdf.text("CÓDIGO", 20, 60);
-  pdf.text("DESCRIPCIÓN", 40, 60);
-  pdf.text("UM", 170, 60);
-  pdf.text("CANTIDAD", 180, 60);
+  pdf.line(10, 40, 200, 40); // Arriba
+  pdf.line(10, 47, 200, 47); // Abajo
+  pdf.line(10, 40, 10, 47); // Izquierda
+  pdf.line(200, 40, 200, 47); // Derecha
+  pdf.text("Código", 12, 45);
+  pdf.text("Descripción", 32, 45);
+  pdf.text("Alm. Origen", 110, 45);
+  pdf.text("Alm. Destino", 140, 45);
+  pdf.text("UM", 170, 45);
+  pdf.text("Cantidad", 183, 45);
 
-  pdf.setFontSize(10);
-  pdf.setFontType("normal");
+  pdf.setFontSize(8);
   let height = 0;
   $.each(data, function (i) {
-    pdf.text(`${i + 1}`, 10, 65 + i * 5);
-    pdf.text(data[i].Codigo, 20, 65 + i * 5);
-    pdf.text(data[i].DESC_ART, 40, 65 + i * 5);
-    pdf.text(data[i].UNID_MEDIDA, 170, 65 + i * 5);
-    pdf.text(Number.parseFloat(data[i].CANTIDAD).toFixed(2), 180, 65 + i * 5);
-    height = 65 + i * 5;
+    pdf.text(data[i].itemcode, 12, 52 + i * 5);
+    pdf.text(data[i].descripcion, 32, 52 + i * 5);
+    pdf.text(data[i].almacenOrigen, 110, 52 + i * 5);
+    pdf.text(data[i].almacenDestino, 140, 52 + i * 5);
+    pdf.text(data[i].um, 170, 52 + i * 5);
+    pdf.text(data[i].cantidad, 183, 52 + i * 5);
+    height = 55 + i * 5;
   });
 
-  // Guardar PDF
-  pdf.save(`Entrada de mercancías - N°${data[0].DocNum}`);
+  pdf.line(10, height, 200, height); // Línea debajo de la tabla
+  // Comentarios
+  pdf.setFontSize(10);
+  pdf.setFontType("bold");
+  pdf.text("COMENTARIOS", 12, height + 5);
+  pdf.setFontSize(10);
+  pdf.setFontType("normal");
+  pdf.text(data[0].comentarios ?? "", 12, height + 10);
+
+  // Guardas el PDF
+  pdf.save(`Nota de Transferencia N°${data[0].docnum}`);
 
   // Regresamos el botón a su estado inicial
-  $(`#tdDownload_${data[0].DocEntry}`).html(
+  $(`#tdDownload_${data[0].docentry}`).html(
     '<i class="fa fa-download" aria-hidden="true" style="color: #4caf50;"></i>'
   );
 }
