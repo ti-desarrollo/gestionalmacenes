@@ -75,6 +75,38 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'], $_SESSION['ga-sedeUsu'
                     </div>
                 </div>
 
+                <!-- Lista de recepciones -->
+                <div class="col-lg-12" id="di">
+                    <div class="card mt-3">
+                        <div class="card-header">
+                            <b>Ingresos del pedido</b>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive mb-3 mt-3">
+                                <table class="table table-bordered table-striped">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Estado</th>
+                                            <th>Código</th>
+                                            <th>Fecha</th>
+                                            <th>Conformidad</th>
+                                            <th>Guía</th>
+                                            <th>Estado pedido</th>
+                                            <th>Comentario</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tbi">
+                                        <tr>
+                                            <td colspan="8">Sin resultados</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Detalle del pedido -->
                 <div class="col-lg-12" id="dd" style="display: none;">
                     <div class="card mt-3">
@@ -163,6 +195,37 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'], $_SESSION['ga-sedeUsu'
                                 <div id="layout">
 
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal de detalle de ingreso -->
+                <div class="modal fade" id="mdlIngreso" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document" style="max-width: unset; width: 50%;">
+                        <div class="modal-content" style="padding: 20px; overflow-x: scroll;">
+                            <div class="modal-header">
+                                <h4>Recepcionado con la guía N° <span id="sGuia">...</span></h4>
+                                <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">X</span></button>
+                            </div>
+                            <div class="modal-body">
+                                <table class="table table-bordered table-striped">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Código</th>
+                                            <th>Descripción</th>
+                                            <th>Cantidad pedida</th>
+                                            <th>Cantidad recibida</th>
+                                            <th>Cantidad pendiente</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tbdi">
+                                        <tr>
+                                            <td colspan="6">Sin resultados</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>

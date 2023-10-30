@@ -45,6 +45,14 @@ if (isset($_REQUEST, $_SESSION)) {
             echo json_encode($pedido->rollbackPedido($_POST['pedido'], $_POST['cabecera'], $_POST['items']));
             break;
 
+        case 10:
+            echo json_encode($pedido->listarIngresos($_POST['pedido']));
+            break;
+
+        case 11:
+            echo json_encode($pedido->buscarDetalleIngreso($_POST['pedido']));
+            break;
+
         default:
             echo json_encode('Tarea no implementada.');
             break;

@@ -28,6 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Abrir/Cerrar
   document.getElementById("closeDetalle").onclick = () => {
     document.getElementById("dl").style.display = "block";
+    document.getElementById("di").style.display = "block";
     document.getElementById("dd").style.display = "none";
   };
 
@@ -71,7 +72,7 @@ function listar() {
       if (datos.length > 0) {
         datos.forEach((element) => {
           tbody.innerHTML += `
-          <tr id="row${element.codigo}">
+          <tr id="row${element.codigo}" onclick="listarIngresos(${element.codigo})">
             <td class="text-primary" onclick="verDetalle(${element.codigo}, '${element.guia}')">${element.codigo}</td>
             <td>${element.estado}</td>
             <td>${element.pedido}</td>
@@ -91,6 +92,83 @@ function listar() {
   );
 }
 
+function listarIngresos(pedido) {
+  /**Agregar clase para saber que fila fue la que abrimos */
+  rowSelected(pedido);
+  const tbody = document.getElementById("tbi");
+  const button = document.getElementById("btnR");
+  tbody.innerHTML = `<tr><td colspan="8"><i class="fa fa-spinner fa-2x fa-spin"></i></td></tr>`;
+  button.innerHTML =
+    '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Cargando';
+  const task = 10;
+  $.post(
+    controllerPE,
+    {
+      task,
+      pedido,
+    },
+    function (response) {
+      const datos = JSON.parse(response);
+      tbody.innerHTML = "";
+      if (datos.length > 0) {
+        datos.forEach((element, index) => {
+          tbody.innerHTML += `
+            <tr>
+              <td>${index + 1}</td>
+              <td><p style="background: ${element.estadoCabecera === "ACEPTADO" ? "#4CAF50" : "#f44336"}; color: white; border-radius: 10px; padding: 2px;">${element.estadoCabecera}</p></td>
+              <td class="text-primary" onclick="verDetalleIngreso(${element.codigo}, '${element.guia}')">${element.codigo}</td>
+              <td>${element.fecha}</td>
+              <td>${element.conformidad}</td>
+              <td>${element.guia}</td>
+              <td>${element.estado}</td>
+              <td>${element.comentario}</td>
+            </tr>`;
+        });
+      } else {
+        tbody.innerHTML = `<tr><td colspan="8">Sin resultados</td></tr>`;
+      }
+
+      button.innerHTML = '<i class="fa fa-play"></i> REPORTAR';
+    }
+  );
+}
+
+function verDetalleIngreso(pedido, guia) {
+  $("#mdlIngreso").modal("toggle");  
+  document.getElementById("sGuia").innerText = guia;
+  const tbody = document.getElementById("tbdi");
+  tbody.innerHTML = `<tr><td colspan="6"><i class="fa fa-spinner fa-2x fa-spin"></i></td></tr>`;
+  const task = 11;
+  $.post(
+    controllerPE,
+    {
+      task,
+      pedido,
+    },
+    function (response) {
+      const datos = JSON.parse(response);
+      tbody.innerHTML = "";
+      if (datos.length > 0) {
+        datos.forEach((element, index) => {
+          tbody.innerHTML += `
+            <tr>
+              <td>${index + 1}</td>
+              <td>${element.item}</td>
+              <td>${element.descripcion}</td>
+              <td>${element.cantidadPedida}</td>
+              <td>${element.cantidadRecibida}</td>
+              <td>${element.cantidadPendiente}</td>
+            </tr>`;
+        });
+      } else {
+        tbody.innerHTML = `<tr><td colspan="6">Sin resultados</td></tr>`;
+      }
+
+      button.innerHTML = '<i class="fa fa-play"></i> REPORTAR';
+    }
+  );
+}
+
 function verDetalle(docentry, guia) {
   /**Agregar clase para saber que fila fue la que abrimos */
   rowSelected(docentry);
@@ -101,6 +179,7 @@ function verDetalle(docentry, guia) {
   const tbody = document.getElementById("tbd");
   tbody.innerHTML = "";
   document.getElementById("dl").style.display = "none";
+  document.getElementById("di").style.display = "none";
   document.getElementById("dd").style.display = "block";
 
   $.post(controllerPE, { task, docentry, guia }, function (response) {

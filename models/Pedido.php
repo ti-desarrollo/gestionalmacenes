@@ -167,4 +167,14 @@ class Pedido extends Conexion
         }
         return $this->simpleQuery('EXEC sp_rollbackPedido ?, ?', [$pedido, $cabecera]);
     }
+
+    public function listarIngresos(int $pedido): array
+    {
+        return $this->returnQuery('EXEC sp_listarIngresosPedido ?', [$pedido]);
+    }
+
+    public function buscarDetalleIngreso(int $pedido): array
+    {
+        return $this->returnQuery('EXEC sp_buscarDetalleIngresoPedido ?', [$pedido]);
+    }
 }
