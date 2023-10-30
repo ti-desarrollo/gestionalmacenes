@@ -72,7 +72,7 @@ class Pedido extends Conexion
         $this->simpleQuery('EXEC sp_actualizarCabeceraPedido ?, ?, ?, ?, ?, ?, ?', [$codigo, $guiaDatos[0], $guiaDatos[1], $guiaDatos[2], $estado, $comentarios, $conformidad]);
 
         // Insertamos en el aplicativo
-        $this->simpleQuery("INSERT INTO recepcion_pedido_cabecera(rpc_pedido, rpc_conformidad, rpc_usuario, rpc_guia_grr, rpc_estado, rpc_comentario) VALUES($codigo, '$conformidad', '$usuario', '$guia', '$estado', '$comentarios');", []);
+        $this->simpleQuery("INSERT INTO recepcion_pedido_cabecera(rpc_pedido, rpc_conformidad, rpc_usuario, rpc_guia_grr, rpc_estado, rpc_comentario, rpc_estado_cabecera) VALUES($codigo, '$conformidad', '$usuario', '$guia', '$estado', '$comentarios', 1);", []);
 
         // Obtenemos el id insertado
         $lastID = $this->lastId();
@@ -160,14 +160,11 @@ class Pedido extends Conexion
         return 1;
     }
 
-    public function rollbackPedido(int $pedido): array
+    public function rollbackPedido(int $pedido, int $cabecera, array $items): int
     {
-        // Cabecera en SAP
-        // Detalle en SAP
-        // Cabecera APP
-        // Detalle APP
-        // Archivos
-
-        return ['success' => true, 'message' => 'Cambios revertidos'];
+        foreach ($items as $item) {
+            $this->simpleQuery('EXEC sp_rollbackPedidoDetalle ?, ?, ?', [$pedido, $item['item'], $item['cantidadPendienteRecibida']]);
+        }
+        return $this->simpleQuery('EXEC sp_rollbackPedido ?, ?', [$pedido, $cabecera]);
     }
 }

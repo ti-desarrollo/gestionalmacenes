@@ -42,7 +42,7 @@ if (isset($_REQUEST, $_SESSION)) {
             break;
 
         case 9:
-            echo json_encode($pedido->rollbackPedido($_POST['pedido']));
+            echo json_encode($pedido->rollbackPedido($_POST['pedido'], $_POST['cabecera'], $_POST['items']));
             break;
 
         default:
