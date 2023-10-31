@@ -11,13 +11,16 @@ class Pedido extends Conexion
     }
     public function listarPedidos_A(string $inicio, string $fin): array
     {
-        $dato = $this->returnQuery('EXEC sp_listarPedidosAdministrativos ?, ?', [$inicio, $fin]);
-        $pedidos = [];
-        foreach ($dato as $pedido) {
-            $pedido['documentos'] =  $this->listarArchivos($pedido['codigoRecepcion']);
-            array_push($pedidos, $pedido);
+        $data = $this->returnQuery('EXEC sp_listarPedidosAdministrativos ?, ?', [$inicio, $fin]);
+        foreach ($data as $pedido => &$valor) {
+            $adjuntos = '';
+            $files = $this->listarArchivos($valor['codigoRecepcion'], $valor['guia']);
+            foreach ($files as $file) {
+                $adjuntos .= "<p style='margin: unset;'><a href='https://gestionalmacenes.3aamseq.com.pe/docs/pedidos/{$file['carpeta']}/RECEPCIÓN%20DE%20MERCADERÍA%20-%20ALMACÉN/{$file['year']}/{$file['mes']}/COMPRAS NACIONALES/{$file['proveedor']}/{$file['fechaFormato']}/{$file['fileName']}' target='_blank'>{$file['fileName']}</a></p>";
+            }
+            $valor['adjuntos'] = $adjuntos;
         }
-        return $pedidos;
+        return $data;
     }
 
     public function listarPedidos(string $sede, string $inicio, string $fin): array
@@ -89,15 +92,15 @@ class Pedido extends Conexion
         return $this->returnQuery('EXEC SBO_3AAMSEQ_OrdenVenta.dbo.SYP_LYT_COMOC01 ?', [$codigo]);
     }
 
-    public function listarArchivos(string $codigo): array
+    public function listarArchivos(string $codigo, string $guia): array
     {
-        return $this->returnQuery('SELECT dp_documento FROM documentos_pedido WHERE dp_pedido = ?', [$codigo]);
+        return $this->returnQuery('sp_listarDocumentosPedido ?, ?', [$codigo, $guia]);
     }
 
 
     public function uploadFile(int $cabecera, string $dir, array $data): array
     {
-        $directorio = "..\\ALMACEN - TIENDA\\$dir";
+        $directorio = "\\\amseq-files\\ALMACEN - TIENDA\\$dir";
         $file = json_decode(json_encode($data));
         $name = date('Ymd_his_') . str_replace(' ', '_', $file->name);
         $location = $directorio . '/' . $name;
@@ -124,23 +127,23 @@ class Pedido extends Conexion
                     if ($this->insertFile($name, $cabecera) > 0) {
                         return ['success' => true, 'message' => $name];
                     }
-                    return ['success' => false, 'message' => "El archivo $name fue subido, pero hubo un error al insertar. Por favor intente otra vez"];
+                    return ['success' => false, 'message' => "::ERROR:\n[*] El archivo $name fue subido, pero hubo un error al insertar. Por favor intente otra vez"];
                 }
-                return ['success' => false, 'message' => "No se pudo subir el archivo $name, por el siguiente motivo: {$file->error}"];
+                return ['success' => false, 'message' => "::ERROR:\n[*] No se pudo subir el archivo $name, por el siguiente motivo: {$file->error}"];
             }
-            return ['success' => false, 'message' => 'Archivo no permitido'];
+            return ['success' => false, 'message' => '::ERROR:\n[*] Archivo no permitido'];
         }
-        return ['success' => false, 'message' => 'El directorio no se puede escribir o no existe. Directorio: ' .  $directorio];
+        return ['success' => false, 'message' => '::ERROR:\n[*] El directorio no se puede escribir o no existe. Directorio: ' .  $directorio];
     }
 
     private function validateFileName(string $dir, string $fileName): array
     {
-        $directorio = "..\\ALMACEN - TIENDA\\$dir";
+        $directorio = "\\\amseq-files\\ALMACEN - TIENDA\\$dir";
         if (file_exists($directorio)) {
             $files = array_diff(scandir($directorio), array('.', '..'));
             foreach ($files as $x) {
                 if (substr($x, 16) === $fileName) {
-                    return ['success' => false, 'message' => "El archivo $fileName ya está cargado. Intenta con otro archivo"];
+                    return ['success' => false, 'message' => "::ERROR:\n[*] El archivo $fileName ya está cargado. Intenta con otro archivo"];
                     break;
                 }
             }
@@ -176,5 +179,21 @@ class Pedido extends Conexion
     public function buscarDetalleIngreso(int $pedido): array
     {
         return $this->returnQuery('EXEC sp_buscarDetalleIngresoPedido ?', [$pedido]);
+    }
+
+    public function rechazarRecepcion(int $pedido, int $cabecera, string $guia, array $items): array
+    {
+        foreach ($items as $item) {
+            $this->simpleQuery('EXEC sp_rollbackPedidoDetalle ?, ?, ?', [$pedido, $item['item'], floatval($item['cantidad'])]);
+        }
+        $files = $this->listarArchivos($cabecera, $guia);
+        foreach ($files as $file) {
+            $file = "\\\amseq-files\\ALMACEN - TIENDA\\{$file['carpeta']}\\RECEPCIÓN DE MERCADERÍA - ALMACÉN\\{$file['year']}\\{$file['mes']}\\COMPRAS NACIONALES\\{$file['proveedor']}\\{$file['fechaFormato']}\\{$file['fileName']}";
+            unlink($file);
+        }
+        if ($this->simpleQuery('EXEC sp_rechazarRecepcionPedido ?, ?', [$pedido, $cabecera]) > 0) {
+            return ['success' => true, 'message' => '::MENSAJE:\n[*] Recepción rechazada'];
+        }
+        return ['success' => false, 'message' => '::ERROR:\n[*] Hubo un error al rechazar la recepción, consulte con el área de TI'];
     }
 }

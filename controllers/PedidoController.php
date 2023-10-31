@@ -53,6 +53,9 @@ if (isset($_REQUEST, $_SESSION)) {
             echo json_encode($pedido->buscarDetalleIngreso($_POST['pedido']));
             break;
 
+        case 12:
+            echo json_encode($pedido->rechazarRecepcion($_POST['pedido'], $_POST['cabecera'], $_POST['guia'], $_POST['items']));
+            break;
         default:
             echo json_encode('Tarea no implementada.');
             break;
