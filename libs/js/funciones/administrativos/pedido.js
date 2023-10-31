@@ -132,27 +132,49 @@ function rechazarRecepcion(datos) {
       cantidad: element.cantidadRecibida,
     });
   });
-  if (
-    confirm(
-      "::CONFIRMACIÓN:\n[*] ¿Está seguro de rechazar la recepción del pedido? Esta acción es irreversible"
-    )
-  ) {
-    const task = 12;
-    $.post(
-      controllerPE_A,
-      {
-        task,
-        pedido,
-        cabecera,
-        guia,
-        items,
-      },
-      function (response) {
-        const datos = JSON.parse(response);
-        alert(datos.message);
-        listar();
-        document.getElementById("closeDetalle").click();
+  const task = 12;
+
+  Swal.fire({
+    text: "Ingres el motivo del rechazo",
+    input: "text",
+    inputAttributes: {
+      autocapitalize: "off",
+      required: true,
+    },
+    showCancelButton: true,
+    confirmButtonText: "Si, rechazar",
+    cancelButtonText: "No, cancelar",
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    showLoaderOnConfirm: true,
+    preConfirm: (comentarios) => {
+      if (!comentarios) {
       }
-    );
-  }
+      return $.post(
+        controllerPE_A,
+        {
+          task,
+          pedido,
+          cabecera,
+          guia,
+          items,
+          comentarios,
+        },
+        function (response) {
+          return JSON.parse(response);
+        }
+      );
+    },
+    allowOutsideClick: () => !Swal.isLoading(),
+  }).then((result) => {
+    if (result.isConfirmed) {
+      const response = JSON.parse(result.value);
+      Swal.fire({
+        icon: response.success ? "success" : "error",
+        title: response.message,
+      });
+      listar();
+      document.getElementById("closeDetalle").click();
+    }
+  });
 }

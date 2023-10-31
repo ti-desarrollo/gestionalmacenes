@@ -115,8 +115,14 @@ function listarIngresos(pedido) {
           tbody.innerHTML += `
             <tr>
               <td>${index + 1}</td>
-              <td><p style="background: ${element.estadoCabecera === "ACEPTADO" ? "#4CAF50" : "#f44336"}; color: white; border-radius: 10px; padding: 2px;">${element.estadoCabecera}</p></td>
-              <td class="text-primary" onclick="verDetalleIngreso(${element.codigo}, '${element.guia}')">${element.codigo}</td>
+              <td><p style="background: ${
+                element.estadoCabecera === "ACEPTADO" ? "#4CAF50" : "#f44336"
+              }; color: white; border-radius: 10px; padding: 2px;">${
+            element.estadoCabecera
+          }</p></td>
+              <td class="text-primary" onclick="verDetalleIngreso(${
+                element.codigo
+              }, '${element.guia}')">${element.codigo}</td>
               <td>${element.fecha}</td>
               <td>${element.conformidad}</td>
               <td>${element.guia}</td>
@@ -134,7 +140,7 @@ function listarIngresos(pedido) {
 }
 
 function verDetalleIngreso(pedido, guia) {
-  $("#mdlIngreso").modal("toggle");  
+  $("#mdlIngreso").modal("toggle");
   document.getElementById("sGuia").innerText = guia;
   const tbody = document.getElementById("tbdi");
   tbody.innerHTML = `<tr><td colspan="6"><i class="fa fa-spinner fa-2x fa-spin"></i></td></tr>`;
@@ -748,17 +754,29 @@ async function procesar(pedido) {
     guia.split("-")[1].substring(0, 1) === "E" ||
     guia.split("-")[1].substring(1, 1) === "G"
   ) {
-    alert("::MENSAJE:\n[*] El número de guía no es válido");
+    Swal.fire({
+      icon: "error",
+      title: "¡Uy!",
+      text: "El número de guía no es válido",
+    });
     return;
   }
 
   if (conformidad === "00") {
-    alert("::MENSAJE:\n[*] Selecciona si está conforme o no conforme");
+    Swal.fire({
+      icon: "error",
+      title: "¡Uy!",
+      text: "Selecciona si está conforme o no conforme",
+    });
     return;
   }
 
   if (inputFile.files.length < 1) {
-    alert("::MENSAJE:\n[*] Debes subir al menos un archivo");
+    Swal.fire({
+      icon: "error",
+      title: "¡Uy!",
+      text: "Debes subir al menos un archivo",
+    });
     return;
   }
 
@@ -767,9 +785,12 @@ async function procesar(pedido) {
     let size = inputFile.files[i].size;
     let fileName = inputFile.files[i].name;
     if (size > maxFileSize) {
-      alert(
-        `::ERROR:\n[*] El archivo ${inputFile.files[i].name} supera el tamaño permitido de ${maxFileSize}.`
-      );
+      Swal.fire({
+        icon: "error",
+        title: "¡Uy!",
+        text: `El archivo ${inputFile.files[i].name} supera el tamaño permitido de ${maxFileSize}.`,
+      });
+
       continuar = false;
       break;
     }
@@ -784,84 +805,103 @@ async function procesar(pedido) {
   }
 
   if (!isName) {
-    alert(
-      "::ERROR\n[*] El nombre de uno tus archivos debe ser el número de guía que ingresaste"
-    );
+    Swal.fire({
+      icon: "error",
+      title: "¡Uy!",
+      text: "El nombre de uno tus archivos debe ser el número de guía que ingresaste",
+    });
     return;
   }
 
-  if (
-    confirm(
-      "::CONFIRMACIÓN:\n[*] ¿Está seguro de procesar el pedido? Esta acción es irreversible"
-    )
-  ) {
-    document.querySelectorAll("td.inputQPedida").forEach(function (item, _) {
-      itemsPedidos.push(parseFloat(item.innerHTML ?? 0));
-    });
-    document.querySelectorAll("td.inputQRecibida").forEach(function (item, _) {
-      itemsRecibidos.push(parseFloat(item.innerHTML ?? 0));
-    });
+  document.querySelectorAll("td.inputQPedida").forEach(function (item, _) {
+    itemsPedidos.push(parseFloat(item.innerHTML ?? 0));
+  });
+  document.querySelectorAll("td.inputQRecibida").forEach(function (item, _) {
+    itemsRecibidos.push(parseFloat(item.innerHTML ?? 0));
+  });
 
-    document
-      .querySelectorAll("input.inputQRecepcionada")
-      .forEach(function (item, index) {
-        items.push({
-          item: item.parentNode.parentNode.children.item(1).innerHTML,
-          cantidadPendienteRecibida: parseFloat(
-            item.value === "" ? 0 : item.value
-          ),
-          cantidadRecibida: parseFloat(itemsRecibidos[index]),
-          cantidadPedida: parseFloat(itemsPedidos[index]),
-        });
+  document
+    .querySelectorAll("input.inputQRecepcionada")
+    .forEach(function (item, index) {
+      items.push({
+        item: item.parentNode.parentNode.children.item(1).innerHTML,
+        cantidadPendienteRecibida: parseFloat(
+          item.value === "" ? 0 : item.value
+        ),
+        cantidadRecibida: parseFloat(itemsRecibidos[index]),
+        cantidadPedida: parseFloat(itemsPedidos[index]),
       });
-
-    items.forEach((item, _) => {
-      if (
-        item.cantidadPedida !==
-        item.cantidadRecibida + item.cantidadPendienteRecibida
-      ) {
-        estado = "RP";
-        return;
-      }
     });
 
-    // Actualizamos el pedido
-    responsePedido = await procesarPedido(
-      items,
-      guia,
-      docentry,
-      comentarios,
-      conformidad,
-      estado
-    );
-
-    if (responsePedido.success) {
-      cabecera = responsePedido.data.cabecera;
-      for (let i = 0; i < inputFile.files.length; i++) {
-        responseFile = await uploadFile(cabecera, dir, inputFile.files[i]);
-        if (!responseFile.success) {
-          continuar = false;
-          break;
-        }
-      }
-      if (continuar) {
-        sendNotification(
-          pedido[0].documento,
-          pedido[0].sede,
-          responsePedido.data.usuario,
-          pedido[0].proveedor,
-          pedido[0].guia,
-          conformidad
-        );
-        alert(responsePedido.message);
-      } else {
-        alert(responseFile.message);
-        rollbackPedido(docentry, cabecera, items);
-      }
-    } else {
-      alert(responsePedido.message);
+  items.forEach((item, _) => {
+    if (
+      item.cantidadPedida !==
+      item.cantidadRecibida + item.cantidadPendienteRecibida
+    ) {
+      estado = "RP";
+      return;
     }
-  }
+  });
+
+  Swal.fire({
+    title: "¿Está seguro de procesar el pedido?",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Si, procesar",
+    cancelButtonText: "No, cancelar",
+    showLoaderOnConfirm: true,
+    preConfirm: async () => {
+      responsePedido = await procesarPedido(
+        items,
+        guia,
+        docentry,
+        comentarios,
+        conformidad,
+        estado
+      );
+
+      if (responsePedido.success) {
+        cabecera = responsePedido.data.cabecera;
+        for (let i = 0; i < inputFile.files.length; i++) {
+          responseFile = await uploadFile(cabecera, dir, inputFile.files[i]);
+          if (!responseFile.success) {
+            continuar = false;
+            break;
+          }
+        }
+        if (continuar) {
+          sendNotification(
+            pedido[0].documento,
+            pedido[0].sede,
+            responsePedido.data.usuario,
+            pedido[0].proveedor,
+            pedido[0].guia,
+            conformidad
+          );
+          return responsePedido;
+        }
+
+        rollbackPedido(docentry, cabecera, items);
+        return responseFile;
+      }
+
+      return responsePedido;
+    },
+    allowOutsideClick: () => !Swal.isLoading(),
+  }).then(async (result) => {
+    if (result.isConfirmed) {
+      if (result.value.success) {
+        listar();
+        verDetalle(docentry, guia);
+      }
+      Swal.fire({
+        icon: result.value.success ? "success" : "error",
+        title: result.value.message,
+      });
+    }
+  });
 }
 
 async function procesarPedido(

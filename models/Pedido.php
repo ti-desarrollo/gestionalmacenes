@@ -49,15 +49,15 @@ class Pedido extends Conexion
                 }
 
                 if ($isUpdate) {
-                    $response = ['success' => true, 'message' => '::MENSAJE:\n[*] Pedido procesado', 'data' => ['cabecera' => $cabecera, 'usuario' => $usuario]];
+                    $response = ['success' => true, 'message' => 'Pedido procesado', 'data' => ['cabecera' => $cabecera, 'usuario' => $usuario]];
                 } else {
-                    $response = ['success' => false, 'message' => '::ERROR:\n[*] Hubo un error al procesar el pedido. Por favor, comuníquese con sistemas'];
+                    $response = ['success' => false, 'message' => 'Hubo un error al procesar el pedido. Por favor, comuníquese con sistemas'];
                 }
             } else {
-                $response = ['success' => false, 'message' => '::ERROR:\n[*] Hubo un error al procesar el pedido. Por favor, comuníquese con sistemas'];
+                $response = ['success' => false, 'message' => 'Hubo un error al procesar el pedido. Por favor, comuníquese con sistemas'];
             }
         } else {
-            $response = ['success' => false, 'message' => '::ERROR:\n[*] Este pedido ya fue RECEPCIONADO anteriormente'];
+            $response = ['success' => false, 'message' => 'Este pedido ya fue RECEPCIONADO anteriormente'];
         }
 
         return $response;
@@ -127,13 +127,13 @@ class Pedido extends Conexion
                     if ($this->insertFile($name, $cabecera) > 0) {
                         return ['success' => true, 'message' => $name];
                     }
-                    return ['success' => false, 'message' => "::ERROR:\n[*] El archivo $name fue subido, pero hubo un error al insertar. Por favor intente otra vez"];
+                    return ['success' => false, 'message' => "El archivo $name fue subido, pero hubo un error al insertar. Por favor intente otra vez"];
                 }
-                return ['success' => false, 'message' => "::ERROR:\n[*] No se pudo subir el archivo $name, por el siguiente motivo: {$file->error}"];
+                return ['success' => false, 'message' => "No se pudo subir el archivo $name, por el siguiente motivo: {$file->error}"];
             }
-            return ['success' => false, 'message' => '::ERROR:\n[*] Archivo no permitido'];
+            return ['success' => false, 'message' => 'Archivo no permitido'];
         }
-        return ['success' => false, 'message' => '::ERROR:\n[*] El directorio no se puede escribir o no existe. Directorio: ' .  $directorio];
+        return ['success' => false, 'message' => 'El directorio no se puede escribir o no existe. Directorio: ' .  $directorio];
     }
 
     private function validateFileName(string $dir, string $fileName): array
@@ -143,7 +143,7 @@ class Pedido extends Conexion
             $files = array_diff(scandir($directorio), array('.', '..'));
             foreach ($files as $x) {
                 if (substr($x, 16) === $fileName) {
-                    return ['success' => false, 'message' => "::ERROR:\n[*] El archivo $fileName ya está cargado. Intenta con otro archivo"];
+                    return ['success' => false, 'message' => "El archivo $fileName ya está cargado. Intenta con otro archivo"];
                     break;
                 }
             }
@@ -181,7 +181,7 @@ class Pedido extends Conexion
         return $this->returnQuery('EXEC sp_buscarDetalleIngresoPedido ?', [$pedido]);
     }
 
-    public function rechazarRecepcion(int $pedido, int $cabecera, string $guia, array $items): array
+    public function rechazarRecepcion(int $pedido, int $cabecera, string $guia, array $items, string $comentarios, string $usuario): array
     {
         foreach ($items as $item) {
             $this->simpleQuery('EXEC sp_rollbackPedidoDetalle ?, ?, ?', [$pedido, $item['item'], floatval($item['cantidad'])]);
@@ -191,9 +191,9 @@ class Pedido extends Conexion
             $file = "\\\amseq-files\\ALMACEN - TIENDA\\{$file['carpeta']}\\RECEPCIÓN DE MERCADERÍA - ALMACÉN\\{$file['year']}\\{$file['mes']}\\COMPRAS NACIONALES\\{$file['proveedor']}\\{$file['fechaFormato']}\\{$file['fileName']}";
             unlink($file);
         }
-        if ($this->simpleQuery('EXEC sp_rechazarRecepcionPedido ?, ?', [$pedido, $cabecera]) > 0) {
-            return ['success' => true, 'message' => '::MENSAJE:\n[*] Recepción rechazada'];
+        if ($this->simpleQuery('EXEC sp_rechazarRecepcionPedido ?, ?, ?, ?', [$pedido, $cabecera, $usuario, $comentarios]) > 0) {
+            return ['success' => true, 'message' => 'Recepción rechazada'];
         }
-        return ['success' => false, 'message' => '::ERROR:\n[*] Hubo un error al rechazar la recepción, consulte con el área de TI'];
+        return ['success' => false, 'message' => 'Hubo un error al rechazar la recepción, consulte con el área de TI'];
     }
 }

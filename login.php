@@ -16,20 +16,31 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'])) {
         <meta name="author" content="">
         <title>3AAMSEQ SA - Gestión de Almacén</title>
         <link href="media/logotipo.ico" rel="shortcut icon" type="image/ico">
-        <!-- Bootstrap core CSS-->
+
+        <!-- Bootstrap CSS -->
         <link href="libs/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-        <!-- Custom fonts for this template-->
+
+        <!-- Icons -->
         <link href="libs/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-        <!-- Custom styles for this template-->
+
+        <!-- Estilos -->
         <link href="libs/css/sb-admin.css" rel="stylesheet">
         <link href="libs/css/estilos.css" rel="stylesheet">
 
-        <!-- Bootstrap core JavaScript-->
+        <!-- SweetAlert2 CSS -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.9.0/sweetalert2.min.css" integrity="sha512-IScV5kvJo+TIPbxENerxZcEpu9VrLUGh1qYWv6Z9aylhxWE4k4Fch3CHl0IYYmN+jrnWQBPlpoTVoWfSMakoKA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+        <!-- Bootstrap JS -->
         <script src="libs/jquery/jquery.min.js"></script>
         <script src="libs/bootstrap/js/bootstrap.min.js"></script>
-        <!-- Core plugin JavaScript-->
+
+        <!-- Easing JS -->
         <script src="libs/jquery-easing/jquery.easing.min.js"></script>
 
+        <!-- SweetAlert2 JS -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.9.0/sweetalert2.all.min.js" integrity="sha512-LTmGiRLYz7G5Sxr4MMXGaOfia3kGZKGAlXzrSCGc4GBGxymu1RGwhFFGwiOQUm+bJOGlV0AmHd1S7zeFlwzkFQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+        <!-- Funciones propias -->
         <script src="libs/js/funciones/usuario.js"></script>
     </head>
 

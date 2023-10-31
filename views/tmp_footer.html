@@ -23,7 +23,7 @@
 <script src="../../firebase-messaging.js"></script>
 <script src="../../firebase-messaging-sw.js"></script>
 <script>
-    messaging.onMessage((payload) => { alert(`::MENSAJE:\n[*] ${payload.data.body}`); });
+    messaging.onMessage((payload) => { alert(`${payload.data.body}`); });
 </script>
 </div>
 </body>

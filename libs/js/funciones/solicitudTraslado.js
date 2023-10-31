@@ -325,7 +325,7 @@ function procesarSolicitud(
   archivos
 ) {
   if (archivos <= 0) {
-    alert("::MENSAJE:\n[*] No adjuntaste tus guías");
+    alert("No adjuntaste tus guías");
     return;
   }
 
@@ -337,13 +337,13 @@ function procesarSolicitud(
 
   if (guiaT.length > 0) {
     if (!patron.test(guiaT)) {
-      alert("::MENSAJE:\n[*] El número de guía no es válido");
+      alert("El número de guía no es válido");
       return;
     }
   }
 
   if (conformidad === "00") {
-    alert("::MENSAJE:\n[*] Selecciona si está conforme o no conforme");
+    alert("Selecciona si está conforme o no conforme");
     return;
   }
 
@@ -363,13 +363,13 @@ function procesarSolicitud(
     }
   }
   if (!continuar) {
-    alert("::MENSAJE:\n[*] Debes indicar la cantidad recepcionada");
+    alert("Debes indicar la cantidad recepcionada");
     return;
   }
 
   if (
     confirm(
-      "::MENSAJE:\n[*] ¿Está seguro de procesare la guía? Recuerda que las guías procesadas no pueden modificarse."
+      "¿Está seguro de procesare la guía? Recuerda que las guías procesadas no pueden modificarse."
     )
   ) {
     $.post(
@@ -409,14 +409,14 @@ async function subirFilesSolicitudes(docentry) {
   if (input.files.length >= 1) {
     if (
       confirm(
-        "::MENSAJE:\n[*] ¿Está seguro de subir los archivos? Esta acción es irreversible"
+        "¿Está seguro de subir los archivos? Esta acción es irreversible"
       )
     ) {
       for (let i = 0; i < input.files.length; i++) {
         let size = input.files[i].size;
         if (size > maxFileSize) {
           alert(
-            `::ERROR:\n[*] El archivo ${input.files[i].name} supera el tamaño permitido de ${maxFileSize}`
+            `El archivo ${input.files[i].name} supera el tamaño permitido de ${maxFileSize}`
           );
           return;
         }
@@ -447,7 +447,7 @@ async function subirFilesSolicitudes(docentry) {
                     exito = true;
                   } else {
                     alert(
-                      "::ERROR:\n[*] Error al guardar archivo, por favor comunicarse con sistemas"
+                      "Error al guardar archivo, por favor comunicarse con sistemas"
                     );
                     return;
                   }
@@ -455,7 +455,7 @@ async function subirFilesSolicitudes(docentry) {
               );
             } else {
               alert(
-                "::ERROR:\n[*] Error al subir archivo, por favor comunicarse con sistemas"
+                "Error al subir archivo, por favor comunicarse con sistemas"
               );
               return;
             }
@@ -463,10 +463,10 @@ async function subirFilesSolicitudes(docentry) {
         });
       }
       listarDetalleSolicitud(docentry);
-      alert("::MENSAJE:\n[*] Archivos guardados");
+      alert("Archivos guardados");
     }
   } else {
-    alert("::ERROR:\n[*] Debes subir al menos un archivo");
+    alert("Debes subir al menos un archivo");
   }
 }
 

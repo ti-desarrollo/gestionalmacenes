@@ -60,11 +60,11 @@ class SolicitudTraslado extends Conexion
                 if (move_uploaded_file($file->tmp_name, $location)) {
                     return ['success' => true, 'message' => $name];
                 }
-                return ['success' => false, 'message' => "::ERROR:\n[*] No se pudo subir el archivo $name, por el siguiente motivo: {$file->error}"];
+                return ['success' => false, 'message' => ":No se pudo subir el archivo $name, por el siguiente motivo: {$file->error}"];
             }
-            return ['success' => false, 'message' => '::ERROR:\n[*] Archivo no permitido'];
+            return ['success' => false, 'message' => ':Archivo no permitido'];
         }
-        return ['success' => false, 'message' => '::ERROR:\n[*] El directorio no se puede escribir o no existe'];
+        return ['success' => false, 'message' => ':El directorio no se puede escribir o no existe'];
     }
 
     public function insertarFile($archivo, $solicitud): int | bool

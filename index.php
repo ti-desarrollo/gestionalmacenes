@@ -23,6 +23,9 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'])) {
         <!-- Estilos -->
         <link href="libs/css/sb-admin.css" rel="stylesheet">
         <link href="libs/css/estilos.css" rel="stylesheet">
+        
+        <!-- SweetAlert2 CSS -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.9.0/sweetalert2.min.css" integrity="sha512-IScV5kvJo+TIPbxENerxZcEpu9VrLUGh1qYWv6Z9aylhxWE4k4Fch3CHl0IYYmN+jrnWQBPlpoTVoWfSMakoKA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
         <!-- JQuery -->
         <script src="libs/jquery/jquery.min.js"></script>
@@ -31,18 +34,32 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'])) {
 
         <!-- Easing JS -->
         <script src="libs/jquery-easing/jquery.easing.min.js"></script>
+
+        <!-- SweetAlert2 JS -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.9.0/sweetalert2.all.min.js" integrity="sha512-LTmGiRLYz7G5Sxr4MMXGaOfia3kGZKGAlXzrSCGc4GBGxymu1RGwhFFGwiOQUm+bJOGlV0AmHd1S7zeFlwzkFQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
     </head>
 
     <body class="fixed-nav sticky-footer bg-dark" id="page-top">
         <script type="text/javascript">
             function logout() {
-                if (confirm("::CONFIRMACIÓN:\n[*] ¿Está seguro que desea cerrar su sesión?")) {
-                    $.post("controllers/UsuarioController.php", {
-                        task: 2
-                    }, function() {
-                        location.reload();
-                    });
-                }
+                Swal.fire({
+                    title: "¿Está seguro de salir?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Si, salir",
+                    cancelButtonText: "No, cancelar",
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.post("controllers/UsuarioController.php", {
+                            task: 2
+                        }, function() {
+                            location.reload();
+                        });
+                    }
+                });
             }
         </script>
 
@@ -148,7 +165,7 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'])) {
             <script src="firebase-messaging-sw.js"></script>
             <script>
                 messaging.onMessage((payload) => {
-                    alert(`::MENSAJE:\n[*] ${payload.data.body}`);
+                    alert(`${payload.data.body}`);
                 });
             </script>
         </div>

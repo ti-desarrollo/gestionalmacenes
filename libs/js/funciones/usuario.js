@@ -23,7 +23,11 @@ function login() {
         guardarToken(tokenFCM);
         location.reload();
       } else {
-        alert(data.message);
+        Swal.fire({
+          icon: "error",
+          title: "¡Uy!",
+          text: data.message,
+        });
       }
     }
   );
@@ -31,13 +35,21 @@ function login() {
 
 function logout() {
   const task = 2;
-  if (
-    confirm("::CONFIRMACIÓN:\n[*] ¿Está seguro que desea cerrar su sesión?")
-  ) {
-    $.post(`../../${controller}`, { task }, function () {
-      location.reload();
-    });
-  }
+  Swal.fire({
+    title: "¿Está seguro de salir?",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Si, salir",
+    cancelButtonText: "No, cancelar",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      $.post(`../../${controller}`, { task }, function () {
+        location.reload();
+      });
+    }
+  });
 }
 
 function guardarToken(token) {

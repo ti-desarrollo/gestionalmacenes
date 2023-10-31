@@ -29,12 +29,12 @@ if (isset($_REQUEST, $_SESSION)) {
                         $aux = $solicitud->actualizarDetalle($_POST['docentry'], $filaItem[0], $filaItem[1], $filaItem[2], $lastId);
                         $i = $i + $aux;
                     }
-                    $response = ['success' => true, 'message' => '::MENSAJE:\n[*] Solicitud procesada'];
+                    $response = ['success' => true, 'message' => 'Solicitud procesada'];
                 } else {
-                    $response = ['success' => false, 'message' => '::ERROR:\n[*] Hubo error al procesar la solicitud. Por favor comunicarse con sistemas'];
+                    $response = ['success' => false, 'message' => 'Hubo error al procesar la solicitud. Por favor comunicarse con sistemas'];
                 }
             } else {
-                $response = ['success' => false, 'message' => '::ERROR:\n[*] Verifica el estado de la solicitud de traslado'];
+                $response = ['success' => false, 'message' => 'Verifica el estado de la solicitud de traslado'];
             }
 
             $response['valor'] = $i;
