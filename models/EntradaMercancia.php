@@ -40,13 +40,12 @@ class EntradaMercancia extends Conexion
             $adjuntos = '';
             $files = $this->listarDocumentosPedido($valor['docentryPedido'], $valor['guia']);
             foreach ($files as $file) {
-                $adjuntos .= "<p style='margin: unset;'><a href='https://gestionalmacenes.3aamseq.com.pe/docs/pedidos/{$file['carpeta']}/RECEPCIÓN%20DE%20MERCADERÍA%20-%20ALMACÉN/{$file['year']}/{$file['mes']}/COMPRAS NACIONALES/{$file['proveedor']}/{$file['fechaFormato']}/{$file['fileName']}' target='_blank'>{$file['fileName']}</a></p>";
+                $adjuntos .= "<p style='margin: unset;'><a href='https://gestionalmacenes.3aamseq.com.pe/docs/pedidos/{$file['carpeta']}/RECEPCIÓN%20DE%20MERCADERÍA - ALMACÉN/{$file['year']}/{$file['mes']}/COMPRAS NACIONALES/{$file['proveedor']}/{$file['fechaFormato']}/{$file['fileName']}' target='_blank'>{$file['fileName']}</a></p>";
             }
             $valor['adjuntos'] = $adjuntos;
         }
         return $data;
     }
-
 
     public function listarEntradas(string $sede, string $inicio, string $fin, string $search, int $page, int $limit): array
     {
@@ -56,7 +55,7 @@ class EntradaMercancia extends Conexion
             $adjuntos = '';
             $files = $this->listarDocumentosPedido($valor['docentryPedido'], $valor['guia']);
             foreach ($files as $file) {
-                $adjuntos .= "<p style='margin: unset;'><a href='https://gestionalmacenes.3aamseq.com.pe/docs/pedidos/{$file['carpeta']}/RECEPCIÓN%20DE%20MERCADERÍA%20-%20ALMACÉN/{$file['year']}/{$file['mes']}/COMPRAS NACIONALES/{$file['proveedor']}/{$file['fechaFormato']}/{$file['fileName']}' target='_blank'>{$file['fileName']}</a></p>";
+                $adjuntos .= "<p style='margin: unset;'><a href='https://gestionalmacenes.3aamseq.com.pe/docs/pedidos/{$file['carpeta']}/RECEPCIÓN%20DE%20MERCADERÍA - ALMACÉN/{$file['year']}/{$file['mes']}/COMPRAS NACIONALES/{$file['proveedor']}/{$file['fechaFormato']}/{$file['fileName']}' target='_blank'>{$file['fileName']}</a></p>";
             }
             $valor['adjuntos'] = $adjuntos;
         }

@@ -29,10 +29,6 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'], $_SESSION['ga-sedeUsu'
                             <div class="pull-right" style="padding-bottom: 10px;">
                                 <form class="form-inline">
                                     <div class="form-group mx-2">
-                                        <label for="txtSearch">Buscar (Guía, Pedido): &nbsp;</label>
-                                        <input type="text" class="form-control" id="txtSearch" placeholder="">
-                                    </div>
-                                    <div class="form-group mx-2">
                                         <input type="date" class="form-control" id="txtFechaI" value="<?php echo date("Y-m-d") ?>">
                                     </div>
                                     <div class="form-group mx-2">

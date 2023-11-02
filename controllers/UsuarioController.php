@@ -10,10 +10,10 @@ if (isset($_REQUEST)) {
         case 1:
             // Inicio de sesión
             $response = [];
-            $result = $usuario->login($_POST['usuario'], $_POST['password']);
-            if (sizeof($result) == 1) {
-                $hour = date('H:m');
-                if ($hour > '07:30' && $hour < '18:00') {
+            $hour = date('H:m');
+            if ($hour > '07:30' && $hour < '18:00') {
+                $result = $usuario->login($_POST['usuario'], $_POST['password']);
+                if (sizeof($result) == 1) {
                     $_SESSION['ga-idUsu'] = $result[0]['id'];
                     $_SESSION['ga-naUsu'] = $result[0]['naUsuario'];
                     $_SESSION['ga-usuario'] = $result[0]['usuario'];
@@ -28,13 +28,13 @@ if (isset($_REQUEST)) {
                 } else {
                     $response = [
                         'success' => false,
-                        'message' => 'Estás fuera del horario permitido para el acceso al aplicativo'
+                        'message' => 'Credenciales no válidas, por favor intenta otra vez'
                     ];
                 }
             } else {
                 $response = [
                     'success' => false,
-                    'message' => 'Credenciales no válidas, por favor intenta otra vez'
+                    'message' => 'Estás fuera del horario permitido para el acceso al aplicativo'
                 ];
             }
             echo json_encode($response);

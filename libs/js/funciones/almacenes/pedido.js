@@ -913,7 +913,7 @@ async function procesarPedido(
   conformidad,
   estado
 ) {
-  let responseProcess;
+  let responsePedido;
   const task = 4;
   await $.post(
     controllerPE,
@@ -927,10 +927,10 @@ async function procesarPedido(
       estado,
     },
     function (response) {
-      responseProcess = JSON.parse(response);
+      responsePedido = JSON.parse(response);
     }
   );
-  return responseProcess;
+  return responsePedido;
 }
 
 async function uploadFile(cabecera, dir, file) {
@@ -957,49 +957,49 @@ async function uploadFile(cabecera, dir, file) {
 }
 
 function sendNotification(pedido, sede, usuario, proveedor, guia, conformidad) {
-  // const task = 4;
-  // $.post(
-  //   "../../controllers/UsuarioController.php",
-  //   {
-  //     task,
-  //   },
-  //   function (response) {
-  //     const data = JSON.parse(response);
-  //     data.forEach((element) => {
-  //       pushNotification(element.tokenfcm, pedido, sede);
-  //       mailNotification(
-  //         element.correo,
-  //         pedido,
-  //         sede,
-  //         usuario,
-  //         proveedor,
-  //         guia,
-  //         conformidad
-  //       );
-  //     });
-  //   }
-  // );
+  const task = 4;
+  $.post(
+    "../../controllers/UsuarioController.php",
+    {
+      task,
+    },
+    function (response) {
+      const data = JSON.parse(response);
+      data.forEach((element) => {
+        pushNotification(element.tokenfcm, pedido, sede);
+        mailNotification(
+          element.correo,
+          pedido,
+          sede,
+          usuario,
+          proveedor,
+          guia,
+          conformidad
+        );
+      });
+    }
+  );
 }
 
 function pushNotification(token, pedido, sede) {
-  // $.ajax({
-  //   url: "https://fcm.googleapis.com/fcm/send",
-  //   method: "POST",
-  //   timeout: 0,
-  //   headers: {
-  //     Authorization:
-  //       "key=AAAAIZ8QssU:APA91bHG2bnhZ4b51Bwtg-aY_zo99lofkdaLex4zGm1sy_fmU3cSdGC9fUzBvdsCbl5LK1Uu97BvvrnoDNawSvXcgpjsf1lVzzz-uYOsTdVQSvhoEdvffKeI-9mecRmiYeCox6RVhNT1",
-  //     "Content-Type": "application/json",
-  //   },
-  //   data: JSON.stringify({
-  //     to: token,
-  //     notification: {},
-  //     data: {
-  //       title: "Pedido procesado",
-  //       body: `RECEPCIÓN DE MERCADERÍA SEDE: ${sede} | PEDIDO ${pedido}`,
-  //     },
-  //   }),
-  // }).done(function () {});
+  $.ajax({
+    url: "https://fcm.googleapis.com/fcm/send",
+    method: "POST",
+    timeout: 0,
+    headers: {
+      Authorization:
+        "key=AAAAIZ8QssU:APA91bHG2bnhZ4b51Bwtg-aY_zo99lofkdaLex4zGm1sy_fmU3cSdGC9fUzBvdsCbl5LK1Uu97BvvrnoDNawSvXcgpjsf1lVzzz-uYOsTdVQSvhoEdvffKeI-9mecRmiYeCox6RVhNT1",
+      "Content-Type": "application/json",
+    },
+    data: JSON.stringify({
+      to: token,
+      notification: {},
+      data: {
+        title: "Pedido procesado",
+        body: `RECEPCIÓN DE MERCADERÍA SEDE: ${sede} | PEDIDO ${pedido}`,
+      },
+    }),
+  }).done(function () {});
 }
 
 function mailNotification(
@@ -1011,37 +1011,37 @@ function mailNotification(
   guia,
   conformidad
 ) {
-  // const task = 7;
-  // let subject = `PRUEBA - RECEPCIÓN DE MERCADERÍA SEDE: ${sede} | PEDIDO ${pedido}`;
-  // let body = `<!DOCTYPE html>
-  // <html lang="en">
-  //   <head>
-  //     <meta charset="UTF-8" />
-  //     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  //     <title>PRUEBA - RECEPCIÓN DE MERCADERÍA SEDE: ${sede} | PEDIDO ${pedido}</title>
-  //   </head>
-  //   <body>
-  //     <div>
-  //       <p>Usuario: <b>${usuario}</b></p>
-  //       <p>N° Pedido: <b>${pedido}</b></p>
-  //       <p>Proveedor: <b>${proveedor}</b></p>
-  //       <p>N° Guía: <b>${guia}</b></p>
-  //       <p>Conformidad: <b>${
-  //         conformidad === "01" ? "CONFORME" : "NO CONFORME"
-  //       }</b></p>
-  //     </div>
-  //   </body>
-  // </html>`;
-  // $.post(
-  //   controllerPE,
-  //   {
-  //     task,
-  //     body,
-  //     recipients,
-  //     subject,
-  //   },
-  //   function (_) {}
-  // );
+  const task = 7;
+  const subject = `PRUEBA - RECEPCIÓN DE MERCADERÍA SEDE: ${sede} | PEDIDO ${pedido}`;
+  const body = `<!DOCTYPE html>
+  <html lang="en">
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>PRUEBA - RECEPCIÓN DE MERCADERÍA SEDE: ${sede} | PEDIDO ${pedido}</title>
+    </head>
+    <body>
+      <div>
+        <p>Usuario: <b>${usuario}</b></p>
+        <p>N° Pedido: <b>${pedido}</b></p>
+        <p>Proveedor: <b>${proveedor}</b></p>
+        <p>N° Guía: <b>${guia}</b></p>
+        <p>Conformidad: <b>${
+          conformidad === "01" ? "CONFORME" : "NO CONFORME"
+        }</b></p>
+      </div>
+    </body>
+  </html>`;
+  $.post(
+    controllerPE,
+    {
+      task,
+      body,
+      recipients,
+      subject,
+    },
+    function (_) {}
+  );
 }
 
 function rollbackPedido(pedido, cabecera, items) {

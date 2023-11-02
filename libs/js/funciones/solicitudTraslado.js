@@ -376,7 +376,7 @@ function procesarSolicitud(
       "../../controllers/SolicitudTrasladoController.php",
       {
         task: 3,
-        arrayItems: items,
+        items,
         docentry,
         observacion,
         conformidad,
@@ -470,7 +470,7 @@ async function subirFilesSolicitudes(docentry) {
   }
 }
 
-function sendNotificationSolicitudTraslado(
+function sendNotification(
   solicitud,
   sede,
   usuario,
@@ -479,54 +479,54 @@ function sendNotificationSolicitudTraslado(
   modalidad,
   guia
 ) {
-  $.post(
-    "../../controllers/UsuarioController.php",
-    {
-      task: 4,
-    },
-    function (response) {
-      let rpta = $.parseJSON(response);
-      rpta.forEach((data) => {
-        sendPushNotificationSolicitudTraslado(data.tokenfcm, solicitud, sede);
-        sendMailNotificationSolicitudTraslado(
-          data.correo,
-          solicitud,
-          sede,
-          usuario,
-          origen,
-          destino,
-          modalidad,
-          guia
-        );
-      });
-    }
-  );
+  // $.post(
+  //   "../../controllers/UsuarioController.php",
+  //   {
+  //     task: 4,
+  //   },
+  //   function (response) {
+  //     let rpta = $.parseJSON(response);
+  //     rpta.forEach((data) => {
+  //       sendPushNotificationSolicitudTraslado(data.tokenfcm, solicitud, sede);
+  //       sendMailNotificationSolicitudTraslado(
+  //         data.correo,
+  //         solicitud,
+  //         sede,
+  //         usuario,
+  //         origen,
+  //         destino,
+  //         modalidad,
+  //         guia
+  //       );
+  //     });
+  //   }
+  // );
 }
 
-function sendPushNotificationSolicitudTraslado(token, solicitud, sede) {
-  let settings = {
-    url: "https://fcm.googleapis.com/fcm/send",
-    method: "POST",
-    timeout: 0,
-    headers: {
-      Authorization:
-        "key=AAAAIZ8QssU:APA91bHG2bnhZ4b51Bwtg-aY_zo99lofkdaLex4zGm1sy_fmU3cSdGC9fUzBvdsCbl5LK1Uu97BvvrnoDNawSvXcgpjsf1lVzzz-uYOsTdVQSvhoEdvffKeI-9mecRmiYeCox6RVhNT1",
-      "Content-Type": "application/json",
-    },
-    data: JSON.stringify({
-      to: token,
-      notification: {},
-      data: {
-        title: "Solicitud de traslado procesada",
-        body: `RECEPCIÓN DE MERCADERÍA POR TRANSFERENCIA ENTRE ALMACENES SEDE: ${sede} | SOLICITUD DE TRASLADO ${solicitud}`,
-      },
-    }),
-  };
+function pushNotification(token, solicitud, sede) {
+  // let settings = {
+  //   url: "https://fcm.googleapis.com/fcm/send",
+  //   method: "POST",
+  //   timeout: 0,
+  //   headers: {
+  //     Authorization:
+  //       "key=AAAAIZ8QssU:APA91bHG2bnhZ4b51Bwtg-aY_zo99lofkdaLex4zGm1sy_fmU3cSdGC9fUzBvdsCbl5LK1Uu97BvvrnoDNawSvXcgpjsf1lVzzz-uYOsTdVQSvhoEdvffKeI-9mecRmiYeCox6RVhNT1",
+  //     "Content-Type": "application/json",
+  //   },
+  //   data: JSON.stringify({
+  //     to: token,
+  //     notification: {},
+  //     data: {
+  //       title: "Solicitud de traslado procesada",
+  //       body: `RECEPCIÓN DE MERCADERÍA POR TRANSFERENCIA ENTRE ALMACENES SEDE: ${sede} | SOLICITUD DE TRASLADO ${solicitud}`,
+  //     },
+  //   }),
+  // };
 
-  $.ajax(settings).done(function () {});
+  // $.ajax(settings).done(function () {});
 }
 
-function sendMailNotificationSolicitudTraslado(
+function mailNotification(
   correo,
   solicitud,
   sede,
@@ -536,31 +536,31 @@ function sendMailNotificationSolicitudTraslado(
   modalidad,
   guia
 ) {
-  $.post(
-    "../../controllers/SolicitudTrasladoController.php",
-    {
-      task: 7,
-      body: `<!DOCTYPE html>
-      <html lang="en">
-        <head>
-          <meta charset="UTF-8" />
-          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-          <title>PRUEBA - RECEPCIÓN DE MERCADERÍA POR TRANSFERENCIA ENTRE ALMACENES SEDE: ${sede} | SOLICITUD DE TRASLADO ${solicitud}</title>
-        </head>
-        <body>
-          <div>
-            <p>Usuario: <b>${usuario}</b></p>
-            <p>N° Solicitud de traslado: <b>${solicitud}</b></p>
-            <p>Almacén origen: <b>${origen}</b></p>
-            <p>Almacén destino: <b>${destino}</b></p>
-            <p>Modalidad: <b>${modalidad}</b></p>
-            <p>N° Guía: <b>${guia}</b></p>
-          </div>
-        </body>
-      </html>`,
-      recipients: correo,
-      subject: `PRUEBA - RECEPCIÓN DE MERCADERÍA POR TRANSFERENCIA ENTRE ALMACENES SEDE: ${sede} | SOLICITUD DE TRASLADO ${solicitud}`,
-    },
-    function () {}
-  );
+  // $.post(
+  //   "../../controllers/SolicitudTrasladoController.php",
+  //   {
+  //     task: 7,
+  //     body: `<!DOCTYPE html>
+  //     <html lang="en">
+  //       <head>
+  //         <meta charset="UTF-8" />
+  //         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  //         <title>PRUEBA - RECEPCIÓN DE MERCADERÍA POR TRANSFERENCIA ENTRE ALMACENES SEDE: ${sede} | SOLICITUD DE TRASLADO ${solicitud}</title>
+  //       </head>
+  //       <body>
+  //         <div>
+  //           <p>Usuario: <b>${usuario}</b></p>
+  //           <p>N° Solicitud de traslado: <b>${solicitud}</b></p>
+  //           <p>Almacén origen: <b>${origen}</b></p>
+  //           <p>Almacén destino: <b>${destino}</b></p>
+  //           <p>Modalidad: <b>${modalidad}</b></p>
+  //           <p>N° Guía: <b>${guia}</b></p>
+  //         </div>
+  //       </body>
+  //     </html>`,
+  //     recipients: correo,
+  //     subject: `PRUEBA - RECEPCIÓN DE MERCADERÍA POR TRANSFERENCIA ENTRE ALMACENES SEDE: ${sede} | SOLICITUD DE TRASLADO ${solicitud}`,
+  //   },
+  //   function () {}
+  // );
 }

@@ -72,7 +72,7 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'], $_SESSION['ga-sedeUsu'
                         </div>
                     </div>
                     <div class="card-footer">
-                        :: La lista solo contiene las solicitudes de traslado que han sido procesadas. <br>
+                        :: La lista solo contiene las solicitudes de traslado que han sido procesadas
                     </div>
                 </div>
             </div>

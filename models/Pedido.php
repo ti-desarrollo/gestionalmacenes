@@ -9,6 +9,7 @@ class Pedido extends Conexion
     {
         parent::__construct();
     }
+    
     public function listarPedidos_A(string $inicio, string $fin): array
     {
         $data = $this->returnQuery('EXEC sp_listarPedidosAdministrativos ?, ?', [$inicio, $fin]);
@@ -16,7 +17,7 @@ class Pedido extends Conexion
             $adjuntos = '';
             $files = $this->listarArchivos($valor['codigoRecepcion'], $valor['guia']);
             foreach ($files as $file) {
-                $adjuntos .= "<p style='margin: unset;'><a href='https://gestionalmacenes.3aamseq.com.pe/docs/pedidos/{$file['carpeta']}/RECEPCIÓN%20DE%20MERCADERÍA%20-%20ALMACÉN/{$file['year']}/{$file['mes']}/COMPRAS NACIONALES/{$file['proveedor']}/{$file['fechaFormato']}/{$file['fileName']}' target='_blank'>{$file['fileName']}</a></p>";
+                $adjuntos .= "<p style='margin: unset;'><a href='https://gestionalmacenes.3aamseq.com.pe/docs/pedidos/{$file['carpeta']}/RECEPCIÓN DE MERCADERÍA - ALMACÉN/{$file['year']}/{$file['mes']}/COMPRAS NACIONALES/{$file['proveedor']}/{$file['fechaFormato']}/{$file['fileName']}' target='_blank'>{$file['fileName']}</a></p>";
             }
             $valor['adjuntos'] = $adjuntos;
         }
@@ -92,7 +93,7 @@ class Pedido extends Conexion
         return $this->returnQuery('EXEC SBO_3AAMSEQ_OrdenVenta.dbo.SYP_LYT_COMOC01 ?', [$codigo]);
     }
 
-    public function listarArchivos(string $codigo, string $guia): array
+    private function listarArchivos(string $codigo, string $guia): array
     {
         return $this->returnQuery('sp_listarDocumentosPedido ?, ?', [$codigo, $guia]);
     }
@@ -176,7 +177,7 @@ class Pedido extends Conexion
             $adjuntos = '';
             $files = $this->listarArchivos($valor['codigo'], $valor['guia']);
             foreach ($files as $file) {
-                $adjuntos .= "<p style='margin: unset;'><a href='https://gestionalmacenes.3aamseq.com.pe/docs/pedidos/{$file['carpeta']}/RECEPCIÓN%20DE%20MERCADERÍA%20-%20ALMACÉN/{$file['year']}/{$file['mes']}/COMPRAS NACIONALES/{$file['proveedor']}/{$file['fechaFormato']}/{$file['fileName']}' target='_blank'>{$file['fileName']}</a></p>";
+                $adjuntos .= "<p style='margin: unset;'><a href='https://gestionalmacenes.3aamseq.com.pe/docs/pedidos/{$file['carpeta']}/RECEPCIÓN DE MERCADERÍA - ALMACÉN/{$file['year']}/{$file['mes']}/COMPRAS NACIONALES/{$file['proveedor']}/{$file['fechaFormato']}/{$file['fileName']}' target='_blank'>{$file['fileName']}</a></p>";
             }
             $valor['adjuntos'] = $adjuntos;
         }

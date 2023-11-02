@@ -120,7 +120,7 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'], $_SESSION['ga-sedeUsu'
                         <div class="card-body">
                             <div class="form-group row">
                                 <div class="form-group col-xs-12 col-sm-6 col-md-4 col-lg-4 col-xl-2 col-xxl-2 mb-3">
-                                    <label for="txtGuia">N° Guía Remisión Remitente</label>
+                                    <label for="txtGuia">N° Guía RR</label>
                                     <input type="text" class="form-control form-control-sm" id="txtGuia" autocomplete="off">
                                 </div>
                                 <div class="form-group col-xs-12 col-sm-6 col-md-4 col-lg-4 col-xl-2 col-xxl-2 mb-3">
@@ -167,19 +167,12 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'], $_SESSION['ga-sedeUsu'
                                     </tbody>
                                 </table>
                             </div>
-
-                            <div id="divArchivos" class="text-center mb-3 mt-3">
-                            </div>
-                            <div id="divLoading" class="text-center" style="display: none;">
-                                <div class="spinner-border" role="status">
-                                    <span class="sr-only">Loading...</span>
-                                </div>
-                            </div>
+                            <div id="divArchivos" class="text-center mb-3 mt-3"></div>
                         </div>
                         <div class="card-footer">
                             <p>
-                                :: Verifica las cantidades antes de procesar el pedido. <br>
-                                :: Ten en cuenta que los pedidos ya procesados no pueden modificarse.
+                                :: Verifica las cantidades antes de procesar el pedido<br>
+                                :: Ten en cuenta que los pedidos ya procesados no pueden modificarse
                             </p>
                         </div>
                     </div>
