@@ -98,22 +98,16 @@ function verDetalle(docentry, sede, guia) {
         document.getElementById("btnRechazar").innerHTML = "";
       }
       datos.forEach((element, index) => {
-        let color = element.cantidadRecibida > 0 ? "#4caf50" : "#f44336";
+        let color = element.cantidadRecibida > 0 ? "#4caf50" : "";
         tbody.innerHTML += `
-            <tr>
+            <tr style="background: ${color}">
                 <td style="vertical-align: middle">${index + 1}</td>
                 <td style="vertical-align: middle">${element.item}</td>
                 <td style="vertical-align: middle">${element.descripcion}</td>
                 <td style="vertical-align: middle">${element.um}</td>
-                <td style="vertical-align: middle"><div style="background: ${color}; border-radius: 10px; color: white;  font-weight: bold;">${
-          element.cantidadPedida
-        }</div></td>
-                <td style="vertical-align: middle"><div style="background: ${color}; border-radius: 10px; color: white;  font-weight: bold;">${
-          element.cantidadRecibida
-        }</div></td>
-                <td style="vertical-align: middle"><div style="background: ${color}; border-radius: 10px; color: white;  font-weight: bold;">${
-          element.cantidadRecepcionada
-        }</div></td>
+                <td style="vertical-align: middle">${element.cantidadPedida}</td>
+                <td>${element.cantidadRecibida}</td>
+                <td>${element.cantidadRecepcionada}</td>
             </tr>
             `;
       });

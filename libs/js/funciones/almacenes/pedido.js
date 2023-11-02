@@ -97,7 +97,7 @@ function listarIngresos(pedido) {
   rowSelected(pedido);
   const tbody = document.getElementById("tbi");
   const button = document.getElementById("btnR");
-  tbody.innerHTML = `<tr><td colspan="8"><i class="fa fa-spinner fa-2x fa-spin"></i></td></tr>`;
+  tbody.innerHTML = `<tr><td colspan="9"><i class="fa fa-spinner fa-2x fa-spin"></i></td></tr>`;
   button.innerHTML =
     '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Cargando';
   const task = 10;
@@ -128,10 +128,11 @@ function listarIngresos(pedido) {
               <td>${element.guia}</td>
               <td>${element.estado}</td>
               <td>${element.comentario}</td>
+              <td>${element.adjuntos}</td>
             </tr>`;
         });
       } else {
-        tbody.innerHTML = `<tr><td colspan="8">Sin resultados</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="9">Sin resultados</td></tr>`;
       }
 
       button.innerHTML = '<i class="fa fa-play"></i> REPORTAR';
@@ -157,7 +158,9 @@ function verDetalleIngreso(pedido, guia) {
       if (datos.length > 0) {
         datos.forEach((element, index) => {
           tbody.innerHTML += `
-            <tr>
+            <tr style="background: ${
+              element.cantidadRecibida > 0 ? "#4caf50" : ""
+            }">
               <td>${index + 1}</td>
               <td>${element.item}</td>
               <td>${element.descripcion}</td>
@@ -169,8 +172,6 @@ function verDetalleIngreso(pedido, guia) {
       } else {
         tbody.innerHTML = `<tr><td colspan="6">Sin resultados</td></tr>`;
       }
-
-      button.innerHTML = '<i class="fa fa-play"></i> REPORTAR';
     }
   );
 }

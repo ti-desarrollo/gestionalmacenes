@@ -94,11 +94,12 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'], $_SESSION['ga-sedeUsu'
                                             <th>Guía</th>
                                             <th>Estado pedido</th>
                                             <th>Comentario</th>
+                                            <th>Adjuntos</th>
                                         </tr>
                                     </thead>
                                     <tbody id="tbi">
                                         <tr>
-                                            <td colspan="8">Sin resultados</td>
+                                            <td colspan="9">Sin resultados</td>
                                         </tr>
                                     </tbody>
                                 </table>

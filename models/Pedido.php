@@ -97,7 +97,6 @@ class Pedido extends Conexion
         return $this->returnQuery('sp_listarDocumentosPedido ?, ?', [$codigo, $guia]);
     }
 
-
     public function uploadFile(int $cabecera, string $dir, array $data): array
     {
         $directorio = "\\\amseq-files\\ALMACEN - TIENDA\\$dir";
@@ -151,7 +150,6 @@ class Pedido extends Conexion
         return ['success' => true, 'message' => "El archivo $fileName es válido"];
     }
 
-
     private function insertFile(string $archivo, string $pedido): int | bool
     {
         return $this->simpleQuery('INSERT INTO documentos_pedido VALUES(?, ?)', [$pedido, $archivo]);
@@ -173,7 +171,17 @@ class Pedido extends Conexion
 
     public function listarIngresos(int $pedido): array
     {
-        return $this->returnQuery('EXEC sp_listarIngresosPedido ?', [$pedido]);
+        $data = $this->returnQuery('EXEC sp_listarIngresosPedido ?', [$pedido]);
+        foreach ($data as $pedido => &$valor) {
+            $adjuntos = '';
+            $files = $this->listarArchivos($valor['codigo'], $valor['guia']);
+            foreach ($files as $file) {
+                $adjuntos .= "<p style='margin: unset;'><a href='https://gestionalmacenes.3aamseq.com.pe/docs/pedidos/{$file['carpeta']}/RECEPCIÓN%20DE%20MERCADERÍA%20-%20ALMACÉN/{$file['year']}/{$file['mes']}/COMPRAS NACIONALES/{$file['proveedor']}/{$file['fechaFormato']}/{$file['fileName']}' target='_blank'>{$file['fileName']}</a></p>";
+            }
+            $valor['adjuntos'] = $adjuntos;
+        }
+        return $data;
+
     }
 
     public function buscarDetalleIngreso(int $pedido): array
