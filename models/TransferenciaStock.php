@@ -50,13 +50,13 @@ class TransferenciaStock extends Conexion
                 $numeroSolicitud = $solicitud[0]['numeroSolicitud'];
                 $files = $this->archivosSolicitud($codigoSolicitud);
                 foreach ($files as $file) {
-                    $adjuntos .= "<p style='margin: unset;'><a href='../../docs/{$file['ds_documento']}' target='_blank'>{$file['ds_documento']}</a></p>";
+                    $adjuntos .= "<p style='margin: unset;'><a href='https://gestionalmacenes.3aamseq.com.pe/docs/pedidos/{$file['carpeta']}/RECEPCIÓN DE MERCADERÍA - ALMACÉN/{$file['year']}/{$file['mes']}/TRANSFERENCIAS/{$file['origen']}/{$file['fechaFormato']}/{$file['fileName']}' target='_blank'>{$file['fileName']}</a></p>";
                 }
             }
             $valor['adjuntos'] = $adjuntos;
             $valor['solicitud'] = $numeroSolicitud;
         }
-        return $data;
+        return $data; 
     }
 
     public function listarTransferencias(string $sede, string $inicio, string $fin, string $search, int $page, int $limit): array
@@ -72,7 +72,7 @@ class TransferenciaStock extends Conexion
                 $numeroSolicitud = $solicitud[0]['numeroSolicitud'];
                 $files = $this->archivosSolicitud($codigoSolicitud);
                 foreach ($files as $file) {
-                    $adjuntos .= "<p style='margin: unset;'><a href='../../docs/{$file['ds_documento']}' target='_blank'>{$file['ds_documento']}</a></p>";
+                    $adjuntos .= "<p style='margin: unset;'><a href='https://gestionalmacenes.3aamseq.com.pe/docs/pedidos/{$file['carpeta']}/RECEPCIÓN DE MERCADERÍA - ALMACÉN/{$file['year']}/{$file['mes']}/TRANSFERENCIAS/{$file['origen']}/{$file['fechaFormato']}/{$file['fileName']}' target='_blank'>{$file['fileName']}</a></p>";
                 }
             }
             $valor['adjuntos'] = $adjuntos;
