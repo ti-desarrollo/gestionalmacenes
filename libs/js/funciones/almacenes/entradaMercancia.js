@@ -23,7 +23,8 @@ var currentPage = 1;
 var currentEM = null;
 
 /**FUNCIONES PARA ADMINISTRATIVOS */
-function initLoad() {
+function initLoad() {  
+  document.getElementById("divPag").innerHTML = "";
   currentPage = 1;
   const task = 1;
   const flag = 0;
