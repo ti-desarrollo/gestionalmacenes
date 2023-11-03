@@ -13,12 +13,12 @@ class TransferenciaStock extends Conexion
     public function paginacion(string $inicio, string $fin, string $search, string | null $sede): int
     {
         $total = 0;
-        $sedeFilter = $sede ? " AND SBO_3AAMSEQ_OrdenVenta.dbo.sededeAlmacen((SELECT TOP 1 X.WhsCode FROM SBO_3AAMSEQ_OrdenVenta.dbo.WTR1 X WHERE T0.DocEntry = X.DocEntry)) = '$sede' " : "";
+        $sedeFilter = $sede ? " AND SBO_3AAMSEQ.dbo.sededeAlmacen((SELECT TOP 1 X.WhsCode FROM SBO_3AAMSEQ.dbo.WTR1 X WHERE T0.DocEntry = X.DocEntry)) = '$sede' " : "";
 
         $result = $this->returnQuery("SELECT
                 COUNT(T0.DocEntry) count 
-            FROM SBO_3AAMSEQ_OrdenVenta.dbo.OWTR T0 WITH(NOLOCK) 
-            INNER JOIN SBO_3AAMSEQ_OrdenVenta.dbo.OWHS T1 WITH(NOLOCK) ON T0.ToWhsCode = T1.WhsCode
+            FROM SBO_3AAMSEQ.dbo.OWTR T0 WITH(NOLOCK) 
+            INNER JOIN SBO_3AAMSEQ.dbo.OWHS T1 WITH(NOLOCK) ON T0.ToWhsCode = T1.WhsCode
             WHERE  
                 T0.CANCELED = 'N' AND 
                 T0.DocStatus = 'O' AND 
@@ -88,7 +88,7 @@ class TransferenciaStock extends Conexion
 
     private function buscarSolicitd(string | null $guia): array
     {
-        return $this->returnQuery("SELECT TOP 1 DocEntry AS 'codigoSolicitud', DocNum AS 'numeroSolicitud' FROM SBO_3AAMSEQ_OrdenVenta.dbo.OWTQ WHERE CONCAT(U_SYP_TPGR, '-', U_SYP_SDGR, '-', SUBSTRING(U_SYP_CDGR, PATINDEX('%[^0]%', U_SYP_CDGR), LEN(U_SYP_CDGR))) = ?", [$guia]);
+        return $this->returnQuery("SELECT TOP 1 DocEntry AS 'codigoSolicitud', DocNum AS 'numeroSolicitud' FROM SBO_3AAMSEQ.dbo.OWTQ WHERE CONCAT(U_SYP_TPGR, '-', U_SYP_SDGR, '-', SUBSTRING(U_SYP_CDGR, PATINDEX('%[^0]%', U_SYP_CDGR), LEN(U_SYP_CDGR))) = ?", [$guia]);
     }
 
     private function archivosSolicitud(string|null $solicitud): array

@@ -4,7 +4,7 @@ class Conexion
 {
     private $server = '10.2.3.30', $connection;
     private $config = [
-        'Database' => 'bd_magazenoj_pruebas',
+        'Database' => 'bd_magazenoj',
         'UID' => 'sa',
         'PWD' => '@123789852456_@M53Q*20*',
         'Characterset' => 'UTF-8',
