@@ -9,35 +9,7 @@ if (isset($_REQUEST)) {
     switch ($_REQUEST['task']) {
         case 1:
             // Inicio de sesión
-            $response = [];
-            $hour = date('H:m');
-            if ($hour > '07:30' && $hour < '19:00') {
-                $result = $usuario->login($_POST['usuario'], $_POST['password']);
-                if (sizeof($result) == 1) {
-                    $_SESSION['ga-idUsu'] = $result[0]['id'];
-                    $_SESSION['ga-naUsu'] = $result[0]['naUsuario'];
-                    $_SESSION['ga-usuario'] = $result[0]['usuario'];
-                    $_SESSION['ga-idSedeUsu'] = $result[0]['idSede'];
-                    $_SESSION['ga-sedeUsu'] = $result[0]['descSede'];
-                    $_SESSION['ga-perfilUsu'] = $result[0]['perfil'];
-                    $_SESSION['ga-idPerfilUsu'] = $result[0]['idPerfil'];
-                    $response = [
-                        'success' => true,
-                        'message' => 'Inicio de sesión exitoso'
-                    ];
-                } else {
-                    $response = [
-                        'success' => false,
-                        'message' => 'Credenciales no válidas, por favor intenta otra vez'
-                    ];
-                }
-            } else {
-                $response = [
-                    'success' => false,
-                    'message' => 'Estás fuera del horario permitido para el acceso al sistema'
-                ];
-            }
-            echo json_encode($response);
+            echo json_encode($usuario->login($_POST['usuario'], $_POST['password']));
             break;
 
         case 2:

@@ -11,8 +11,10 @@ class Usuario extends Conexion
 
    public function login(string $usuario, string $password): array
    {
-
-      $query = "SELECT 
+      $response = [];
+      $hour = date('H:m');
+      if ($hour > '07:30' && $hour < '18:00') {
+         $query = "SELECT 
                   T0.id
                   ,T0.usuario
                   ,T0.naUsuario
@@ -31,7 +33,32 @@ class Usuario extends Conexion
                   T0.usuario = ? COLLATE Latin1_General_CS_AS AND 
                   T0.password = ? COLLATE Latin1_General_CS_AS AND
                   T0.estado = 1";
-      return $this->returnQuery($query, [$usuario, $password]);
+         $data = $this->returnQuery($query, [$usuario, $password]);
+         if (sizeof($data) == 1) {
+            $_SESSION['ga-idUsu'] = $data[0]['id'];
+            $_SESSION['ga-naUsu'] = $data[0]['naUsuario'];
+            $_SESSION['ga-usuario'] = $data[0]['usuario'];
+            $_SESSION['ga-idSedeUsu'] = $data[0]['idSede'];
+            $_SESSION['ga-sedeUsu'] = $data[0]['descSede'];
+            $_SESSION['ga-perfilUsu'] = $data[0]['perfil'];
+            $_SESSION['ga-idPerfilUsu'] = $data[0]['idPerfil'];
+            $response = [
+               'success' => true,
+               'message' => 'Inicio de sesión exitoso'
+            ];
+         } else {
+            $response = [
+               'success' => false,
+               'message' => 'Credenciales no válidas, por favor intenta otra vez'
+            ];
+         }
+      } else {
+         $response = [
+            'success' => false,
+            'message' => 'Estás fuera del horario permitido para el acceso al sistema'
+         ];
+      }
+      return $response;
    }
 
    public function guardarToken(string $token, string $usuario, string $perfil): int| bool
