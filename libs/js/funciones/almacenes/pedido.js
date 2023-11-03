@@ -752,9 +752,8 @@ async function procesar(pedido) {
 
   if (
     guia.split("-").length !== 3 ||
-    guia.split("-")[0] !== "GRR" ||
-    guia.split("-")[1].substring(0, 1) === "E" ||
-    guia.split("-")[1].substring(1, 1) === "G"
+    guia.split("-")[0] !== "GRR"
+    // || guia.split("-")[1].substring(0, 1) === "E" || guia.split("-")[1].substring(1, 1) === "G"
   ) {
     Swal.fire({
       icon: "error",
