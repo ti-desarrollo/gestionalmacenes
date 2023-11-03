@@ -101,7 +101,7 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'], $_SESSION['ga-sedeUsu'
                         <div class="card-body">
                             <div class="form-group row">
                                 <div class="form-group col-xs-12 col-sm-6 col-md-3 col-lg-3 col-xl-3 col-xxl-3 mb-3">
-                                    <label for="txtNumGuia">N° Guía</label>
+                                    <label for="txtNumGuia">N° Guía GRR</label>
                                     <input type="text" class="form-control form-control-sm" id="txtNumGuia" disabled>
                                 </div>
                                 <div class="form-group col-xs-12 col-sm-6 col-md-3 col-lg-3 col-xl-3 col-xxl-3 mb-3">

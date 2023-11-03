@@ -148,14 +148,8 @@ function verDetalle(docentry) {
             <td style="vertical-align: middle">${index + 1}</td>
             <td style="vertical-align: middle">${element.itemcode}</td>
             <td style="vertical-align: middle">${element.descripcion}</td>
-            <td style="vertical-align: middle" class="inputQPedida">${
-              element.cantidad
-            }</td>
-            <td><input type="number" class="form-control form-control-sm inputQRecibida" id="${
-              element.linenum
-            }" value="${element.cantidadRecibida}" ${
-        element.estado === "Procesada" ? "disabled" : ""
-      }/></td>
+            <td style="vertical-align: middle" class="inputQPedida">${element.cantidad}</td>
+            <td><input type="number" class="form-control form-control-sm inputQRecibida" value="${element.cantidadRecibida}" ${element.estado === "PROCESADA" ? "disabled" : ""}/></td>
       </tr>`;
     });
   });

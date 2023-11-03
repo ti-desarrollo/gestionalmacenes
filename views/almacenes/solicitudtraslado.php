@@ -35,15 +35,12 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'], $_SESSION['ga-sedeUsu'
                                     <div class="form-group mx-2">
                                         <input type="date" class="form-control" id="txtFechaF" value="<?php echo date("Y-m-d") ?>">
                                     </div>
-                                    <button type="button" class="btn btn-primary" id="btnR" onclick="listarTransferenciasAdm()">
+                                    <button type="button" class="btn btn-primary" id="btnR">
                                         <i class="fa fa-play"></i> REPORTAR
                                     </button>
                                 </form>
                             </div>
                             <div class="table-responsive">
-                                <div class="container row">
-                                    <div id="divPag" class="col-xs-12"></div>
-                                </div>
                                 <div class="container row">
                                     <div class="col-xs-12">
                                         <div class="form-group">
@@ -92,7 +89,6 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'], $_SESSION['ga-sedeUsu'
                             </div>
                         </div>
                         <div class="card-body">
-
                             <div class="form-group row">
                                 <div class="form-group col-xs-12 col-sm-6 col-md-4 col-lg-4 col-xl-2 col-xxl-2 mb-3">
                                     <label for="txtGuia">N° Guía GRR</label>
@@ -129,7 +125,7 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'], $_SESSION['ga-sedeUsu'
                                 </div>
                             </div>
 
-                            <div class="table-responsive" id="divTListaSolicitudes">
+                            <div class="table-responsive">
                                 <table class="table table-bordered table-striped">
                                     <thead class="thead-dark">
                                         <tr>

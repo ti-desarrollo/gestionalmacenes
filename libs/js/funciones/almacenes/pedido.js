@@ -734,6 +734,7 @@ function pdf(data) {
 
 async function procesar(pedido) {
   const docentry = pedido[0].codigo;
+  const transportista = pedido[0].rucTransportista;
   const dir = `${pedido[0].carpeta}\\RECEPCIÓN DE MERCADERÍA - ALMACÉN\\${pedido[0].year}\\${pedido[0].mes}\\COMPRAS NACIONALES\\${pedido[0].proveedor}\\${pedido[0].fechaFormato}`;
   const guia = txtGuia.value;
   const comentarios = txtComentario.value.trim();
@@ -768,6 +769,15 @@ async function procesar(pedido) {
       icon: "error",
       title: "¡Uy!",
       text: "Selecciona si está conforme o no conforme",
+    });
+    return;
+  }
+
+  if (transportista.length > 0 && inputFile.files.length < 2) {
+    Swal.fire({
+      icon: "error",
+      title: "¡Uy!",
+      text: "Debes subir al menos dos archivos",
     });
     return;
   }

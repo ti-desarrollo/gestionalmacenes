@@ -120,7 +120,7 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'], $_SESSION['ga-sedeUsu'
                         <div class="card-body">
                             <div class="form-group row">
                                 <div class="form-group col-xs-12 col-sm-6 col-md-4 col-lg-4 col-xl-2 col-xxl-2 mb-3">
-                                    <label for="txtGuia">N° Guía RR</label>
+                                    <label for="txtGuia">N° Guía GRR</label>
                                     <input type="text" class="form-control form-control-sm" id="txtGuia" autocomplete="off">
                                 </div>
                                 <div class="form-group col-xs-12 col-sm-6 col-md-4 col-lg-4 col-xl-2 col-xxl-2 mb-3">

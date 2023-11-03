@@ -11,7 +11,7 @@ if (isset($_REQUEST)) {
             // Inicio de sesión
             $response = [];
             $hour = date('H:m');
-            if ($hour > '07:30' && $hour < '18:00') {
+            if ($hour > '07:30' && $hour < '19:00') {
                 $result = $usuario->login($_POST['usuario'], $_POST['password']);
                 if (sizeof($result) == 1) {
                     $_SESSION['ga-idUsu'] = $result[0]['id'];
@@ -34,7 +34,7 @@ if (isset($_REQUEST)) {
             } else {
                 $response = [
                     'success' => false,
-                    'message' => 'Estás fuera del horario permitido para el acceso al aplicativo'
+                    'message' => 'Estás fuera del horario permitido para el acceso al sistema'
                 ];
             }
             echo json_encode($response);
