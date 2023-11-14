@@ -101,7 +101,7 @@ function listar(fechaI, fechaF, search, page, limit) {
           <td>${element.modalidadTraslado}</td>
           <td>${element.transportista}</td>
           <td>${element.adjuntos}</td>
-          <td id="tdDownload_${element.docentry}" onclick='layoutTransferencia(${element.docentry})'><i class="fa fa-download" aria-hidden="true" style="color: #4caf50;"></i></td>
+          <td id="tdDownload_${element.docentry}" onclick='layout(${element.docentry})'><i class="fa fa-download" aria-hidden="true" style="color: #4caf50;"></i></td>
           </tr>`;
         });
       } else {
@@ -157,7 +157,7 @@ function pdf(data) {
 
   pdf.setFontSize(14);
   pdf.setFontType("bold");
-  pdf.text(`Nota de Transferencia N°${data[0].docnum}`, 105, 10, "center");
+  pdf.text(`Nota de Transferencia N°${data[0].transferencia}`, 105, 10, "center");
 
   // Cuadro cabecera
   pdf.setLineWidth(0.25);
@@ -208,7 +208,7 @@ function pdf(data) {
   pdf.text(data[0].comentarios ?? "", 12, height + 10);
 
   // Guardas el PDF
-  pdf.save(`Nota de Transferencia N°${data[0].docnum}`);
+  pdf.save(`Nota de Transferencia N°${data[0].transferencia}`);
 
   // Regresamos el botón a su estado inicial
   $(`#tdDownload_${data[0].docentry}`).html(
