@@ -772,7 +772,7 @@ async function procesar(pedido) {
     return;
   }
 
-  if (transportista.length > 0 && inputFile.files.length < 2) {
+  if (transportista.length > 0 && transportista !== "20608931156" && inputFile.files.length < 2) {
     Swal.fire({
       icon: "error",
       title: "¡Uy!",
