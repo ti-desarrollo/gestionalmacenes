@@ -61,7 +61,7 @@ function listar() {
       `;
         });
       } else {
-        tbody.innerHTML = `<tr><td colspan="13">Sin resultados</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="14">Sin resultados</td></tr>`;
       }
       button.innerHTML = '<i class="fa fa-play"></i> REPORTAR';
     }

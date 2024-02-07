@@ -138,16 +138,16 @@ class Pedido extends Conexion
 
     private function validateFileName(string $dir, string $fileName): array
     {
-        $directorio = "\\\amseq-files\\ALMACEN - TIENDA\\$dir";
-        if (file_exists($directorio)) {
-            $files = array_diff(scandir($directorio), array('.', '..'));
-            foreach ($files as $x) {
-                if (substr($x, 16) === $fileName) {
-                    return ['success' => false, 'message' => "El archivo $fileName ya está cargado. Intenta con otro archivo"];
-                    break;
-                }
-            }
-        }
+        // $directorio = "\\\amseq-files\\ALMACEN - TIENDA\\$dir";
+        // if (file_exists($directorio)) {
+        //     $files = array_diff(scandir($directorio), array('.', '..'));
+        //     foreach ($files as $x) {
+        //         if (substr($x, 16) === $fileName) {
+        //             return ['success' => false, 'message' => "El archivo $fileName ya está cargado. Intenta con otro archivo"];
+        //             break;
+        //         }
+        //     }
+        // }
         return ['success' => true, 'message' => "El archivo $fileName es válido"];
     }
 
