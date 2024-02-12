@@ -13,12 +13,12 @@ if (isset($_REQUEST, $_SESSION)) {
 
         case 2:
             // Listar los pedidos por sede
-            echo json_encode($pedido->listarPedidos($_SESSION['ga-idSedeUsu'],  $_POST['fechaI'], $_POST['fechaF']));
+            echo json_encode($pedido->listarPedidos($_SESSION['ga-sede'],  $_POST['fechaI'], $_POST['fechaF']));
             break;
 
         case 3:
             // Listar el detalle del pedido
-            echo json_encode($pedido->buscarDetalle($_POST['sede'] ?? $_SESSION['ga-idSedeUsu'], $_POST['docentry'], $_POST['guia']));
+            echo json_encode($pedido->buscarDetalle($_POST['sede'] ?? $_SESSION['ga-sede'], $_POST['docentry'], $_POST['guia']));
             break;
 
         case 4:

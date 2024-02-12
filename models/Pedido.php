@@ -66,7 +66,7 @@ class Pedido extends Conexion
 
     private function obtenerEstado(string $codigo): array
     {
-        return $this->returnQuery('SELECT U_AMQ_ESTADO_OC estado FROM SBO_3AAMSEQ.dbo.OPOR WHERE DocEntry = ?', [$codigo]);
+        return $this->returnQuery('SELECT U_AMQ_ESTADO_OC estado FROM SBO_3AAMSEQ_OrdenVenta.dbo.OPOR WHERE DocEntry = ?', [$codigo]);
     }
 
     private function actualizarCabecera(string $codigo, string $guia, string $estado, string $comentarios, string $conformidad, string $usuario): int | bool
@@ -90,7 +90,7 @@ class Pedido extends Conexion
 
     public function layout(string $codigo): array
     {
-        return $this->returnQuery('EXEC SBO_3AAMSEQ.dbo.SYP_LYT_COMOC01 ?', [$codigo]);
+        return $this->returnQuery('EXEC SBO_3AAMSEQ_OrdenVenta.dbo.SYP_LYT_COMOC01 ?', [$codigo]);
     }
 
     private function listarArchivos(string $codigo, string $guia): array

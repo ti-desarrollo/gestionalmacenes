@@ -1,7 +1,7 @@
 <?php
 date_default_timezone_set('America/Lima');
 session_start();
-if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'])) {
+if (isset($_SESSION['ga-usuario'])) {
 ?>
     <!DOCTYPE html>
     <html lang="es">
@@ -146,8 +146,8 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'])) {
         <div class="content-wrapper">
             <div class="container-fluid">
                 <h2>
-                    <i class="fa fa-user-circle"></i> <?php echo $_SESSION["ga-naUsu"]; ?> |
-                    <i class="fa fa-building-o"></i> <?php echo $_SESSION["ga-sedeUsu"]; ?>
+                    <i class="fa fa-user-circle"></i> <?php echo $_SESSION["ga-nombres"]; ?> |
+                    <i class="fa fa-building-o"></i> <?php echo $_SESSION["ga-ciudad"]; ?>
                 </h2>
                 <hr>
                 <p>

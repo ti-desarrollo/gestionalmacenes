@@ -74,7 +74,7 @@ class SolicitudTraslado extends Conexion
 
     private function obtenerEstado(string $codigo): array
     {
-        return $this->returnQuery('SELECT U_AMQ_ESTADO_ST estado FROM SBO_3AAMSEQ.dbo.OWTQ WHERE DocEntry = ?', [$codigo]);
+        return $this->returnQuery('SELECT U_AMQ_ESTADO_ST estado FROM SBO_3AAMSEQ_OrdenVenta.dbo.OWTQ WHERE DocEntry = ?', [$codigo]);
     }
 
     private function actualizarCabecera(string $codigo, string $comentarios, string $conformidad, string $guia, string $usuario): int | bool
