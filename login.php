@@ -1,7 +1,7 @@
 <?php
 date_default_timezone_set('America/Lima');
 session_start();
-if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'])) {
+if (isset($_SESSION['ga-usuario'])) {
     header('Location: index.php');
 } else {
 ?>
@@ -12,8 +12,8 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'])) {
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <meta name="description" content="">
-        <meta name="author" content="">
+        <meta name="description" content="Gestión de almacenes">
+        <meta name="author" content="TIC 3AAMSEQ SA">
         <title>3AAMSEQ SA - Gestión de Almacén</title>
         <link href="media/logotipo.ico" rel="shortcut icon" type="image/ico">
 

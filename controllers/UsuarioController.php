@@ -20,7 +20,7 @@ if (isset($_REQUEST)) {
 
         case 3:
             // Guardar token para notificaciones
-            echo json_encode($usuario->guardarToken($_POST['token'], $_SESSION['ga-usuario'], $_SESSION['ga-idPerfilUsu']));
+            echo json_encode($usuario->guardarToken($_POST['token'], $_SESSION['ga-usuario'], $_SESSION['ga-area']));
             break;
 
         case 4:

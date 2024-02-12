@@ -1,7 +1,7 @@
 <?php
 date_default_timezone_set('America/Lima');
 session_start();
-if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'])) {
+if (isset($_SESSION['ga-usuario'])) {
 ?>
     <!DOCTYPE html>
     <html lang="es">
@@ -23,7 +23,7 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'])) {
         <!-- Estilos -->
         <link href="libs/css/sb-admin.css" rel="stylesheet">
         <link href="libs/css/estilos.css" rel="stylesheet">
-        
+
         <!-- SweetAlert2 CSS -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.9.0/sweetalert2.min.css" integrity="sha512-IScV5kvJo+TIPbxENerxZcEpu9VrLUGh1qYWv6Z9aylhxWE4k4Fch3CHl0IYYmN+jrnWQBPlpoTVoWfSMakoKA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
@@ -116,6 +116,14 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'])) {
                             </li>
                         </ul>
                     </li>
+
+                    <li class="nav-item" title="Importaciones">
+                        <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" data-target="#collapseComponents3" href="#">
+                            <i class="fa fa-fw fa-building"></i><span class="nav-link-text"> Importaciones</span>
+                        </a>
+                        <ul class="sidenav-second-level collapse" id="collapseComponents3" data-parent="#exampleAccordion">
+                        </ul>
+                    </li>
                 </ul>
 
                 <ul class="navbar-nav sidenav-toggler">
@@ -138,8 +146,8 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'])) {
         <div class="content-wrapper">
             <div class="container-fluid">
                 <h2>
-                    <i class="fa fa-user-circle"></i> <?php echo $_SESSION["ga-naUsu"]; ?> |
-                    <i class="fa fa-building-o"></i> <?php echo $_SESSION["ga-sedeUsu"]; ?>
+                    <i class="fa fa-user-circle"></i> <?php echo $_SESSION["ga-nombres"]; ?> |
+                    <i class="fa fa-building-o"></i> <?php echo $_SESSION["ga-ciudad"]; ?>
                 </h2>
                 <hr>
                 <p>
