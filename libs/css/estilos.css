@@ -5,13 +5,26 @@ body {
 
 ::-webkit-scrollbar {
   width: 5px;
-  height: 10px;
+  height: 5px;
 }
 
 ::-webkit-scrollbar-thumb {
   background: rgb(0, 21, 41, 1) !important;
-  border-radius: 10px;
+  border-radius: 5px;
   cursor: pointer !important;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
 }
 
 table {
@@ -40,6 +53,10 @@ h4 {
 
 .card-header {
   font-size: 14px;
+}
+
+.card-body {
+  overflow: scroll;
 }
 
 .card-footer {

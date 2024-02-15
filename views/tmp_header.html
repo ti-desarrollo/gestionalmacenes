@@ -56,7 +56,8 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
-            <ul class="navbar-nav navbar-sidenav accordion" id="exampleAccordion">
+            <ul class="navbar-nav navbar-sidenav accordion" id="menuPrincipal">
+
                 <li class="nav-item" title="Inicio">
                     <a class="nav-link" href="../../index.php">
                         <i class="fa fa-fw fa-home"></i><span class="nav-link-text"> Inicio</span>
@@ -65,14 +66,14 @@
 
                 <li class="nav-item" title="Tiendas">
                     <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse"
-                        data-target="#collapseComponents1" href="#"><i class="fa fa-fw fa-list"></i><span
+                        data-target="#menuTiendas" href="#"><i class="fa fa-fw fa-list"></i><span
                             class="nav-link-text"> Tiendas</span></a>
-                    <ul class="sidenav-second-level collapse" id="collapseComponents1" data-parent="#exampleAccordion">
+                    <ul class="sidenav-second-level collapse" id="menuTiendas" data-parent="#menuPrincipal">
                         <li>
                             <a class="nav-link-collapse collapsed" data-toggle="collapse" data-target="#collapseMulti1"
                                 href="#"><span class="nav-link-text">Almacenes</span></a>
                             <ul class="sidenav-third-level collapse" id="collapseMulti1"
-                                data-parent="#collapseComponents1">
+                                data-parent="#menuTiendas">
                                 <li>
                                     <a href="../../views/almacenes/solicitudtraslado.php"><span
                                             class="nav-link-text">Solicitudes de traslado</span></a>
@@ -96,14 +97,14 @@
 
                 <li class="nav-item" title="Administrativos">
                     <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse"
-                        data-target="#collapseComponents2" href="#"><i class="fa fa-fw fa-building"></i><span
+                        data-target="#menuAdministrativos" href="#"><i class="fa fa-fw fa-building"></i><span
                             class="nav-link-text"> Administrativos</span></a>
-                    <ul class="sidenav-second-level collapse" id="collapseComponents2" data-parent="#exampleAccordion">
+                    <ul class="sidenav-second-level collapse" id="menuAdministrativos" data-parent="#menuPrincipal">
                         <li>
                             <a class="nav-link-collapse collapsed" data-toggle="collapse" data-target="#collapseMulti2"
                                 href="#"><span class="nav-link-text">Almacenes</span></a>
                             <ul class="sidenav-third-level collapse" id="collapseMulti2"
-                                data-parent="#collapseComponents2">
+                                data-parent="#menuAdministrativos">
                                 <li>
                                     <a href="../../views/administrativos/pedido.php"><span
                                             class="nav-link-text">Pedidos</span></a>
@@ -118,7 +119,7 @@
                             <a class="nav-link-collapse collapsed" data-toggle="collapse" data-target="#collapseMulti3"
                                 href="#"><span class="nav-link-text">Mesa de partes</span></a>
                             <ul class="sidenav-third-level collapse" id="collapseMulti3"
-                                data-parent="#collapseComponents2">
+                                data-parent="#menuAdministrativos">
                                 <li>
                                     <a href="../../views/administrativos/entradamercancia.php"><span
                                             class="nav-link-text">Entrada de mercancías</span></a>
@@ -127,6 +128,27 @@
                                     <a href="../../views/administrativos/transferenciastock.php"><span
                                             class="nav-link-text">Transferencias de stock</span></a>
                                 </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="nav-item" title="Importaciones">
+                    <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" data-target="#menuImportaciones" href="#">
+                        <i class="fa fa-fw fa-ship"></i><span class="nav-link-text"> Importaciones</span>
+                    </a>
+                    <ul class="sidenav-second-level collapse" id="menuImportaciones" data-parent="#menuPrincipal">
+                        <li>
+                            <a class="nav-link-collapse collapsed" data-toggle="collapse" data-target="#importacionesAlmacenes" href="#"><span class="nav-link-text">Almacenes</span></a>
+                            <ul class="sidenav-third-level collapse" id="importacionesAlmacenes" data-parent="#menuImportaciones">
+                                <li><a href="../../views/almacenes/importaciones_reg.php"><span class="nav-link-text">Registro</span></a></li>
+                                <li><a href="../../views/almacenes/importaciones_rep.php"><span class="nav-link-text">Reporte</span></a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a class="nav-link-collapse collapsed" data-toggle="collapse" data-target="#importacionesLogistica" href="#"><span class="nav-link-text">Logística</span></a>
+                            <ul class="sidenav-third-level collapse" id="importacionesLogistica" data-parent="#menuImportaciones">
+                                <li><a href="../../views/administrativos/importaciones.php"><span class="nav-link-text">Registro</span></a></li>
                             </ul>
                         </li>
                     </ul>

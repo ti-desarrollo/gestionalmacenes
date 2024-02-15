@@ -238,13 +238,22 @@ function verDetalle(docentry, guia) {
             element.cantidadRecibida
           }</td>
           <td style="vertical-align: middle">
-            <input class="inputQRecepcionada" id="txtCantidadRecepcionada_${
-              element.item
-            }" type="number" 
-              value="${parseFloat(element.cantidadRecepcionada)}" ${
-        parseFloat(element.cantidadRecepcionada) === 0 ? "disabled" : ""
-      } />
+            <input 
+              class="inputQRecepcionada" 
+              id="txtCantidadRecepcionada_${element.item}"
+              type="number" 
+              value="${parseFloat(element.cantidadRecepcionada)}" 
+              ${
+                parseFloat(element.cantidadRecepcionada) === 0 ? "disabled" : ""
+              }
+              onkeyup="changeColor('${element.item}', ${
+        element.cantidadPedida
+      }, ${element.cantidadRecibida});" 
+            />
           </td>
+          <td><div id="estado_items_${
+            element.item
+          }" style="height: 10px; width: 10px; border-radius: 10px; background: #28a745; margin: auto;"></div></td>
       </tr>
       `;
     });
@@ -772,7 +781,11 @@ async function procesar(pedido) {
     return;
   }
 
-  if (transportista.length > 0 && transportista !== "20608931156" && inputFile.files.length < 2) {
+  if (
+    transportista.length > 0 &&
+    transportista !== "20608931156" &&
+    inputFile.files.length < 2
+  ) {
     Swal.fire({
       icon: "error",
       title: "¡Uy!",
@@ -1065,4 +1078,24 @@ function rollbackPedido(pedido, cabecera, items) {
     },
     function (_) {}
   );
+}
+
+function changeColor(item, cantidadPedida, cantidadPendiente) {
+  const estado = document.getElementById(`estado_items_${item}`);
+  const cantidadRecibida = parseFloat(
+    document.getElementById(`txtCantidadRecepcionada_${item}`).value ?? "0"
+  );
+  const faltante = cantidadPedida - cantidadPendiente;
+  let color = "#28a745";
+
+  if (cantidadRecibida > faltante) {
+    color = "#ff9800";
+  }
+  if (cantidadRecibida === faltante) {
+    color = "#28a745";
+  }
+  if (cantidadRecibida < faltante) {
+    color = "#f44336";
+  }
+  estado.style.background = color;
 }

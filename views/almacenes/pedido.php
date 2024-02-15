@@ -161,6 +161,7 @@ if (isset($_SESSION['ga-usuario'])) {
                                             <th>Cantidad pedida</th>
                                             <th>Cantidad recibida</th>
                                             <th>Cantidad pendiente de recepción</th>
+                                            <th></th>
                                         </tr>
                                     </thead>
                                     <tbody id="tbd">

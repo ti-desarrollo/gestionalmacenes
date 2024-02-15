@@ -133,7 +133,8 @@ if (isset($_SESSION['ga-usuario'])) {
                                             <th>Código</th>
                                             <th>Descripción</th>
                                             <th>Cantidad</th>
-                                            <th width="10%">Cantidad por Recepcionar</th>
+                                            <th width="10%">Cantidad por recepcionar</th>
+                                            <th></th>
                                         </tr>
                                     </thead>
                                     <tbody id="tbd"></tbody>

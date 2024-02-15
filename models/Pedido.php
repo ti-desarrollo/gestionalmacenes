@@ -9,7 +9,7 @@ class Pedido extends Conexion
     {
         parent::__construct();
     }
-    
+
     public function listarPedidos_A(string $inicio, string $fin): array
     {
         $data = $this->returnQuery('EXEC sp_listarPedidosAdministrativos ?, ?', [$inicio, $fin]);
@@ -34,7 +34,7 @@ class Pedido extends Conexion
         return $this->returnQuery('EXEC sp_buscarPedido ?, ?, ?', [$sede, $codigo, $guia]);
     }
 
-    public function procesarPedido(int $codigo, string $guia, string $estado, string $comentarios, string $conformidad, string $usuario, array $items)
+    public function procesarPedido(int $codigo, string $guia, string $estado, string $comentarios, string $conformidad, string $usuario, array $items): array
     {
         $response = [];
         $guia = str_replace('GRR', '09', $guia);
@@ -182,7 +182,6 @@ class Pedido extends Conexion
             $valor['adjuntos'] = $adjuntos;
         }
         return $data;
-
     }
 
     public function buscarDetalleIngreso(int $pedido): array

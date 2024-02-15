@@ -41,6 +41,23 @@ class Conexion
         return sqlsrv_fetch_array($last_id, SQLSRV_FETCH_ASSOC);
     }
 
+    public function insertQuery($query, $params): int|bool
+    {
+        try {
+            $result = sqlsrv_query($this->connection, $query, $params);
+            if ($result === false) {
+                return false;
+            }
+            sqlsrv_next_result($result);
+            sqlsrv_fetch($result);
+            $ultimoID = sqlsrv_get_field($result, 0);
+            sqlsrv_free_stmt($result);
+            return $ultimoID;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
     public function closeConnection(): void
     {
         sqlsrv_close($this->connection);
