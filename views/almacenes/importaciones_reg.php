@@ -30,7 +30,7 @@ if (isset($_SESSION['ga-usuario'])) {
                         </div>
                         <div class="card-body">
                             <div class="pull-right" style="padding-bottom: 10px;">
-                                <form class="form-inline">
+                                <form class="form-inline center-text">
                                     <div class="form-group mx-2">
                                         <input type="date" class="form-control" id="txtFechaI" value="<?php echo date("Y-m-d") ?>">
                                     </div>
@@ -156,8 +156,8 @@ if (isset($_SESSION['ga-usuario'])) {
                                     <th>TICKET (adjunto)</th>
                                     <th>TICKET - Bultos</th>
                                     <th>TICKET - Peso</th>
-                                    <th>Peso recepcionado</th>
                                     <th>Bultos recepcionados</th>
+                                    <th>Peso recepcionado</th>
                                     <th>Placa del vehículo</th>
                                     <th>Conformidad</th>
                                     <th>Comentario</th>

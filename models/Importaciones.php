@@ -17,12 +17,18 @@ class Importaciones extends Conexion
         return $this->returnQuery('EXEC sp_listarPedidosImportacion ?, ?, ?', [$sede, $inicio, $fin]);
     }
 
-    public function buscarDetalle(string $sede, string $codigo, string $usuario): array
+    public function buscarDetalle(string $sede, string $pedido, string $usuario): array
     {
-        return $this->returnQuery('EXEC sp_buscarImportacion ?, ?, ?', [$sede, $codigo, $usuario]);
+        $this->registrarImportacion($sede, $pedido, $usuario);
+        return $this->returnQuery('EXEC sp_buscarImportacion ?, ?, ?', [$sede, $pedido, $usuario]);
     }
 
-    public function procesarImportacion(string $importacion, string $recepciones, string $usuario, string $sede): array
+    private function registrarImportacion(string $sede, int $pedido, string $usuario): int | bool
+    {
+        return $this->insertQuery('EXEC sp_registrarImportacion ?, ?, ?', [$sede, $pedido, $usuario]);
+    }
+
+    public function procesarRecepcionImportacion(string $importacion, string $recepciones, string $usuario, string $sede): array
     {
         $importacion = (object) json_decode($importacion, true);
         $recepciones = json_decode($recepciones, true);
@@ -46,7 +52,7 @@ class Importaciones extends Conexion
                 $grrAdjunto = $this->uploadFile($importacion->dir, $recepcion->grrAdjunto, $grr);
                 $grrBultos = (int) $recepcion->grrBultos;
                 $grrPeso = (float) $recepcion->grrPeso;
-                $grt = str_replace('GRR', '31', $recepcion->grr);
+                $grt = str_replace('GRR', '31', $recepcion->grt);
                 $grtAdjunto =  $this->uploadFile($importacion->dir, $recepcion->grtAdjunto, $grt);
                 $ticket = $recepcion->ticket;
                 $ticketAdjunto = $this->uploadFile($importacion->dir, $recepcion->ticketAdjunto, $ticket);
@@ -64,7 +70,7 @@ class Importaciones extends Conexion
                 // Guardamos los archivos cargados
                 array_push($uploadedFiles, $grrAdjunto, $grtAdjunto, $ticketAdjunto);
 
-                $result = $this->insertQuery('EXEC sp_registrarImportacion ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?', [
+                $result = $this->insertQuery('EXEC sp_registrarRecepcionImportacion ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?', [
                     $codigo,
                     $grr,
                     $grrAdjunto,
@@ -97,7 +103,7 @@ class Importaciones extends Conexion
                     array_push($inserted, $result);
                 }
             } catch (Exception $e) {
-                $this->rollbackImportacion($uploadedFiles, $importacion, $pesoRecepcionadoTotal, $bultosRecepcionadosTotal, $inserted);
+                $this->rollbackRecepcionImportacion($uploadedFiles, $importacion, $pesoRecepcionadoTotal, $bultosRecepcionadosTotal, $inserted);
                 return ['success' => false, 'message' => $e->getMessage()];
             }
         }
@@ -138,7 +144,7 @@ class Importaciones extends Conexion
         }
     }
 
-    private function rollbackImportacion(array $uploadedFiles, object $importacion, float $pesoRecepcionadoTotal, int $bultosRecepcionadosTotal, array $inserted): void
+    private function rollbackRecepcionImportacion(array $uploadedFiles, object $importacion, float $pesoRecepcionadoTotal, int $bultosRecepcionadosTotal, array $inserted): void
     {
         /** 1. BORRAR ARCHIVOS */
         foreach ($uploadedFiles as $file) {

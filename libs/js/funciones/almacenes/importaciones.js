@@ -164,8 +164,8 @@ function addLineaRecepcion() {
     <td style="vertical-align: middle"><input type="file" accept="image/jpeg,image/jpg,image/png,application/pdf" id="ticketAdjunto_${id}" /></td>
     <td style="vertical-align: middle"><input type="number" id="ticketBultos_${id}" /></td>
     <td style="vertical-align: middle"><input type="number" id="ticketPeso_${id}" /></td>
-    <td style="vertical-align: middle"><input type="number" id="pesoRecepcionado_${id}" /></td>
     <td style="vertical-align: middle"><input type="number" id="bultosRecepcionados_${id}" /></td>
+    <td style="vertical-align: middle"><input type="number" id="pesoRecepcionado_${id}" /></td>
     <td style="vertical-align: middle"><input type="text" id="placaVehiculo_${id}" /></td>
     <td style="vertical-align: middle">
       <select id="conformidad_${id}" onchange="actualizarEstadoComentario(this)">

@@ -17,7 +17,7 @@ if (isset($_REQUEST, $_SESSION)) {
 
         case 4:
             // Procesamos el pedido
-            echo json_encode($pedido->procesarImportacion($_POST['importacion'], $_POST['recepcion'], $_SESSION['ga-usuario'], $_SESSION['ga-sede']));
+            echo json_encode($pedido->procesarRecepcionImportacion($_POST['importacion'], $_POST['recepcion'], $_SESSION['ga-usuario'], $_SESSION['ga-sede']));
             break;
 
         default:
