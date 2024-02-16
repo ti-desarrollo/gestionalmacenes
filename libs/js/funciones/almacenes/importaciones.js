@@ -143,6 +143,9 @@ function limpiarCampos() {
     );
     if (input) input.value = "";
   });
+  txtDUA.value = "";
+  txtOT.value = "";
+  txtAgente.value = "";
 }
 
 function addLineaRecepcion() {
@@ -302,8 +305,8 @@ function validarDatos() {
       ticketAdjunto: inputs[7].files[0],
       ticketBultos: inputs[8].value.trim(),
       ticketPeso: inputs[9].value.trim(),
-      pesoRecepcionado: inputs[10].value.trim(),
-      bultosRecepcionados: inputs[11].value.trim(),
+      bultosRecepcionados: inputs[10].value.trim(),
+      pesoRecepcionado: inputs[11].value.trim(),
       placaVehiculo: inputs[12].value.trim(),
       conformidad: conformidad,
       comentario: comentario,

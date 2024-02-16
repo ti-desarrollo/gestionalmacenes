@@ -98,8 +98,8 @@ class Importaciones extends Conexion
                     throw new Exception('Hubo un error al registrar las importaciones. Intente nuevamente');
                 } else {
                     $this->simpleQuery('EXEC sp_actualizarImportacionPesoYBultos ?, ?, ?', [$codigo, $pesoRecepcionado, $bultosRecepcionados]);
-                    $pesoRecepcionadoTotal = $pesoRecepcionadoTotal + $pesoRecepcionado;
-                    $bultosRecepcionadosTotal = $bultosRecepcionadosTotal + $bultosRecepcionados;
+                    $pesoRecepcionadoTotal +=  $pesoRecepcionado;
+                    $bultosRecepcionadosTotal += $bultosRecepcionados;
                     array_push($inserted, $result);
                 }
             } catch (Exception $e) {
