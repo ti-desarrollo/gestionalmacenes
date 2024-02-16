@@ -53,6 +53,7 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   document.getElementById("closeDetalle").onclick = () => {
+    limpiarCampos();
     document.getElementById("dl").style.display = "block";
     document.getElementById("dd").style.display = "none";
   };
@@ -133,6 +134,15 @@ function verDetalle(docentry) {
     importacion = datos[0];
   });
   addLineaRecepcion();
+}
+
+function limpiarCampos() {
+  Object.keys(importacion).forEach((key) => {
+    const input = document.getElementById(
+      `txt${key.charAt(0).toUpperCase() + key.slice(1)}`
+    );
+    if (input) input.value = "";
+  });
 }
 
 function addLineaRecepcion() {
@@ -358,15 +368,16 @@ function procesar(datos) {
       Swal.fire({
         icon: response.success ? "success" : "error",
         title: response.message,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          document.getElementById("closeDetalle").click();
+          rowSelected(parseInt(response.data));
+        }
       });
 
       if (response.success) {
         listar();
-        document.getElementById("closeDetalle").click();
       }
-      /**
-       * FALTA REGRESAR AL REPORTE CON EL ESTADO ACTUALIZADO Y LA COLUMNA SELECCIONADA
-       */
     }
   });
 }
