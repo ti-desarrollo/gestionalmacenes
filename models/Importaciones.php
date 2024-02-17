@@ -12,12 +12,17 @@ class Importaciones extends Conexion
         parent::__construct();
     }
 
+    public function listarImportacionesRecepcionadas(string $sede, string $inicio, string $fin): array
+    {
+        return $this->returnQuery('EXEC sp_listarImportacionesRecepcionadas ?, ?, ?', [$sede === '99' ? '' : $sede, $inicio, $fin]);
+    }
+
     public function listarImportaciones(string $sede, string $inicio, string $fin): array
     {
         return $this->returnQuery('EXEC sp_listarPedidosImportacion ?, ?, ?', [$sede, $inicio, $fin]);
     }
 
-    public function buscarDetalle(string $sede, string $pedido, string $usuario): array
+    public function buscarDetalleImportacion(string $sede, string $pedido, string $usuario): array
     {
         $this->registrarImportacion($sede, $pedido, $usuario);
         return $this->returnQuery('EXEC sp_buscarImportacion ?, ?, ?', [$sede, $pedido, $usuario]);
@@ -28,7 +33,17 @@ class Importaciones extends Conexion
         return $this->insertQuery('EXEC sp_registrarImportacion ?, ?, ?', [$sede, $pedido, $usuario]);
     }
 
-    public function procesarRecepcionImportacion(string $importacion, string $recepciones, string $usuario, string $sede): array
+    public function buscarRecepcionesPorImportacion(int $importacion, string $sede): array
+    {
+        return $this->returnQuery('EXEC sp_listarRecepcionesPorImportacion ?, ?', [$importacion, $sede]);
+    }
+
+    public function buscarDetalleRecepcion(int $recepcion, string $sede): array
+    {
+        return  $this->returnQuery('EXEC sp_buscarRecepcion ?, ?', [$recepcion, $sede]);
+    }
+
+    public function registrarRecepcion(string $importacion, string $recepciones, string $usuario, string $sede): array
     {
         $importacion = (object) json_decode($importacion, true);
         $recepciones = json_decode($recepciones, true);

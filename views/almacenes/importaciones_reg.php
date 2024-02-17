@@ -57,8 +57,8 @@ if (isset($_SESSION['ga-usuario'])) {
                                         <th>Estado</th>
                                         <th>N° Pedido</th>
                                         <th>Proveedor</th>
-                                        <th>Fecha de entrega</th>
                                         <th>N° Operación</th>
+                                        <th>Fecha de recepción</th>
                                     </thead>
                                     <tbody id="tbdl">
                                         <tr>
@@ -77,6 +77,7 @@ if (isset($_SESSION['ga-usuario'])) {
 
                 <!-- Detalle del pedido -->
                 <div class="col-lg-12" id="dd" style="display: none;">
+                    <!-- Importación -->
                     <div class="card mt-3">
                         <div class="card-header">
                             <b>Datos del pedido</b>
@@ -134,9 +135,11 @@ if (isset($_SESSION['ga-usuario'])) {
                             </div>
                         </div>
                     </div>
+
+                    <!-- Nuevas recepciones -->
                     <div class="card mt-3">
                         <div class="card-header">
-                            <b>Recepción</b>
+                            <b>Registrar recepción</b>
                             <div class="pull-right">
                                 <a href="#" id="addLineaRecepcion">Agregar línea de recepción</a>
                             </div>
@@ -168,10 +171,206 @@ if (isset($_SESSION['ga-usuario'])) {
                                     </tr>
                                 </tbody>
                             </table>
-
                         </div>
                         <div class="card-footer text-center">
                             <button type="button" class="btn btn-success btn-sm" id="validarDatos"><i class="fa fa-fw fa-upload"></i> Procesar</button>
+                        </div>
+                    </div>
+
+                    <!-- Recepciones registradas -->
+                    <div id="drr" style="display: none;">
+                        <div class="card mb-3 mt-3">
+                            <div class="card-header">
+                                <b>Recepciones registradas</b>
+                            </div>
+                            <div class="card-body">
+                                <table class="table table-bordered table-striped">
+                                    <thead class="table-dark">
+                                        <th>#</th>
+                                        <th>Fecha de recepción</th>
+                                        <th>GRR</th>
+                                        <th>GRT</th>
+                                        <th>TICKET</th>
+                                        <th>Conformidad</th>
+                                        <th>Acción</th>
+                                    </thead>
+                                    <tbody id="tbdr">
+                                        <tr>
+                                            <td colspan="7"><i class="fa fa-spinner fa-2x fa-spin"></i></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="card-footer">
+                                :: La lista solo contiene los registros que pertenecen a la misma sede del usuario en sesión<br />
+                                :: Leyenda: Ver detalle <i class="fa fa-fw fa-eye" style="color: #2196f3; font-size: large;"></i> Eliminar registro <i class="fa fa-fw fa-trash" style="color: #F44336; font-size: large;"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal de detalle de la recepción -->
+                    <div class="modal fade" id="mdlLayout" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document" style="max-width: unset; width: 50%;">
+                            <div class="modal-content" style="padding: 20px; overflow-x: scroll;">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Detalle de la recepción</h5>
+                                    <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">X</span></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div id="layout">
+
+                                        <div class="row">
+                                            <div class="col-xs-12 col-sm-12 col-lg-6 col-xl-6 col-xxl-6">
+                                                <div class="card mb-3">
+                                                    <div class="card-header">
+                                                        <b>Fecha</b>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <div class="row">
+                                                            <div class="mb-2 col-xs-12 col-sm-6 col-lg-4 col-xl-4 col-xxl-4">
+                                                                <label for="txtOrden">Orden</label>
+                                                                <input type="text" readonly class="form-control form-control-sm" id="txtOrden">
+                                                            </div>
+                                                            <div class="mb-2 col-xs-12 col-sm-6 col-lg-8 col-xl-8 col-xxl-8">
+                                                                <label for="txtFechaRecepcion">Fecha/Hora</label>
+                                                                <input type="text" readonly class="form-control form-control-sm" id="txtFechaRecepcion">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 col-sm-12 col-lg-6 col-xl-6 col-xxl-6">
+                                                <div class="card mb-3">
+                                                    <div class="card-header">
+                                                        <b>Guía de remisión transportista</b>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <div class="input-group mb-2">
+                                                            <input type="text" readonly class="form-control form-control-sm" id="txtGRT">
+                                                            <div class="input-group-prepend">
+                                                                <a target="_blank" class="input-group-text" id="txtGRTAdjunto" style="color: #4CAF50"><i class="fa fa-fw fa-download"></i></a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 col-sm-12 col-lg-6 col-xl-6 col-xxl-6">
+                                                <div class="card mb-3">
+                                                    <div class="card-header">
+                                                        <b>Guía de remisión remitente</b>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <div class="row">
+                                                            <div class="mb-2 col-xs-12 col-sm-12 col-lg-12 col-xl-12 col-xxl-12">
+                                                                <div class="input-group mb-2">
+                                                                    <input type="text" readonly class="form-control form-control-sm" id="txtGRR">
+                                                                    <div class="input-group-prepend">
+                                                                        <a target="_blank" class="input-group-text" id="txtGRRAdjunto" style="color: #4CAF50"><i class="fa fa-fw fa-download"></i></a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="mb-2 col-xs-12 col-sm-6 col-lg-6 col-xl-6 col-xxl-6">
+                                                                <label for="txtGRRBultos">N° Bultos</label>
+                                                                <input type="text" readonly class="form-control form-control-sm" id="txtGRRBultos">
+                                                            </div>
+                                                            <div class="mb-2 col-xs-12 col-sm-6 col-lg-6 col-xl-6 col-xxl-6">
+                                                                <label for="txtGRRPeso">Peso</label>
+                                                                <input type="text" readonly class="form-control form-control-sm" id="txtGRRPeso">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 col-sm-12 col-lg-6 col-xl-6 col-xxl-6">
+                                                <div class="card mb-3">
+                                                    <div class="card-header">
+                                                        <b>Ticket de balanza</b>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <div class="row">
+                                                            <div class="mb-2 col-xs-12 col-sm-12 col-lg-12 col-xl-12 col-xxl-12">
+                                                                <div class="input-group mb-2">
+                                                                    <input type="text" readonly class="form-control form-control-sm" id="txtTicket">
+                                                                    <div class="input-group-prepend">
+                                                                        <a target="_blank" class="input-group-text" id="txtTicketAdjunto" style="color: #4CAF50"><i class="fa fa-fw fa-download"></i></a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="mb-2 col-xs-12 col-sm-6 col-lg-6 col-xl-6 col-xxl-6">
+                                                                <label for="txtTicketBultos">N° Bultos</label>
+                                                                <input type="text" readonly class="form-control form-control-sm" id="txtTicketBultos">
+                                                            </div>
+                                                            <div class="mb-2 col-xs-12 col-sm-6 col-lg-6 col-xl-6 col-xxl-6">
+                                                                <label for="txtTicketPeso">Peso</label>
+                                                                <input type="text" readonly class="form-control form-control-sm" id="txtTicketPeso">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 col-sm-12 col-lg-12 col-xl-12 col-xxl-12">
+                                                <div class="card mb-3">
+                                                    <div class="card-header">
+                                                        <b>Datos de recepción</b>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <div class="row">
+                                                            <div class="mb-2 col-xs-12 col-sm-6 col-lg-4 col-xl-4 col-xxl-4">
+                                                                <label for="txtPesoRecibido">Peso recibido</label>
+                                                                <input type="text" readonly class="form-control form-control-sm" id="txtPesoRecibido">
+                                                            </div>
+                                                            <div class="mb-2 col-xs-12 col-sm-6 col-lg-4 col-xl-4 col-xxl-4">
+                                                                <label for="txtBultosRecibidos">Bultos recepcionados</label>
+                                                                <input type="text" readonly class="form-control form-control-sm" id="txtBultosRecibidos">
+                                                            </div>
+                                                            <div class="mb-2 col-xs-12 col-sm-6 col-lg-4 col-xl-4 col-xxl-4">
+                                                                <label for="txtPlacaVehiculo">Placa del vehículo</label>
+                                                                <input type="text" readonly class="form-control form-control-sm" id="txtPlacaVehiculo">
+                                                            </div>
+                                                            <div class="mb-2 col-xs-12 col-sm-6 col-lg-2 col-xl-2 col-xxl-2">
+                                                                <label for="txtDua">N° DUA</label>
+                                                                <input type="text" readonly class="form-control form-control-sm" id="txtDua">
+                                                            </div>
+                                                            <div class="mb-2 col-xs-12 col-sm-6 col-lg-2 col-xl-2 col-xxl-2">
+                                                                <label for="txtOt">N° OT</label>
+                                                                <input type="text" readonly class="form-control form-control-sm" id="txtOt">
+                                                            </div>
+                                                            <div class="mb-2 col-xs-12 col-sm-6 col-lg-8 col-xl-8 col-xxl-8">
+                                                                <label for="txtAgenteAduana">Agente ADUANA</label>
+                                                                <input type="text" readonly class="form-control form-control-sm" id="txtAgenteAduana">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 col-sm-12 col-lg-12 col-xl-12 col-xxl-12">
+                                                <div class="card mb-3">
+                                                    <div class="card-header">
+                                                        <b>Datos de conformidad</b>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <div class="row">
+                                                            <div class="mb-2 col-xs-12 col-sm-6 col-lg-4 col-xl-4 col-xxl-4">
+                                                                <label for="txtConformidad">Conformidad</label>
+                                                                <input type="text" readonly class="form-control form-control-sm" id="txtConformidad">
+                                                            </div>
+                                                            <div class="mb-2 col-xs-12 col-sm-6 col-lg-8 col-xl-8 col-xxl-8">
+                                                                <label for="txtComentario">Comentario</label>
+                                                                <div class="input-group mb-2">
+                                                                    <input type="text" readonly class="form-control form-control-sm" id="txtComentario" />
+                                                                    <div class="input-group-prepend">
+                                                                        <a target="_blank" class="input-group-text" id="txtAdjuntoNoConformidad" style="color: #4CAF50;"><i class="fa fa-fw fa-download"></i></a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

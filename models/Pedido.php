@@ -95,7 +95,7 @@ class Pedido extends Conexion
 
     private function listarArchivos(string $codigo, string $guia): array
     {
-        return $this->returnQuery('sp_listarDocumentosPedido ?, ?', [$codigo, $guia]);
+        return $this->returnQuery('EXEC sp_listarDocumentosPedido ?, ?', [$codigo, $guia]);
     }
 
     public function uploadFile(int $cabecera, string $dir, array $data): array

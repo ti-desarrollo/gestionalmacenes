@@ -22,7 +22,10 @@ const campos = {
   agenteAduana: "Agente ADUANA",
 };
 
-let txtOperacion,
+let divdl,
+  divdd,
+  divdrr,
+  txtOperacion,
   txtFamilia,
   txtProveedor,
   txtEstado,
@@ -47,6 +50,9 @@ document.addEventListener("DOMContentLoaded", () => {
   txtDUA = document.getElementById("txtDUA");
   txtOT = document.getElementById("txtOT");
   txtAgente = document.getElementById("txtAgente");
+  divdl = document.getElementById("dl");
+  divdd = document.getElementById("dd");
+  divdrr = document.getElementById("drr");
 
   document.getElementById("txtFilter").onkeyup = function (e) {
     filterTable(e.target.value, document.getElementById("tbdl"));
@@ -54,8 +60,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.getElementById("closeDetalle").onclick = () => {
     limpiarCampos();
-    document.getElementById("dl").style.display = "block";
-    document.getElementById("dd").style.display = "none";
+    divdl.style.display = "block";
+    divdd.style.display = "none";
   };
 
   document.getElementById("addLineaRecepcion").onclick = addLineaRecepcion;
@@ -105,8 +111,8 @@ function verDetalle(docentry) {
   const task = 3;
   const tbody = document.getElementById("tbd");
   tbody.innerHTML = "";
-  document.getElementById("dl").style.display = "none";
-  document.getElementById("dd").style.display = "block";
+  divdl.style.display = "none";
+  divdd.style.display = "block";
 
   $.post(controllerIA, { task, docentry }, function (response) {
     const datos = JSON.parse(response);
@@ -118,8 +124,8 @@ function verDetalle(docentry) {
         text: "No se encontraron datos para el pedido, intenta nuevamente",
       }).then((result) => {
         if (result.isConfirmed) {
-          document.getElementById("dl").style.display = "block";
-          document.getElementById("dd").style.display = "none";
+          divdl.style.display = "block";
+          divdd.style.display = "none";
         }
       });
     }
@@ -132,8 +138,103 @@ function verDetalle(docentry) {
     });
 
     importacion = datos[0];
+    buscarRecepcionesRegistradasPorImportacion(importacion.codigo);
   });
   addLineaRecepcion();
+}
+
+function buscarRecepcionesRegistradasPorImportacion(importacion) {
+  const task = 5;
+  const tbody = document.getElementById("tbdr");
+  tbody.innerHTML = "";
+  $.post(controllerIA, { task, importacion }, function (response) {
+    const datos = JSON.parse(response);
+    let color = "";
+    if (datos.length > 0) {
+      divdrr.style.display = "block";
+      datos.forEach((element) => {
+        color = element.conformidad === "Conforme" ? "#28a745" : "#F44336";
+        tbody.innerHTML += `
+          <tr>
+            <td>${element.orden}</td>           
+            <td>${element.fecha}</td>
+            <td>${element.grr}</td>
+            <td>${element.grt}</td>
+            <td>${element.ticket}</td>
+            <td><b style="background: ${color}; padding: 5px; color: #ffffff; border-radius: 5px;">${element.conformidad}</b></td>
+            <td>
+              <i class="fa fa-fw fa-trash" style="color: #F44336; font-size: large; cursor: pointer;" onclick="deleteRecepcion(${importacion}, ${element.codigo})"></i>
+              <i class="fa fa-fw fa-eye" style="color: #2196f3; font-size: large; cursor: pointer;" onclick="readRecepcion(${element.codigo})"></i>
+            </td>
+          </tr>`;
+      });
+    } else {
+      tbody.innerHTML = `<tr><td colspan="7">Sin resultados</td></tr>`;
+      divdrr.style.display = "none";
+    }
+  });
+}
+
+function readRecepcion(recepcion) {
+  const task = 6;
+  $.post(controllerIA, { task, recepcion }, function (response) {
+    const datos = JSON.parse(response);
+
+    if (datos.length === 0) {
+      Swal.fire({
+        icon: "error",
+        title: "¡Uy!",
+        text: "No se encontraron datos de la recepción, intenta nuevamente",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          divdl.style.display = "block";
+          divdd.style.display = "none";
+        }
+      });
+    }
+    Object.keys(datos[0]).forEach((key) => {
+      const input = document.getElementById(
+        `txt${key.charAt(0).toUpperCase() + key.slice(1)}`
+      );
+      if (input) input.value = datos[0][key];
+    });
+
+    const file1 = document.getElementById("txtGRTAdjunto");
+    const file2 = document.getElementById("txtGRRAdjunto");
+    const file3 = document.getElementById("txtTicketAdjunto");
+    const file4 = document.getElementById("txtAdjuntoNoConformidad");
+
+    file1.href = datos[0]["GRTAdjunto"];
+    file2.href = datos[0]["GRRAdjunto"];
+    file3.href = datos[0]["TicketAdjunto"];
+    file4.href = datos[0]["AdjuntoNoConformidad"];
+
+    if (datos[0]["AdjuntoNoConformidad"] === null) {
+      file4.style.visibility = "hidden";
+    } else {
+      file4.style.visibility = "visible";
+    }
+
+    $("#mdlLayout").modal("toggle");
+  });
+}
+
+function deleteRecepcion(importacion, recepcion) {
+  Swal.fire({
+    title: "¿Está seguro de eliminar este registro?",
+    text: "Esta acción no se puede revertir",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Si, eliminar",
+    cancelButtonText: "No, cancelar",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      // Lógica para eliminar la recepción
+      buscarRecepcionesRegistradasPorImportacion(importacion);
+    }
+  });
 }
 
 function limpiarCampos() {
