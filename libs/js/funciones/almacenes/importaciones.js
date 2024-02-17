@@ -1,5 +1,4 @@
-const maxFileSize = 5 * 1024 * 1024;
-const controllerIA = "../../controllers/ImportacionesController.php";
+const controllerI = "../../controllers/ImportacionesController.php";
 
 const campos = {
   grr: "GRR",
@@ -82,7 +81,7 @@ function listar() {
   const fechaF = document.getElementById("txtFechaF").value;
   const task = 2;
 
-  $.post(controllerIA, { task, fechaI, fechaF }, function (response) {
+  $.post(controllerI, { task, fechaI, fechaF }, function (response) {
     const datos = JSON.parse(response);
     tbody.innerHTML = "";
 
@@ -114,7 +113,7 @@ function verDetalle(docentry) {
   divdl.style.display = "none";
   divdd.style.display = "block";
 
-  $.post(controllerIA, { task, docentry }, function (response) {
+  $.post(controllerI, { task, docentry }, function (response) {
     const datos = JSON.parse(response);
 
     if (datos.length === 0) {
@@ -147,7 +146,7 @@ function buscarRecepcionesRegistradasPorImportacion(importacion) {
   const task = 5;
   const tbody = document.getElementById("tbdr");
   tbody.innerHTML = "";
-  $.post(controllerIA, { task, importacion }, function (response) {
+  $.post(controllerI, { task, importacion }, function (response) {
     const datos = JSON.parse(response);
     let color = "";
     if (datos.length > 0) {
@@ -177,7 +176,7 @@ function buscarRecepcionesRegistradasPorImportacion(importacion) {
 
 function readRecepcion(recepcion) {
   const task = 6;
-  $.post(controllerIA, { task, recepcion }, function (response) {
+  $.post(controllerI, { task, recepcion }, function (response) {
     const datos = JSON.parse(response);
 
     if (datos.length === 0) {
@@ -457,7 +456,7 @@ function procesar(datos) {
       formData.append("recepcion", JSON.stringify(datos));
       formData.append("task", 4);
       await $.ajax({
-        url: controllerIA,
+        url: controllerI,
         dataType: "text",
         cache: false,
         contentType: false,
