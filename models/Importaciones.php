@@ -126,6 +126,12 @@ class Importaciones extends Conexion
         return ['success' => true, 'message' => 'Recepciones registradas', 'data' => $importacion->pedido];
     }
 
+    public function borrarRecepcion(int $recepcion): array
+    {
+                
+        return [];
+    }
+
     private function uploadFile(string $dir, object $file, string $name): string
     {
         try {

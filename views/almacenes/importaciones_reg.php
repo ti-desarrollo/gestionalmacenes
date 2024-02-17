@@ -352,16 +352,24 @@ if (isset($_SESSION['ga-usuario'])) {
                                                         <div class="row">
                                                             <div class="mb-2 col-xs-12 col-sm-6 col-lg-4 col-xl-4 col-xxl-4">
                                                                 <label for="txtConformidad">Conformidad</label>
-                                                                <input type="text" readonly class="form-control form-control-sm" id="txtConformidad">
-                                                            </div>
-                                                            <div class="mb-2 col-xs-12 col-sm-6 col-lg-8 col-xl-8 col-xxl-8">
-                                                                <label for="txtComentario">Comentario</label>
                                                                 <div class="input-group mb-2">
-                                                                    <input type="text" readonly class="form-control form-control-sm" id="txtComentario" />
+                                                                    <input type="text" readonly class="form-control form-control-sm" id="txtConformidad">
                                                                     <div class="input-group-prepend">
                                                                         <a target="_blank" class="input-group-text" id="txtAdjuntoNoConformidad" style="color: #4CAF50;"><i class="fa fa-fw fa-download"></i></a>
                                                                     </div>
                                                                 </div>
+                                                            </div>
+                                                            <div class="mb-2 col-xs-12 col-sm-6 col-lg-8 col-xl-8 col-xxl-8">
+                                                                <label for="txtComentario">Comentario</label>
+                                                                <input type="text" readonly class="form-control form-control-sm" id="txtComentario" />
+                                                            </div>
+                                                            <div class="mb-2 col-xs-12 col-sm-6 col-lg-6 col-xl-6 col-xxl-6" id="UsuarioNoCo">
+                                                                <label for="txtUsuarioNoConformidad">Usuario</label>
+                                                                <input type="text" readonly class="form-control form-control-sm" id="txtUsuarioNoConformidad">
+                                                            </div>
+                                                            <div class="mb-2 col-xs-12 col-sm-6 col-lg-6 col-xl-6 col-xxl-6" id="FechaNoCo">
+                                                                <label for="txtFechaNoConformidad">Fecha</label>
+                                                                <input type="text" readonly class="form-control form-control-sm" id="txtFechaNoConformidad">
                                                             </div>
                                                         </div>
                                                     </div>

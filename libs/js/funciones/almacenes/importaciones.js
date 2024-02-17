@@ -203,6 +203,8 @@ function readRecepcion(recepcion) {
     const file2 = document.getElementById("txtGRRAdjunto");
     const file3 = document.getElementById("txtTicketAdjunto");
     const file4 = document.getElementById("txtAdjuntoNoConformidad");
+    const UsuarioNoCo = document.getElementById("UsuarioNoCo");
+    const FechaNoCo = document.getElementById("FechaNoCo");
 
     file1.href = datos[0]["GRTAdjunto"];
     file2.href = datos[0]["GRRAdjunto"];
@@ -211,8 +213,12 @@ function readRecepcion(recepcion) {
 
     if (datos[0]["AdjuntoNoConformidad"] === null) {
       file4.style.visibility = "hidden";
+      UsuarioNoCo.style.display = "none";
+      FechaNoCo.style.display = "none";
     } else {
       file4.style.visibility = "visible";
+      UsuarioNoCo.style.display = "block";
+      FechaNoCo.style.display = "block";
     }
 
     $("#mdlLayout").modal("toggle");
