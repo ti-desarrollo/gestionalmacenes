@@ -52,7 +52,7 @@ class Conexion
             sqlsrv_fetch($result);
             $ultimoID = sqlsrv_get_field($result, 0);
             sqlsrv_free_stmt($result);
-            return $ultimoID;
+            return $ultimoID ?? false;
         } catch (Exception $e) {
             return false;
         }

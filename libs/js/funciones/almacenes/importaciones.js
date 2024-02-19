@@ -162,7 +162,7 @@ function buscarRecepcionesRegistradasPorImportacion(importacion) {
             <td>${element.ticket}</td>
             <td><b style="background: ${color}; padding: 5px; color: #ffffff; border-radius: 5px;">${element.conformidad}</b></td>
             <td>
-              <i class="fa fa-fw fa-trash" style="color: #F44336; font-size: large; cursor: pointer;" onclick="deleteRecepcion(${importacion}, ${element.codigo})"></i>
+              <i class="fa fa-fw fa-trash" style="color: #F44336; font-size: large; cursor: pointer;" onclick="deleteRecepcion(${element.codigo})"></i>
               <i class="fa fa-fw fa-eye" style="color: #2196f3; font-size: large; cursor: pointer;" onclick="readRecepcion(${element.codigo})"></i>
             </td>
           </tr>`;
@@ -224,7 +224,7 @@ function readRecepcion(recepcion) {
   });
 }
 
-function deleteRecepcion(importacion, recepcion) {
+function deleteRecepcion(recepcion) {
   Swal.fire({
     title: "¿Está seguro de eliminar este registro?",
     text: "Esta acción no se puede revertir",
@@ -232,12 +232,46 @@ function deleteRecepcion(importacion, recepcion) {
     showCancelButton: true,
     confirmButtonColor: "#3085d6",
     cancelButtonColor: "#d33",
-    confirmButtonText: "Si, eliminar",
+    confirmButtonText: "Si, procesar",
     cancelButtonText: "No, cancelar",
-  }).then((result) => {
+    showLoaderOnConfirm: true,
+    preConfirm: async () => {
+      let result;
+
+      const formData = new FormData();
+      formData.append("recepcion", recepcion);
+      formData.append("task", 7);
+      await $.ajax({
+        url: controllerI,
+        dataType: "text",
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: formData,
+        type: "post",
+        success: function (response) {
+          result = JSON.parse(response);
+        },
+      });
+      return result;
+    },
+    allowOutsideClick: () => !Swal.isLoading(),
+  }).then(async (result) => {
     if (result.isConfirmed) {
-      // Lógica para eliminar la recepción
-      buscarRecepcionesRegistradasPorImportacion(importacion);
+      const response = result.value;
+      Swal.fire({
+        icon: response.success ? "success" : "error",
+        title: response.message,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          rowSelected(parseInt(response.data));
+        }
+      });
+
+      if (response.success) {
+        listar();
+        verDetalle(response.data);
+      }
     }
   });
 }
@@ -423,7 +457,7 @@ function validarDatos() {
     datos.push(dato);
   }
 
-  procesar(datos);
+  addRecepcion(datos);
 }
 
 function obtenerNombreCampo(id) {
@@ -432,7 +466,7 @@ function obtenerNombreCampo(id) {
   return nombreCampo;
 }
 
-function procesar(datos) {
+function addRecepcion(datos) {
   Swal.fire({
     title: "¿Está seguro de procesar los datos?",
     text: "Verifica las cantidades antes de procesar el pedido, ten en cuenta que los pedidos ya procesados no pueden modificarse",
@@ -479,13 +513,12 @@ function procesar(datos) {
         title: response.message,
       }).then((result) => {
         if (result.isConfirmed) {
-          document.getElementById("closeDetalle").click();
           rowSelected(parseInt(response.data));
         }
       });
 
       if (response.success) {
-        listar();
+        verDetalle(response.data);
       }
     }
   });

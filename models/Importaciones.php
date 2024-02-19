@@ -1,7 +1,5 @@
 <?php
 
-use FFI\Exception;
-
 require_once 'Conexion.php';
 
 class Importaciones extends Conexion
@@ -118,7 +116,7 @@ class Importaciones extends Conexion
                     array_push($inserted, $result);
                 }
             } catch (Exception $e) {
-                $this->rollbackRecepcionImportacion($uploadedFiles, $importacion, $pesoRecepcionadoTotal, $bultosRecepcionadosTotal, $inserted);
+                $this->rollbackRecepcionImportacion($uploadedFiles, $importacion, $pesoRecepcionadoTotal, $bultosRecepcionadosTotal, $inserted, 'ANULADO POR ERROR AL REGISTRAR');
                 return ['success' => false, 'message' => $e->getMessage()];
             }
         }
@@ -126,10 +124,38 @@ class Importaciones extends Conexion
         return ['success' => true, 'message' => 'Recepciones registradas', 'data' => $importacion->pedido];
     }
 
-    public function borrarRecepcion(int $recepcion): array
+    public function borrarRecepcion(int $recepcion, string $sede): array
     {
-                
-        return [];
+        try {
+            $datos = $this->buscarDetalleRecepcion($recepcion, $sede);
+            if (count($datos) === 0) {
+                throw new Exception('No existe el registro o ya fue anulado por otra persona');
+            }
+
+            $file1 = explode('/', $datos[0]['GRRAdjunto'])[12];
+            $file2 = explode('/', $datos[0]['GRTAdjunto'])[12];
+            $file3 = explode('/', $datos[0]['TicketAdjunto'])[12];
+            $fechaNoConformidad = $datos[0]['FechaNoConformidad'];
+            $dir = $datos[0]['dir'];
+            $importacionCodigo = $datos[0]['importacion'];
+            $pedido = (int) $datos[0]['pedido'];
+            $pesoRecibido = (float) $datos[0]['PesoRecibido'];
+            $bultosRecibidos = (int) $datos[0]['BultosRecibidos'];
+            $importacion = (object)[
+                'dir' => $dir,
+                'codigo' => $importacionCodigo
+            ];
+
+            if ($fechaNoConformidad !== null) {
+                throw new Exception('Este registro no puede ser anulado');
+            }
+
+            $this->rollbackRecepcionImportacion([$file1, $file2, $file3], $importacion, $pesoRecibido, $bultosRecibidos, [$recepcion], 'ANULADO POR EL USUARIO');
+
+            return ['success' => true, 'message' => 'Registro anulado', 'data' => $pedido];
+        } catch (Exception $e) {
+            return ['success' => false, 'message' => $e->getMessage()];
+        }
     }
 
     private function uploadFile(string $dir, object $file, string $name): string
@@ -165,19 +191,14 @@ class Importaciones extends Conexion
         }
     }
 
-    private function rollbackRecepcionImportacion(array $uploadedFiles, object $importacion, float $pesoRecepcionadoTotal, int $bultosRecepcionadosTotal, array $inserted): void
+    private function rollbackRecepcionImportacion(array $uploadedFiles, object $importacion, float $pesoRecepcionadoTotal, int $bultosRecepcionadosTotal, array $inserted, string $comentario): void
     {
-        /** 1. BORRAR ARCHIVOS */
         foreach ($uploadedFiles as $file) {
             unlink("\\\amseq-files\\ALMACEN - TIENDA\\$importacion->dir\\$file");
         }
-
-        /** 2. ACTUALIZAR LA CABECERA DE LA IMPORTACIÓN */
         $this->simpleQuery('EXEC sp_actualizarImportacionPesoYBultos ?, ?, ?', [$importacion->codigo, ($pesoRecepcionadoTotal * -1), ($bultosRecepcionadosTotal * -1)]);
-
-        /** 3. BORRAMOS LAS RECEPCIONES REGISTRADAS */
         foreach ($inserted as $line) {
-            $this->simpleQuery('UPDATE recepcion_importacion_detalle SET rid_estado = ?, rid_comentario = ? WHERE rid_id = ?', [0, 'ANULADO POR ERROR AL REGISTRAR', $line]);
+            $this->simpleQuery('EXEC sp_anularRecepcion ?, ?', [$line, $comentario]);
         }
     }
 }

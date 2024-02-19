@@ -35,6 +35,11 @@ if (isset($_REQUEST, $_SESSION)) {
             echo json_encode($pedido->buscarDetalleRecepcion($_POST['recepcion'], $_SESSION['ga-sede']));
             break;
 
+        case 7:
+            // Buscar el detalle de la recepción
+            echo json_encode($pedido->borrarRecepcion($_POST['recepcion'], $_SESSION['ga-sede']));
+            break;
+
         default:
             echo json_encode('Tarea no implementada.');
             break;
