@@ -10,9 +10,9 @@ class Importaciones extends Conexion
         parent::__construct();
     }
 
-    public function listarImportacionesRecepcionadas(string $sede, string $inicio, string $fin): array
+    public function reporteImportaciones(string $sede, string $inicio, string $fin): array
     {
-        return $this->returnQuery('EXEC sp_listarImportacionesRecepcionadas ?, ?, ?', [$sede === '99' ? '' : $sede, $inicio, $fin]);
+        return $this->returnQuery('EXEC sp_reporteImportaciones ?, ?, ?', [$sede === '99' ? '' : $sede, $inicio, $fin]);
     }
 
     public function listarImportaciones(string $sede, string $inicio, string $fin): array
@@ -36,9 +36,9 @@ class Importaciones extends Conexion
         return $this->returnQuery('EXEC sp_listarRecepcionesPorImportacion ?, ?', [$importacion, $sede]);
     }
 
-    public function buscarDetalleRecepcion(int $recepcion, string $sede): array
+    public function buscarDetalleRecepcion(int $recepcion): array
     {
-        return  $this->returnQuery('EXEC sp_buscarRecepcion ?, ?', [$recepcion, $sede]);
+        return  $this->returnQuery('EXEC sp_buscarRecepcion ?', [$recepcion]);
     }
 
     public function registrarRecepcion(string $importacion, string $recepciones, string $usuario, string $sede): array
@@ -202,3 +202,18 @@ class Importaciones extends Conexion
         }
     }
 }
+
+
+/**
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * REVISAR EL REPORTE DE LAS IMPORTACIONES
+ * 
+ * 
+ * 
+ * 
+ */

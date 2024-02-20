@@ -7,7 +7,7 @@ if (isset($_SESSION['ga-usuario'])) {
     if (in_array($_SESSION['ga-area'], ['ALMACENES', 'TIC', 'PLANEAMIENTO'])) {
 ?>
         <!-- Importamos el archivo js -->
-        <script src="../../libs/js/funciones/almacenes/importaciones.js"></script>
+        <script src="../../libs/js/funciones/almacenes/importaciones_reg.js"></script>
 
         <!-- Breadcrumbs-->
         <ol class="breadcrumb">

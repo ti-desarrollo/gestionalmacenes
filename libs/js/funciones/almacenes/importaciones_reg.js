@@ -73,7 +73,7 @@ document.addEventListener("DOMContentLoaded", () => {
 function listar() {
   const tbody = document.getElementById("tbdl");
   const button = document.getElementById("btnR");
-  tbody.innerHTML = `<tr><td colspan="13"><i class="fa fa-spinner fa-2x fa-spin"></i></td></tr>`;
+  tbody.innerHTML = `<tr><td colspan="6"><i class="fa fa-spinner fa-2x fa-spin"></i></td></tr>`;
   button.innerHTML =
     '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Cargando';
 
@@ -88,8 +88,8 @@ function listar() {
     if (datos.length > 0) {
       datos.forEach((element) => {
         tbody.innerHTML += `
-          <tr id="row${element.codigo}" onclick="verDetalle(${element.codigo})">
-            <td class="text-primary">${element.codigo}</td>
+          <tr id="row${element.codigo}">
+            <td class="text-primary" onclick="verDetalle(${element.codigo})">${element.codigo}</td>
             <td>${element.estado}</td>
             <td>${element.pedido}</td>
             <td>${element.proveedor}</td>

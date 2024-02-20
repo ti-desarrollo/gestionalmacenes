@@ -7,7 +7,7 @@ if (isset($_REQUEST, $_SESSION)) {
     switch ($_REQUEST['task']) {
         case 1:
             // Listar las importaciones recepcionadas
-            echo json_encode($pedido->listarImportacionesRecepcionadas($_SESSION['ga-sede'],  $_POST['fechaI'], $_POST['fechaF']));
+            echo json_encode($pedido->reporteImportaciones($_SESSION['ga-sede'],  $_POST['fechaI'], $_POST['fechaF']));
             break;
 
         case 2:
@@ -32,7 +32,7 @@ if (isset($_REQUEST, $_SESSION)) {
 
         case 6:
             // Buscar el detalle de la recepción
-            echo json_encode($pedido->buscarDetalleRecepcion($_POST['recepcion'], $_SESSION['ga-sede']));
+            echo json_encode($pedido->buscarDetalleRecepcion($_POST['recepcion']));
             break;
 
         case 7:
