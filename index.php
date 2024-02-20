@@ -132,7 +132,7 @@ if (isset($_SESSION['ga-usuario'])) {
                             <li>
                                 <a class="nav-link-collapse collapsed" data-toggle="collapse" data-target="#importacionesLogistica" href="#"><span class="nav-link-text">Logística</span></a>
                                 <ul class="sidenav-third-level collapse" id="importacionesLogistica" data-parent="#menuImportaciones">
-                                    <li><a href="views/administrativos/importaciones.php"><span class="nav-link-text">Importaciones</span></a></li>
+                                    <li><a href="views/administrativos/importaciones_rep.php"><span class="nav-link-text">Reporte</span></a></li>
                                 </ul>
                             </li>
                         </ul>

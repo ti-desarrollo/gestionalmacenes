@@ -40,6 +40,11 @@ if (isset($_REQUEST, $_SESSION)) {
             echo json_encode($pedido->borrarRecepcion($_POST['recepcion'], $_SESSION['ga-sede']));
             break;
 
+        case 8:
+            // Subir la no conformidad de una recepción
+            echo json_encode($pedido->noConformidad($_SESSION['ga-usuario'], $_POST['codigo'], $_POST['grr'], $_POST['directorio'], (object) $_FILES['file']));
+            break;
+
         default:
             echo json_encode('Tarea no implementada.');
             break;

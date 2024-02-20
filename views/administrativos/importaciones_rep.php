@@ -4,15 +4,15 @@ date_default_timezone_set('America/Lima');
 session_start();
 if (isset($_SESSION['ga-usuario'])) {
     include('../tmp_header.html');
-    if (in_array($_SESSION['ga-area'], ['ALMACENES', 'TIC', 'PLANEAMIENTO'])) {
+    if (in_array($_SESSION['ga-area'], ['LOGISTICA', 'TIC', 'PLANEAMIENTO'])) {
 ?>
         <!-- Importamos el archivo js -->
-        <script src="../../libs/js/funciones/almacenes/importaciones_rep.js"></script>
+        <script src="../../libs/js/funciones/administrativos/importaciones_rep.js"></script>
 
         <!-- Breadcrumbs-->
         <ol class="breadcrumb">
             <li class="breadcrumb-item">
-                <a href="#">ALMACENES</a>
+                <a href="#">LOGISTICA</a>
             </li>
             <li class="breadcrumb-item">
                 <a href="#">IMPORTACIONES</a>
@@ -64,19 +64,20 @@ if (isset($_SESSION['ga-usuario'])) {
                                         <th>GRT</th>
                                         <th>N° TICKET</th>
                                         <th>Conformidad</th>
-
+                                        <th>Acciones</th>
                                     </thead>
                                     <tbody id="tbdl">
                                         <tr>
-                                            <td colspan="11"><i class="fa fa-spinner fa-2x fa-spin"></i></td>
+                                            <td colspan="12"><i class="fa fa-spinner fa-2x fa-spin"></i></td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                         <div class="card-footer">
-                            :: La lista solo contiene los pedidos que pertenecen a la misma sede del usuario en sesión<br>
-                            :: Para ver los productos que contiene un pedido debes hacer clic en el número del documento
+                            :: La lista solo contiene los pedidos que pertenecen a la misma sede del usuario en sesión<br />
+                            :: Para ver los productos que contiene un pedido debes hacer clic en el número del documento<br />
+                            :: Leyenda: Subir No Conformidad <i class="fa fa-fw fa-upload" style="color: #F44336; font-size: large;"></i>
                         </div>
                     </div>
                 </div>
@@ -91,7 +92,6 @@ if (isset($_SESSION['ga-usuario'])) {
                             </div>
                             <div class="modal-body">
                                 <div id="layout">
-
                                     <div class="row">
                                         <div class="col-xs-12 col-sm-12 col-lg-6 col-xl-6 col-xxl-6">
                                             <div class="card mb-3">
@@ -250,6 +250,28 @@ if (isset($_SESSION['ga-usuario'])) {
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal carga de no conformidad -->
+                <div class="modal fade" id="mdlLayoutNoConformidad" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: unset; width: 50%;">
+                        <div class="modal-content" style="padding: 20px; overflow-x: scroll;">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Subir archivo de no conformidad</h5>
+                                <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">X</span></button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="formNoConformidad">
+                                    <div class="form-group">
+                                        <label for="noConformidadAjunto">Archivo de no conformidad</label>
+                                        <input type="file" class="form-control" aria-describedby="fileHelp" accept="image/jpeg,image/jpg,image/png,application/pdf" id="noConformidadAjunto" required />
+                                        <small id="fileHelp" class="form-text text-muted">Puedes subir un archivo JPEG, JPG, PNG O PDF</small>
+                                    </div>
+                                    <button type="submit" class="btn btn-success btn-sm"><i class="fa fa-fw fa-upload"></i> Subir archivo</button>
+                                </form>
                             </div>
                         </div>
                     </div>

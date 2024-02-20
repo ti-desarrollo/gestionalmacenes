@@ -38,7 +38,7 @@ class Importaciones extends Conexion
 
     public function buscarDetalleRecepcion(int $recepcion): array
     {
-        return  $this->returnQuery('EXEC sp_buscarRecepcion ?', [$recepcion]);
+        return $this->returnQuery('EXEC sp_buscarRecepcion ?', [$recepcion]);
     }
 
     public function registrarRecepcion(string $importacion, string $recepciones, string $usuario, string $sede): array
@@ -158,6 +158,19 @@ class Importaciones extends Conexion
         }
     }
 
+    public function noConformidad(string $usuario, int $codigo, string $grr, string $directorio, object $file): array
+    {
+        try {
+            $adjunto = $this->uploadFile($directorio, $file, "NO CONFORMIDAD $grr");
+            if ($this->simpleQuery('EXEC sp_subirNoConformidad ?, ?, ?', [$codigo, $usuario, $adjunto])) {
+                return ['success' => true, 'message' => 'Archivo cargado'];
+            }
+            return ['success' => false, 'message' => 'Hubo un error al cargar el archivo.'];
+        } catch (Exception $e) {
+            return ['success' => false, 'message' => $e->getMessage()];
+        }
+    }
+
     private function uploadFile(string $dir, object $file, string $name): string
     {
         try {
@@ -202,18 +215,3 @@ class Importaciones extends Conexion
         }
     }
 }
-
-
-/**
- * 
- * 
- * 
- * 
- * 
- * 
- * REVISAR EL REPORTE DE LAS IMPORTACIONES
- * 
- * 
- * 
- * 
- */

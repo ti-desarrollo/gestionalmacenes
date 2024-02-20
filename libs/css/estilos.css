@@ -40,6 +40,7 @@ th {
 td {
   text-align: center;
   font-size: 12px;
+  vertical-align: middle !important;
 }
 
 label,
