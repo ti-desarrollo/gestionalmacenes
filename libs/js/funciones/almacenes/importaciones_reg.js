@@ -545,8 +545,11 @@ async function sendNotification(codigo) {
           recepcion.usuario,
           recepcion.proveedor,
           recepcion.GRR,
+          recepcion.GRRAdjunto,
           recepcion.GRT,
+          recepcion.GRTAdjunto,
           recepcion.Ticket,
+          recepcion.TicketAdjunto,
           recepcion.Conformidad,
           recepcion.FechaRecepcion
         );
@@ -583,8 +586,11 @@ function mailNotification(
   usuario,
   proveedor,
   grr,
+  adjunto,
   grt,
+  adjunto2,
   ticket,
+  adjunto3,
   conformidad,
   fechaRecepcion
 ) {
@@ -599,14 +605,14 @@ function mailNotification(
     </head>
     <body>
       <div>
-        <p>Usuario: <b>${usuario}</b></p>
-        <p>N° Pedido: <b>${pedido}</b></p>
-        <p>Proveedor: <b>${proveedor}</b></p>
-        <p>N° GRR: <b>${grr}</b></p>
-        <p>N° GRT: <b>${grt}</b></p>
-        <p>N° TICKET: <b>${ticket}</b></p>
-        <p>Conformidad: <b>${conformidad}</b></p>
-        <p>Fecha de recepción: <b>${fechaRecepcion}</b></p>
+        <span>Usuario: <b>${usuario}</b></span><br />
+        <span>N° Pedido: <b>${pedido}</b></span><br />
+        <span>Proveedor: <b>${proveedor}</b></span><br />
+        <span>N° GRR: <b>${grr} (<a href="${adjunto}" target="_blank">Descargar</a>)</b></span><br />
+        <span>N° GRT: <b>${grt} (<a href="${adjunto2}" target="_blank">Descargar</a>)</b></span><br />
+        <span>N° TICKET: <b>${ticket} (<a href="${adjunto3}" target="_blank">Descargar</a>)</b></span><br />
+        <span>Conformidad: <b>${conformidad}</b></span><br />
+        <span>Fecha de recepción: <b>${fechaRecepcion}</b></span><br />
       </div>
     </body>
   </html>`;
