@@ -121,7 +121,7 @@ class Importaciones extends Conexion
             }
         }
 
-        return ['success' => true, 'message' => 'Recepciones registradas', 'data' => $importacion->pedido];
+        return ['success' => true, 'message' => 'Recepciones registradas', 'data' => $importacion->pedido, 'recepcion' => $result];
     }
 
     public function borrarRecepcion(int $recepcion, string $sede): array
@@ -213,5 +213,11 @@ class Importaciones extends Conexion
         foreach ($inserted as $line) {
             $this->simpleQuery('sp_anularRecepcion ?, ?', [$line, $comentario]);
         }
+    }
+
+    public function enviarCorreo(string $body, string $recipients, string $subject): int | bool
+    {
+        $this->simpleQuery("[10.2.3.30].msdb.dbo.sp_send_dbmail @profile_name = 'PerfilEnvioCorreos2023', @body = ?, @body_format ='HTML', @recipients = ?, @subject = ?;", [$body, $recipients, $subject]);
+        return 1;
     }
 }

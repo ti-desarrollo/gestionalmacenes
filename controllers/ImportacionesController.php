@@ -45,6 +45,10 @@ if (isset($_REQUEST, $_SESSION)) {
             echo json_encode($pedido->noConformidad($_SESSION['ga-usuario'], $_POST['codigo'], $_POST['grr'], $_POST['directorio'], (object) $_FILES['file']));
             break;
 
+        case 9:
+            // Enviar correo para notificar procesamiento de un pedido
+            echo json_encode($pedido->enviarCorreo($_POST['body'], $_POST['recipients'], $_POST['subject']));
+            break;
         default:
             echo json_encode('Tarea no implementada.');
             break;

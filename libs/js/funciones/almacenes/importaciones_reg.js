@@ -518,10 +518,131 @@ function addRecepcion(datos) {
       });
 
       if (response.success) {
+        sendNotification(response.recepcion);
         verDetalle(response.data);
       }
     }
   });
 }
 
+async function sendNotification(codigo) {
+  const recepcion = await detalleRecepcion(codigo);
+  console.log(recepcion);
 
+  const task = 4;
+  $.post(
+    "../../controllers/UsuarioController.php",
+    {
+      task,
+    },
+    function (response) {
+      const data = JSON.parse(response);
+      data.forEach((element) => {
+        pushNotification(element.tokenfcm, recepcion.pedido, recepcion.sede);
+
+        mailNotification(
+          element.correo,
+          recepcion.pedido,
+          recepcion.sede,
+          recepcion.usuario,
+          recepcion.proveedor,
+          recepcion.GRR,
+          recepcion.GRT,
+          recepcion.Ticket,
+          recepcion.Conformidad,
+          recepcion.FechaRecepcion
+        );
+      });
+    }
+  );
+}
+
+function pushNotification(token, pedido, sede) {
+  $.ajax({
+    url: "https://fcm.googleapis.com/fcm/send",
+    method: "POST",
+    timeout: 0,
+    headers: {
+      Authorization:
+        "key=AAAAIZ8QssU:APA91bHG2bnhZ4b51Bwtg-aY_zo99lofkdaLex4zGm1sy_fmU3cSdGC9fUzBvdsCbl5LK1Uu97BvvrnoDNawSvXcgpjsf1lVzzz-uYOsTdVQSvhoEdvffKeI-9mecRmiYeCox6RVhNT1",
+      "Content-Type": "application/json",
+    },
+    data: JSON.stringify({
+      to: token,
+      notification: {},
+      data: {
+        title: "Pedido procesado",
+        body: `RECEPCIÓN DE IMPORTACIÓN --- SEDE: ${sede} | PEDIDO ${pedido}`,
+      },
+    }),
+  }).done(function () {});
+}
+
+function mailNotification(
+  recipients,
+  pedido,
+  sede,
+  usuario,
+  proveedor,
+  grr,
+  grt,
+  ticket,
+  conformidad,
+  fechaRecepcion
+) {
+  const task = 9;
+  const subject = `RECEPCIÓN DE IMPORTACIÓN --- SEDE: ${sede} | PEDIDO ${pedido}`;
+  const body = `<!DOCTYPE html>
+  <html lang="en">
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>RECEPCIÓN DE IMPORTACIÓN --- SEDE: ${sede} | PEDIDO ${pedido}</title>
+    </head>
+    <body>
+      <div>
+        <p>Usuario: <b>${usuario}</b></p>
+        <p>N° Pedido: <b>${pedido}</b></p>
+        <p>Proveedor: <b>${proveedor}</b></p>
+        <p>N° GRR: <b>${grr}</b></p>
+        <p>N° GRT: <b>${grt}</b></p>
+        <p>N° TICKET: <b>${ticket}</b></p>
+        <p>Conformidad: <b>${conformidad}</b></p>
+        <p>Fecha de recepción: <b>${fechaRecepcion}</b></p>
+      </div>
+    </body>
+  </html>`;
+  $.post(
+    controllerI,
+    {
+      task,
+      body,
+      recipients,
+      subject,
+    },
+    function (_) {}
+  );
+}
+
+async function detalleRecepcion(recepcion) {
+  let response = null;
+  const task = 6;
+
+  const formData = new FormData();
+  formData.append("recepcion", recepcion);
+  formData.append("task", task);
+  await $.ajax({
+    url: controllerI,
+    dataType: "text",
+    cache: false,
+    contentType: false,
+    processData: false,
+    data: formData,
+    type: "post",
+    success: function (result) {
+      response = JSON.parse(result)[0];
+    },
+  });
+
+  return response;
+}
