@@ -527,8 +527,6 @@ function addRecepcion(datos) {
 
 async function sendNotification(codigo) {
   const recepcion = await detalleRecepcion(codigo);
-  console.log(recepcion);
-
   const task = 4;
   $.post(
     "../../controllers/UsuarioController.php",

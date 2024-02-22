@@ -35,3 +35,22 @@ function rowSelected(id) {
     row.classList.toggle("blob", shouldAddClass);
   }
 }
+
+function logout() {
+  const task = 2;
+  Swal.fire({
+    title: "¿Está seguro de salir?",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Si, salir",
+    cancelButtonText: "No, cancelar",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      $.post(`../../controllers/UsuarioController.php`, { task }, function () {
+        location.reload();
+      });
+    }
+  });
+}
