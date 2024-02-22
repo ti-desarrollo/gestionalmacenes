@@ -12,33 +12,33 @@ class Importaciones extends Conexion
 
     public function reporteImportaciones(string $sede, string $inicio, string $fin): array
     {
-        return $this->returnQuery('EXEC sp_reporteImportaciones ?, ?, ?', [$sede === '99' ? '' : $sede, $inicio, $fin]);
+        return $this->returnQuery('sp_reporteImportaciones ?, ?, ?', [$sede === '99' ? '' : $sede, $inicio, $fin]);
     }
 
     public function listarImportaciones(string $sede, string $inicio, string $fin): array
     {
-        return $this->returnQuery('EXEC sp_listarPedidosImportacion ?, ?, ?', [$sede, $inicio, $fin]);
+        return $this->returnQuery('sp_listarPedidosImportacion ?, ?, ?', [$sede, $inicio, $fin]);
     }
 
     public function buscarDetalleImportacion(string $sede, string $pedido, string $usuario): array
     {
         $this->registrarImportacion($sede, $pedido, $usuario);
-        return $this->returnQuery('EXEC sp_buscarImportacion ?, ?, ?', [$sede, $pedido, $usuario]);
+        return $this->returnQuery('sp_buscarImportacion ?, ?, ?', [$sede, $pedido, $usuario]);
     }
 
     private function registrarImportacion(string $sede, int $pedido, string $usuario): int | bool
     {
-        return $this->insertQuery('EXEC sp_registrarImportacion ?, ?, ?', [$sede, $pedido, $usuario]);
+        return $this->insertQuery('sp_registrarImportacion ?, ?, ?', [$sede, $pedido, $usuario]);
     }
 
     public function buscarRecepcionesPorImportacion(int $importacion, string $sede): array
     {
-        return $this->returnQuery('EXEC sp_listarRecepcionesPorImportacion ?, ?', [$importacion, $sede]);
+        return $this->returnQuery('sp_listarRecepcionesPorImportacion ?, ?', [$importacion, $sede]);
     }
 
     public function buscarDetalleRecepcion(int $recepcion): array
     {
-        return $this->returnQuery('EXEC sp_buscarRecepcion ?', [$recepcion]);
+        return $this->returnQuery('sp_buscarRecepcion ?', [$recepcion]);
     }
 
     public function registrarRecepcion(string $importacion, string $recepciones, string $usuario, string $sede): array
@@ -83,7 +83,7 @@ class Importaciones extends Conexion
                 // Guardamos los archivos cargados
                 array_push($uploadedFiles, $grrAdjunto, $grtAdjunto, $ticketAdjunto);
 
-                $result = $this->insertQuery('EXEC sp_registrarRecepcionImportacion ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?', [
+                $result = $this->insertQuery('sp_registrarRecepcionImportacion ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?', [
                     $codigo,
                     $grr,
                     $grrAdjunto,
@@ -110,7 +110,7 @@ class Importaciones extends Conexion
                 if (!$result) {
                     throw new Exception('Hubo un error al registrar las importaciones. Intente nuevamente');
                 } else {
-                    $this->simpleQuery('EXEC sp_actualizarImportacionPesoYBultos ?, ?, ?', [$codigo, $pesoRecepcionado, $bultosRecepcionados]);
+                    $this->simpleQuery('sp_actualizarImportacionPesoYBultos ?, ?, ?', [$codigo, $pesoRecepcionado, $bultosRecepcionados]);
                     $pesoRecepcionadoTotal +=  $pesoRecepcionado;
                     $bultosRecepcionadosTotal += $bultosRecepcionados;
                     array_push($inserted, $result);
@@ -162,7 +162,7 @@ class Importaciones extends Conexion
     {
         try {
             $adjunto = $this->uploadFile($directorio, $file, "NO CONFORMIDAD $grr");
-            if ($this->simpleQuery('EXEC sp_subirNoConformidad ?, ?, ?', [$codigo, $usuario, $adjunto])) {
+            if ($this->simpleQuery('sp_subirNoConformidad ?, ?, ?', [$codigo, $usuario, $adjunto])) {
                 return ['success' => true, 'message' => 'Archivo cargado'];
             }
             return ['success' => false, 'message' => 'Hubo un error al cargar el archivo.'];
@@ -209,9 +209,9 @@ class Importaciones extends Conexion
         foreach ($uploadedFiles as $file) {
             unlink("\\\amseq-files\\ALMACEN - TIENDA\\$importacion->dir\\$file");
         }
-        $this->simpleQuery('EXEC sp_actualizarImportacionPesoYBultos ?, ?, ?', [$importacion->codigo, ($pesoRecepcionadoTotal * -1), ($bultosRecepcionadosTotal * -1)]);
+        $this->simpleQuery('sp_actualizarImportacionPesoYBultos ?, ?, ?', [$importacion->codigo, ($pesoRecepcionadoTotal * -1), ($bultosRecepcionadosTotal * -1)]);
         foreach ($inserted as $line) {
-            $this->simpleQuery('EXEC sp_anularRecepcion ?, ?', [$line, $comentario]);
+            $this->simpleQuery('sp_anularRecepcion ?, ?', [$line, $comentario]);
         }
     }
 }

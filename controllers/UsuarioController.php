@@ -13,19 +13,20 @@ if (isset($_REQUEST)) {
             break;
 
         case 2:
-            // Cerrar sesión
+            // Cerrar sesión            
+            $usuario->cerrarSesion($_SESSION['ga-sesion']);
             $_SESSION = [];
             session_destroy();
             break;
 
         case 3:
             // Guardar token para notificaciones
-            echo json_encode($usuario->guardarToken($_POST['token'], $_SESSION['ga-usuario'], $_SESSION['ga-area']));
+            echo json_encode($usuario->abrirSesion($_SESSION['ga-usuario'], $_SESSION['ga-area'], $_POST['token'], $_SESSION['ga-correo']));
             break;
 
         case 4:
             // Leer token para notificaciones
-            echo json_encode($usuario->leerToken());
+            echo json_encode($usuario->leerSesiones());
             break;
 
         default:

@@ -35,7 +35,7 @@ class EntradaMercancia extends Conexion
     public function listarEntradas_A(string $inicio, string $fin, string $search, int $page, int $limit): array
     {
         $startFrom = ($page - 1) * $limit;
-        $data = $this->returnQuery('EXEC sp_listarEntradaMercanciasAdm ?, ?, ?, ?, ?', [$inicio, $fin, $search, $startFrom, $limit]);
+        $data = $this->returnQuery('sp_listarEntradaMercanciasAdm ?, ?, ?, ?, ?', [$inicio, $fin, $search, $startFrom, $limit]);
         foreach ($data as $entrada => &$valor) {
             $adjuntos = '';
             $files = $this->listarDocumentosPedido($valor['docentryPedido'], $valor['guia']);
@@ -50,7 +50,7 @@ class EntradaMercancia extends Conexion
     public function listarEntradas(string $sede, string $inicio, string $fin, string $search, int $page, int $limit): array
     {
         $startFrom = ($page - 1) * $limit;
-        $data = $this->returnQuery('EXEC sp_listarEntradaMercancias ?, ?, ?, ?, ?, ?', [$sede, $inicio, $fin, $search, $startFrom, $limit]);
+        $data = $this->returnQuery('sp_listarEntradaMercancias ?, ?, ?, ?, ?, ?', [$sede, $inicio, $fin, $search, $startFrom, $limit]);
         foreach ($data as $entrada => &$valor) {
             $adjuntos = '';
             $files = $this->listarDocumentosPedido($valor['docentryPedido'], $valor['guia']);
@@ -64,16 +64,16 @@ class EntradaMercancia extends Conexion
 
     public function buscarDetalle(string $sede, string $codigo): array
     {
-        return $this->returnQuery('EXEC sp_buscarEntradaMercancia ?, ?', [$sede, $codigo]);
+        return $this->returnQuery('sp_buscarEntradaMercancia ?, ?', [$sede, $codigo]);
     }
 
     private function listarDocumentosPedido(string|null $pedido, string|null $guia): array
     {
-        return $this->returnQuery('EXEC sp_listarDocumentosPedido ?, ?', [$pedido, $guia]);
+        return $this->returnQuery('sp_listarDocumentosPedido ?, ?', [$pedido, $guia]);
     }
 
     public function layout(string $docentry,): array
     {
-        return $this->returnQuery('EXEC SBO_3AAMSEQ_OrdenVenta.dbo.USP_ME_NOTARECEPCION ?', [$docentry]);
+        return $this->returnQuery('SBO_3AAMSEQ_OrdenVenta.dbo.USP_ME_NOTARECEPCION ?', [$docentry]);
     }
 }

@@ -12,7 +12,7 @@ class Pedido extends Conexion
 
     public function listarPedidos_A(string $inicio, string $fin): array
     {
-        $data = $this->returnQuery('EXEC sp_listarPedidosAdministrativos ?, ?', [$inicio, $fin]);
+        $data = $this->returnQuery('sp_listarPedidosAdministrativos ?, ?', [$inicio, $fin]);
         foreach ($data as $pedido => &$valor) {
             $adjuntos = '';
             $files = $this->listarArchivos($valor['codigoRecepcion'], $valor['guia']);
@@ -26,12 +26,12 @@ class Pedido extends Conexion
 
     public function listarPedidos(string $sede, string $inicio, string $fin): array
     {
-        return $this->returnQuery('EXEC sp_listarPedidos ?, ?, ?', [$sede, $inicio, $fin]);
+        return $this->returnQuery('sp_listarPedidos ?, ?, ?', [$sede, $inicio, $fin]);
     }
 
     public function buscarDetalle(string $sede, string $codigo, string $guia): array
     {
-        return $this->returnQuery('EXEC sp_buscarPedido ?, ?, ?', [$sede, $codigo, $guia]);
+        return $this->returnQuery('sp_buscarPedido ?, ?, ?', [$sede, $codigo, $guia]);
     }
 
     public function procesarPedido(int $codigo, string $guia, string $estado, string $comentarios, string $conformidad, string $usuario, array $items): array
@@ -73,7 +73,7 @@ class Pedido extends Conexion
     {
         // Actualizamos la cebecera en SAP
         $guiaDatos = explode('-', $guia);
-        $this->simpleQuery('EXEC sp_actualizarCabeceraPedido ?, ?, ?, ?, ?, ?, ?', [$codigo, $guiaDatos[0], $guiaDatos[1], $guiaDatos[2], $estado, $comentarios, $conformidad]);
+        $this->simpleQuery('sp_actualizarCabeceraPedido ?, ?, ?, ?, ?, ?, ?', [$codigo, $guiaDatos[0], $guiaDatos[1], $guiaDatos[2], $estado, $comentarios, $conformidad]);
 
         // Insertamos en el aplicativo
         $this->simpleQuery("INSERT INTO recepcion_pedido_cabecera(rpc_pedido, rpc_conformidad, rpc_usuario, rpc_guia_grr, rpc_estado, rpc_comentario, rpc_estado_cabecera) VALUES($codigo, '$conformidad', '$usuario', '$guia', '$estado', '$comentarios', 1);", []);
@@ -85,17 +85,17 @@ class Pedido extends Conexion
 
     private function actualizarDetalle(string $cabecera, string $codigo, string $itemcode, string $cantidad): int |bool
     {
-        return $this->simpleQuery('EXEC sp_actualizarDetallePedido ?, ?, ?, ?', [$cabecera, $codigo, $itemcode, $cantidad]);
+        return $this->simpleQuery('sp_actualizarDetallePedido ?, ?, ?, ?', [$cabecera, $codigo, $itemcode, $cantidad]);
     }
 
     public function layout(string $codigo): array
     {
-        return $this->returnQuery('EXEC SBO_3AAMSEQ_OrdenVenta.dbo.SYP_LYT_COMOC01 ?', [$codigo]);
+        return $this->returnQuery('SBO_3AAMSEQ_OrdenVenta.dbo.SYP_LYT_COMOC01 ?', [$codigo]);
     }
 
     private function listarArchivos(string $codigo, string $guia): array
     {
-        return $this->returnQuery('EXEC sp_listarDocumentosPedido ?, ?', [$codigo, $guia]);
+        return $this->returnQuery('sp_listarDocumentosPedido ?, ?', [$codigo, $guia]);
     }
 
     public function uploadFile(int $cabecera, string $dir, array $data): array
@@ -158,21 +158,21 @@ class Pedido extends Conexion
 
     public function enviarCorreo(string $body, string $recipients, string $subject): int | bool
     {
-        $this->simpleQuery("EXECUTE [10.2.3.30].msdb.dbo.sp_send_dbmail @profile_name = 'PerfilEnvioCorreos2023', @body = ?, @body_format ='HTML', @recipients = ?, @subject = ?;", [$body, $recipients, $subject]);
+        $this->simpleQuery("[10.2.3.30].msdb.dbo.sp_send_dbmail @profile_name = 'PerfilEnvioCorreos2023', @body = ?, @body_format ='HTML', @recipients = ?, @subject = ?;", [$body, $recipients, $subject]);
         return 1;
     }
 
     public function rollbackPedido(int $pedido, int $cabecera, array $items): int
     {
         foreach ($items as $item) {
-            $this->simpleQuery('EXEC sp_rollbackPedidoDetalle ?, ?, ?', [$pedido, $item['item'], $item['cantidadPendienteRecibida']]);
+            $this->simpleQuery('sp_rollbackPedidoDetalle ?, ?, ?', [$pedido, $item['item'], $item['cantidadPendienteRecibida']]);
         }
-        return $this->simpleQuery('EXEC sp_rollbackPedido ?, ?', [$pedido, $cabecera]);
+        return $this->simpleQuery('sp_rollbackPedido ?, ?', [$pedido, $cabecera]);
     }
 
     public function listarIngresos(int $pedido): array
     {
-        $data = $this->returnQuery('EXEC sp_listarIngresosPedido ?', [$pedido]);
+        $data = $this->returnQuery('sp_listarIngresosPedido ?', [$pedido]);
         foreach ($data as $pedido => &$valor) {
             $adjuntos = '';
             $files = $this->listarArchivos($valor['codigo'], $valor['guia']);
@@ -186,20 +186,20 @@ class Pedido extends Conexion
 
     public function buscarDetalleIngreso(int $pedido): array
     {
-        return $this->returnQuery('EXEC sp_buscarDetalleIngresoPedido ?', [$pedido]);
+        return $this->returnQuery('sp_buscarDetalleIngresoPedido ?', [$pedido]);
     }
 
     public function rechazarRecepcion(int $pedido, int $cabecera, string $guia, array $items, string $comentarios, string $usuario): array
     {
         foreach ($items as $item) {
-            $this->simpleQuery('EXEC sp_rollbackPedidoDetalle ?, ?, ?', [$pedido, $item['item'], floatval($item['cantidad'])]);
+            $this->simpleQuery('sp_rollbackPedidoDetalle ?, ?, ?', [$pedido, $item['item'], floatval($item['cantidad'])]);
         }
         $files = $this->listarArchivos($cabecera, $guia);
         foreach ($files as $file) {
             $file = "\\\amseq-files\\ALMACEN - TIENDA\\{$file['carpeta']}\\RECEPCIÓN DE MERCADERÍA - ALMACÉN\\{$file['year']}\\{$file['mes']}\\COMPRAS NACIONALES\\{$file['proveedor']}\\{$file['fechaFormato']}\\{$file['fileName']}";
             unlink($file);
         }
-        if ($this->simpleQuery('EXEC sp_rechazarRecepcionPedido ?, ?, ?, ?', [$pedido, $cabecera, $usuario, $comentarios]) > 0) {
+        if ($this->simpleQuery('sp_rechazarRecepcionPedido ?, ?, ?, ?', [$pedido, $cabecera, $usuario, $comentarios]) > 0) {
             return ['success' => true, 'message' => 'Recepción rechazada'];
         }
         return ['success' => false, 'message' => 'Hubo un error al rechazar la recepción, consulte con el área de TI'];

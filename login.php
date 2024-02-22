@@ -40,8 +40,6 @@ if (isset($_SESSION['ga-usuario'])) {
         <!-- SweetAlert2 JS -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.9.0/sweetalert2.all.min.js" integrity="sha512-LTmGiRLYz7G5Sxr4MMXGaOfia3kGZKGAlXzrSCGc4GBGxymu1RGwhFFGwiOQUm+bJOGlV0AmHd1S7zeFlwzkFQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-        <!-- Funciones propias -->
-        <script src="libs/js/funciones/usuario.js"></script>
     </head>
 
     <body class="bg-dark">
@@ -54,46 +52,33 @@ if (isset($_SESSION['ga-usuario'])) {
                     <form id="formSesion">
                         <div class="form-group">
                             <label for="txtUsuario">Usuario</label>
-                            <input class="form-control form-control-sm" id="txtUsuario" name="txtUsuario" type="text" placeholder="Ingrese su usuario">
+                            <input class="form-control form-control-sm" id="txtUsuario" name="txtUsuario" type="text" placeholder="Ingrese su usuario" required autocomplete="off">
                         </div>
                         <div class="form-group">
                             <label for="txtClave">Contraseña</label>
-                            <input class="form-control form-control-sm" id="txtClave" name="txtClave" type="password" placeholder="Ingrese su contraseña">
+                            <input class="form-control form-control-sm" id="txtClave" name="txtClave" type="password" placeholder="Ingrese su contraseña" required autocomplete="off">
                         </div>
-                        <button type="button" id="btnLogin" class="btn btn-primary btn-block btn-sm" onclick="login()"><i class="fa fa-fw fa-sign-in"></i>INGRESAR</button>
+                        <div class="form-check" style="display: flex;">
+                            <input type="checkbox" class="form-check-input" id="remeber" checked>
+                            <label class="form-check-label" for="remeber" check>Recordar credenciales</label>
+                        </div>
+                        <div class="mt-3 text-center">
+                            <button type="submit" id="btnLogin" class="btn btn-success btn-sm"><i class="fa fa-fw fa-sign-in"></i> INGRESAR</button>
+                        </div>
                     </form>
-                    <div class="text-center">
+                    <div class="text-center" style="font-size: x-small;">
                         <br><b>Nota:</b> El acceso al sistema está disponible desde las 7:30am hasta las 6:00pm
                     </div>
                 </div>
             </div>
         </div>
 
-        <script src="./firebase-app.js"></script>
-        <script src="./firebase-messaging.js"></script>
-        <script src="./firebase-messaging-sw.js"></script>
-        <script>
-            var tokenFCM = "";
-            if (firebase.messaging.isSupported()) {
-                messaging
-                    .getToken({
-                        vapidKey: "BNKgkUDdgAOdz-4U-wG6vtkGk9QepgwJOy7uAuWf7dQQW6aW1lYLHS2fj1_7_EldcpcZZUbriCXAo6VsDwEdCr4",
-                    })
-                    .then((token) => {
-                        if (token) {
-                            tokenFCM =
-                                token;
-                        } else {
-                            console.log(
-                                "No registration token available. Request permission to generate one."
-                            );
-                        }
-                    })
-                    .catch((err) => {
-                        console.log("An error occurred while retrieving token. ", err);
-                    });
-            }
-        </script>
+        <script src="firebase-app.js"></script>
+        <script src="firebase-messaging.js"></script>
+        <script src="firebase-messaging-sw.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
+        <!-- Funciones propias -->
+        <script src="libs/js/funciones/usuario.js"></script>
     </body>
 
     </html>

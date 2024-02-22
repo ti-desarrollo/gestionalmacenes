@@ -11,7 +11,7 @@ class Usuario extends Conexion
 
    public function login(string $usuario, string $password): array
    {
-      // $user = get_current_user();
+
       $response = [];
       $hour = date('H:m');
       if ($hour > '07:30' && $hour < '18:00') {
@@ -62,6 +62,7 @@ class Usuario extends Conexion
                $_SESSION['ga-ciudad'] = $usuario->ciudad;
                $_SESSION['ga-area'] = $usuario->area;
                $_SESSION['ga-puesto'] = $usuario->puesto;
+               $_SESSION['ga-correo'] = $usuario->correo;
                $response = [
                   'success' => true,
                   'message' => 'Inicio de sesión exitoso'
@@ -82,17 +83,26 @@ class Usuario extends Conexion
       return $response;
    }
 
-   public function guardarToken(string $token, string $usuario, string $perfil): int| bool
+   public function abrirSesion(string $usuario, string $area, string $token, string $correo): int| bool
    {
-      if (in_array($perfil, ['TIC', 'PLANEAMIENTO', 'ALMACENES'])) {
-         $query = "UPDATE usuarios SET tokenfcm = ? WHERE usuario = ?";
-         return $this->simpleQuery($query, [$token, $usuario]);
+      $host = getenv('COMPUTERNAME');
+      if (in_array($area, ['TIC', 'PLANEAMIENTO', 'ALMACENES'])) {
+         $sesion = $this->insertQuery('sp_abrirSesion ?, ?, ?, ?, ?', [$usuario, $area, $token, $correo, $host]);
+         if ($sesion) {
+            $_SESSION['ga-sesion'] = $sesion;
+         }
+         return $sesion;
       }
-      return 0;
+      return false;
    }
 
-   public function leerToken(): array
+   public function cerrarSesion(int $sesion): int| bool
    {
-      return $this->returnQuery("SELECT ISNULL(tokenfcm, '') AS tokenfcm, correo FROM usuarios WHERE correo IS NOT NULL AND idPerfil = 4", []);
+      return $this->simpleQuery('sp_cerrarSesion ?', [$sesion]);
+   }
+
+   public function leerSesiones(): array
+   {
+      return $this->returnQuery("sp_listarSesiones", []);
    }
 }

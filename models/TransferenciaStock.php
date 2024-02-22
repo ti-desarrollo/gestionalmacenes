@@ -40,7 +40,7 @@ class TransferenciaStock extends Conexion
     public function listarTransferencias_A(string $inicio, string $fin, string $search, int $page, int $limit): array
     {
         $startFrom = ($page - 1) * $limit;
-        $data = $this->returnQuery('EXEC sp_listarTransfStockAdm ?, ?, ?, ?, ?', [$inicio, $fin, $search, $startFrom, $limit]);
+        $data = $this->returnQuery('sp_listarTransfStockAdm ?, ?, ?, ?, ?', [$inicio, $fin, $search, $startFrom, $limit]);
         foreach ($data as $transferencia => &$valor) {
             $adjuntos = '';
             $numeroSolicitud = '';
@@ -62,7 +62,7 @@ class TransferenciaStock extends Conexion
     public function listarTransferencias(string $sede, string $inicio, string $fin, string $search, int $page, int $limit): array
     {
         $startFrom = ($page - 1) * $limit;
-        $data = $this->returnQuery('EXEC sp_listarTransfStock ?, ?, ?, ?, ?, ?', [$sede, $inicio, $fin, $search, $startFrom, $limit]);
+        $data = $this->returnQuery('sp_listarTransfStock ?, ?, ?, ?, ?, ?', [$sede, $inicio, $fin, $search, $startFrom, $limit]);
         foreach ($data as $transferencia => &$valor) {
             $adjuntos = '';
             $numeroSolicitud = '';
@@ -83,7 +83,7 @@ class TransferenciaStock extends Conexion
 
     public function buscarDetalle(string $sede, string $codigo): array
     {
-        return $this->returnQuery('EXEC sp_buscarTransfStock ?, ?', [$sede, $codigo]);
+        return $this->returnQuery('sp_buscarTransfStock ?, ?', [$sede, $codigo]);
     }
 
     private function buscarSolicitd(string | null $guia): array
@@ -93,6 +93,6 @@ class TransferenciaStock extends Conexion
 
     private function archivosSolicitud(string|null $solicitud): array
     {
-        return $this->returnQuery('EXEC sp_listarDocumentosSolicitud ?', [$solicitud]);
+        return $this->returnQuery('sp_listarDocumentosSolicitud ?', [$solicitud]);
     }
 }
