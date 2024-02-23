@@ -220,6 +220,45 @@ function readRecepcion(recepcion) {
       FechaNoCo.style.display = "block";
     }
 
+    const bultosGRR = datos[0].GRRBultos;
+    const bultosTICKET = datos[0].TicketBultos;
+    const bultosRECEPCION = datos[0].BultosRecibidos;
+
+    const pesoGRR = datos[0].GRRPeso;
+    const pesoTICKET = datos[0].TicketPeso;
+    const pesoRECEPCION = datos[0].PesoRecibido;
+
+    let estado1 = "Conforme";
+    let estado2 = "Conforme";
+    let color1 = "#28a745";
+    let color2 = "#28a745";
+    if (new Set([bultosGRR, bultosTICKET, bultosRECEPCION]).size !== 1) {
+      estado1 = "No conforme";
+      color1 = "#F44336";
+    }
+
+    if (new Set([pesoGRR, pesoTICKET, pesoRECEPCION]).size !== 1) {
+      estado2 = "No conforme";
+      color2 = "#F44336";
+    }
+
+    document.getElementById("tbodyConformidad").innerHTML = `
+    <tr>
+        <td>PESO</td>
+        <td>${pesoGRR}</td>
+        <td>${pesoTICKET}</td>
+        <td>${pesoRECEPCION}</td>
+        <td><b style="background: ${color2}; padding: 5px; color: #ffffff; border-radius: 5px;">${estado2}</b></td>
+    </tr>
+    <tr>
+        <td>N° Bultos</td>
+        <td>${bultosGRR}</td>
+        <td>${bultosTICKET}</td>
+        <td>${bultosRECEPCION}</td>
+        <td><b style="background: ${color1}; padding: 5px; color: #ffffff; border-radius: 5px;">${estado1}</b></td>
+    </tr>
+    `;
+
     $("#mdlLayout").modal("toggle");
   });
 }
@@ -434,6 +473,38 @@ function validarDatos() {
     const conformidad = select.value;
     const comentario = comentarioInput.value.trim();
 
+    const bultosGRR = parseFloat(inputs[2].value.trim());
+    const pesoGRR = parseFloat(inputs[3].value.trim());
+
+    const bultosAlm = parseFloat(inputs[10].value.trim());
+    const pesoAlm = parseFloat(inputs[11].value.trim());
+
+    if (bultosGRR !== bultosAlm) {
+      if (conformidad === "01") {
+        Swal.fire({
+          icon: "warning",
+          title: "¡Uy!",
+          text: `GRR - Bultos y Bultos recepcionados son diferentes en la Fila #${
+            i + 1
+          }. Debes seleccionar "No conforme"`,
+        });
+        return;
+      }
+    }
+
+    if (pesoGRR !== pesoAlm) {
+      if (conformidad === "01") {
+        Swal.fire({
+          icon: "warning",
+          title: "¡Uy!",
+          text: `GRR - Peso y Peso recepcionado son diferentes en la Fila #${
+            i + 1
+          }. Debes seleccionar "No conforme"`,
+        });
+        return;
+      }
+    }
+
     const dato = {
       grr: inputs[0].value.trim(),
       grrAdjunto: inputs[1].files[0],
@@ -538,21 +609,21 @@ async function sendNotification(codigo) {
       data.forEach((element) => {
         pushNotification(element.tokenfcm, recepcion.pedido, recepcion.sede);
 
-        mailNotification(
-          element.correo,
-          recepcion.pedido,
-          recepcion.sede,
-          recepcion.usuario,
-          recepcion.proveedor,
-          recepcion.GRR,
-          recepcion.GRRAdjunto,
-          recepcion.GRT,
-          recepcion.GRTAdjunto,
-          recepcion.Ticket,
-          recepcion.TicketAdjunto,
-          recepcion.Conformidad,
-          recepcion.FechaRecepcion
-        );
+        // mailNotification(
+        //   element.correo,
+        //   recepcion.pedido,
+        //   recepcion.sede,
+        //   recepcion.usuario,
+        //   recepcion.proveedor,
+        //   recepcion.GRR,
+        //   recepcion.GRRAdjunto,
+        //   recepcion.GRT,
+        //   recepcion.GRTAdjunto,
+        //   recepcion.Ticket,
+        //   recepcion.TicketAdjunto,
+        //   recepcion.Conformidad,
+        //   recepcion.FechaRecepcion
+        // );
       });
     }
   );

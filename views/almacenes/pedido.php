@@ -3,7 +3,7 @@ date_default_timezone_set('America/Lima');
 session_start();
 if (isset($_SESSION['ga-usuario'])) {
     include('../tmp_header.html');
-    if (in_array($_SESSION['ga-area'], ['ALMACENES', 'SISTEMAS'])) {
+    if (in_array($_SESSION['ga-area'], ['RESPONSABLE DE ALMACEN', 'SISTEMAS'])) {
 ?>
 
         <!-- Importamos el archivo js -->

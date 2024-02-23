@@ -4,7 +4,7 @@ date_default_timezone_set('America/Lima');
 session_start();
 if (isset($_SESSION['ga-usuario'])) {
     include('../tmp_header.html');
-    if (in_array($_SESSION['ga-area'], ['ALMACENES', 'SISTEMAS'])) {
+    if (in_array($_SESSION['ga-area'], ['RESPONSABLE DE ALMACEN', 'SISTEMAS'])) {
 ?>
         <!-- Importamos el archivo js -->
         <script src="../../libs/js/funciones/almacenes/importaciones_rep.js"></script>
@@ -223,6 +223,22 @@ if (isset($_SESSION['ga-usuario'])) {
                                                 </div>
                                                 <div class="card-body">
                                                     <div class="row">
+                                                        <div class="mb-2 col-xs-12 col-sm-12 col-lg-12 col-xl-12 col-xxl-12">
+                                                            <table class="table">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th></th>
+                                                                        <th>GRR</th>
+                                                                        <th>TICKET</th>
+                                                                        <th>RECEPCIÓN</th>
+                                                                        <th>ESTADO</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody id="tbodyConformidad">
+                                                                   
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
                                                         <div class="mb-2 col-xs-12 col-sm-6 col-lg-4 col-xl-4 col-xxl-4">
                                                             <label for="txtConformidad">Conformidad</label>
                                                             <div class="input-group mb-2">
