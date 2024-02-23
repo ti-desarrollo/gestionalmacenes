@@ -11,67 +11,48 @@ class Usuario extends Conexion
 
    public function login(string $usuario, string $password): array
    {
-
       $response = [];
       $hour = date('H:m');
       if ($hour > '07:30' && $hour < '18:00') {
-         $domain = 'amseq.pe';
-         $dn = 'dc=amseq,dc=pe';
-         $ldaprdn = trim($usuario) . '@' . $domain;
-         $ldapport = 389;
-         $ldap = ldap_connect($domain, $ldapport);
-         ldap_set_option($ldap, LDAP_OPT_PROTOCOL_VERSION, 3);
-         ldap_set_option($ldap, LDAP_OPT_REFERRALS, 0);
-         $ldapbind = @ldap_bind($ldap, $ldaprdn, $password);
-         if ($ldapbind) {
-            $filter = "(sAMAccountName=$usuario)";
-            $result = ldap_search($ldap, $dn, $filter);
-            $info = ldap_get_entries($ldap, $result);
-            for ($i = 0; $i < $info['count']; $i++) {
-               if ($info['count'] > 1)
-                  break;
-               // $unidadOrganizativa = substr(explode(',', $info[$i]['distinguishedname'][0])[1], 3);
-               $lastname = strtoupper($info[$i]['sn'][0] ?? '');
-               $name = strtoupper($info[$i]['givenname'][0] ?? '');
-               $account = $info[$i]['samaccountname'][0] ?? '';
-               $empresa = $info[$i]["company"][0] ?? '';
-               $area = $info[0]["department"][0] ?? '';
-               $celular = $info[0]["telephonenumber"][0] ?? '';
-               $correo = $info[0]["mail"][0] ?? '';
-               $puesto = $info[$i]["title"][0] ?? '';
-               $sede = $info[$i]["postalcode"][0] ?? '';
-               $ciudad = $info[$i]["l"][0] ?? '';
-               if (session_status() == PHP_SESSION_NONE) {
-                  session_start();
-               }
-               $usuario = (object) [
-                  'usuario' => $account,
-                  'nombre' => $name,
-                  'apellidos' => $lastname,
-                  'empresa' => $empresa,
-                  'sede' => $sede,
-                  'ciudad' => $ciudad,
-                  'area' => $area,
-                  'puesto' => $puesto,
-                  'celular' => $celular,
-                  'correo' => $correo
-               ];
-               $_SESSION['ga-usuario'] = $usuario->usuario;
-               $_SESSION['ga-nombres'] = $usuario->nombre;
-               $_SESSION['ga-sede'] = $usuario->sede;
-               $_SESSION['ga-ciudad'] = $usuario->ciudad;
-               $_SESSION['ga-area'] = $usuario->area;
-               $_SESSION['ga-puesto'] = $usuario->puesto;
-               $_SESSION['ga-correo'] = $usuario->correo;
-               $response = [
-                  'success' => true,
-                  'message' => 'Inicio de sesión exitoso'
-               ];
-            }
+         $query = "SELECT 
+                  T0.id AS 'codigo'
+                  ,T0.usuario AS 'usuario'
+                  ,T0.naUsuario AS 'nombres'
+                  ,T0.idSede AS 'sede'
+                  ,T1.descripcion AS 'ciudad'
+                  ,T0.idPerfil
+                  ,CASE T0.idPerfil
+                     WHEN 1 THEN 'SISTEMAS'
+                     WHEN 2 THEN 'ADMINISTRADOR TIENDA'
+                     WHEN 3 THEN 'RESPONSABLE DE ALMACEN'
+                     WHEN 4 THEN 'ALMACENES'
+                     WHEN 5 THEN 'MESA DE PARTES'
+                     WHEN 6 THEN 'LOGISTICA'
+                  END AS 'area'
+                  ,T0.correo AS 'correo'
+
+               FROM usuarios T0
+               INNER JOIN sedes T1 ON T0.idSede = T1.id
+               WHERE 
+                  T0.usuario = ? COLLATE Latin1_General_CS_AS AND 
+                  T0.password = ? COLLATE Latin1_General_CS_AS AND
+                  T0.estado = 1";
+         $data = $this->returnQuery($query, [$usuario, $password]);
+         if (sizeof($data) == 1) {
+            $_SESSION['ga-usuario'] = $data[0]['usuario'];
+            $_SESSION['ga-nombres'] = $data[0]['nombres'];
+            $_SESSION['ga-sede'] = $data[0]['sede'];
+            $_SESSION['ga-ciudad'] = $data[0]['ciudad'];
+            $_SESSION['ga-area'] = $data[0]['area'];
+            $_SESSION['ga-correo'] = $data[0]['correo'];
+            $response = [
+               'success' => true,
+               'message' => 'Inicio de sesión exitoso'
+            ];
          } else {
             $response = [
                'success' => false,
-               'message' => 'Credenciales inválidas o su usuario está bloqueado. Si sus datos son correctos, consulte con TI.'
+               'message' => 'Credenciales no válidas, por favor intenta otra vez'
             ];
          }
       } else {
@@ -83,10 +64,11 @@ class Usuario extends Conexion
       return $response;
    }
 
+
    public function abrirSesion(string $usuario, string $area, string $token, string $correo): int| bool
    {
       $host = getenv('COMPUTERNAME');
-      if (in_array($area, ['TIC', 'PLANEAMIENTO', 'ALMACENES'])) {
+      if (in_array($area, ['SISTEMAS', 'ALMACENES'])) {
          $sesion = $this->insertQuery('sp_abrirSesion ?, ?, ?, ?, ?', [$usuario, $area, $token, $correo, $host]);
          if ($sesion) {
             $_SESSION['ga-sesion'] = $sesion;
@@ -96,7 +78,7 @@ class Usuario extends Conexion
       return false;
    }
 
-   public function cerrarSesion(int $sesion): int| bool
+   public function cerrarSesion(int $sesion = null): int| bool
    {
       return $this->simpleQuery('sp_cerrarSesion ?', [$sesion]);
    }

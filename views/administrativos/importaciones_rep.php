@@ -4,7 +4,7 @@ date_default_timezone_set('America/Lima');
 session_start();
 if (isset($_SESSION['ga-usuario'])) {
     include('../tmp_header.html');
-    if (in_array($_SESSION['ga-area'], ['LOGISTICA', 'TIC', 'PLANEAMIENTO'])) {
+    if (in_array($_SESSION['ga-area'], ['LOGISTICA', 'SISTEMAS'])) {
 ?>
         <!-- Importamos el archivo js -->
         <script src="../../libs/js/funciones/administrativos/importaciones_rep.js"></script>

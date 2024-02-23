@@ -4,7 +4,7 @@ date_default_timezone_set('America/Lima');
 session_start();
 if (isset($_SESSION['ga-usuario'])) {
     include('../tmp_header.html');
-    if (in_array($_SESSION['ga-area'], ['ALMACENES', 'TIC', 'PLANEAMIENTO'])) {
+    if (in_array($_SESSION['ga-area'], ['ALMACENES', 'SISTEMAS'])) {
 ?>
         <!-- Importamos el archivo js -->
         <script src="../../libs/js/funciones/almacenes/transferenciaStock.js"></script>

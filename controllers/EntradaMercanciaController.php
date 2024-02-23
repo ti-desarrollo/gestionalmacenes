@@ -21,7 +21,8 @@ if (isset($_REQUEST, $_SESSION)) {
             echo json_encode($entrada->listarEntradas($_SESSION['ga-sede'], $_POST['fechaI'], $_POST['fechaF'], $_POST['search'], $_POST['page'], $_POST['limit']));
             break;
 
-        case 4: // Buscar el detalle de una entrada
+        case 4:
+            // Buscar el detalle de una entrada
             echo json_encode($entrada->buscarDetalle($_POST['sede'] ?? $_SESSION['ga-sede'],  $_POST['docentry']));
             break;
 
