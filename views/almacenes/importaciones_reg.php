@@ -57,8 +57,8 @@ if (isset($_SESSION['ga-usuario'])) {
                                         <th>Estado</th>
                                         <th>N° Pedido</th>
                                         <th>Proveedor</th>
-                                        <th>N° Operación</th>
                                         <th>Fecha de recepción</th>
+                                        <th>N° Operación</th>
                                     </thead>
                                     <tbody id="tbdl">
                                         <tr>
@@ -109,7 +109,12 @@ if (isset($_SESSION['ga-usuario'])) {
                                 </div>
                                 <div class="form-group col-xs-12 col-sm-6 col-md-4 col-lg-3 col-xl-3 col-xxl-3 mb-3">
                                     <label for="txtAgente">Agente ADUANA</label>
-                                    <input type="text" class="form-control form-control-sm" id="txtAgente">
+                                    <select class="form-control form-control-sm" name="txtAgente" id="txtAgente">
+                                        <option value="San Remo">San Remo</option>
+                                        <option value="Grupo Transoceanic">Grupo Transoceanic</option>
+                                        <option value="LB Gayoso">LB Gayoso</option>
+                                        <option value="Orbis">Orbis</option>
+                                    </select>
                                 </div>
 
                                 <div class="form-group col-xs-12 col-sm-6 col-md-4 col-lg-3 col-xl-4 col-xxl-4 mb-3">
