@@ -116,6 +116,22 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'])) {
                             </li>
                         </ul>
                     </li>
+
+                    <li class="nav-item" title="Soldadura">
+                        <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" data-target="#collapseComponents3" href="#">
+                            <i class="fa fa-fw fa-building"></i><span class="nav-link-text"> Control de Soldadura</span>
+                        </a>
+                        <ul class="sidenav-second-level collapse" id="collapseComponents3" data-parent="#exampleAccordion">
+                            <li>
+                                <a class="nav-link-collapse collapsed" data-toggle="collapse" data-target="#collapseMulti4" href="#"><span class="nav-link-text">Almacenes</span></a>
+                                <ul class="sidenav-third-level collapse" id="collapseMulti4" data-parent="#collapseComponents3">
+                                    <li><a href="views/soldadura/pesajes.php"><span class="nav-link-text">Pesaje</span></a></li>
+                                    <li><a href="views/soldadura/confirmacion.php"><span class="nav-link-text">Confirmación</span></a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+
                 </ul>
 
                 <ul class="navbar-nav sidenav-toggler">
