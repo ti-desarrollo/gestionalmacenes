@@ -12,23 +12,23 @@ class Importaciones extends Conexion
 
     public function reporteImportaciones(string $sede, string $inicio, string $fin): array
     {
-        return $this->returnQuery('sp_reporteImportaciones ?, ?, ?', [$sede === '99' ? '' : $sede, $inicio, $fin]);
+        return $this->returnQuery('sp_reporteImportaciones ?, ?, ?, ?', [DATABASE_SAP, $sede === '99' ? '' : $sede, $inicio, $fin]);
     }
 
     public function listarImportaciones(string $sede, string $inicio, string $fin): array
     {
-        return $this->returnQuery('sp_listarPedidosImportacion ?, ?, ?', [$sede, $inicio, $fin]);
+        return $this->returnQuery('sp_listarPedidosImportacion ?, ?, ?, ?', [DATABASE_SAP, $sede, $inicio, $fin]);
     }
 
     public function buscarDetalleImportacion(string $sede, string $pedido, string $usuario): array
     {
         $this->registrarImportacion($sede, $pedido, $usuario);
-        return $this->returnQuery('sp_buscarImportacion ?, ?, ?', [$sede, $pedido, $usuario]);
+        return $this->returnQuery('sp_buscarImportacion ?, ?, ?, ?', [DATABASE_SAP, $sede, $pedido, $usuario]);
     }
 
     private function registrarImportacion(string $sede, int $pedido, string $usuario): int | bool
     {
-        return $this->insertQuery('sp_registrarImportacion ?, ?, ?', [$sede, $pedido, $usuario]);
+        return $this->insertQuery('sp_registrarImportacion ?, ?, ?, ?', [DATABASE_SAP, $sede, $pedido, $usuario]);
     }
 
     public function buscarRecepcionesPorImportacion(int $importacion, string $sede): array
@@ -38,7 +38,7 @@ class Importaciones extends Conexion
 
     public function buscarDetalleRecepcion(int $recepcion): array
     {
-        return $this->returnQuery('sp_buscarRecepcion ?', [$recepcion]);
+        return $this->returnQuery('sp_buscarRecepcion ?, ?', [DATABASE_SAP, $recepcion]);
     }
 
     public function registrarRecepcion(string $importacion, string $recepciones, string $usuario, string $sede): array
@@ -110,7 +110,7 @@ class Importaciones extends Conexion
                 if (!$result) {
                     throw new Exception('Hubo un error al registrar las importaciones. Intente nuevamente');
                 } else {
-                    $this->simpleQuery('sp_actualizarImportacionPesoYBultos ?, ?, ?', [$codigo, $pesoRecepcionado, $bultosRecepcionados]);
+                    $this->simpleQuery('sp_actualizarImportacionPesoYBultos ?, ?, ?, ?', [DATABASE_SAP, $codigo, $pesoRecepcionado, $bultosRecepcionados]);
                     $pesoRecepcionadoTotal +=  $pesoRecepcionado;
                     $bultosRecepcionadosTotal += $bultosRecepcionados;
                     array_push($inserted, $result);
@@ -209,7 +209,7 @@ class Importaciones extends Conexion
         foreach ($uploadedFiles as $file) {
             unlink("\\\amseq-files\\ALMACEN - TIENDA\\$importacion->dir\\$file");
         }
-        $this->simpleQuery('sp_actualizarImportacionPesoYBultos ?, ?, ?', [$importacion->codigo, ($pesoRecepcionadoTotal * -1), ($bultosRecepcionadosTotal * -1)]);
+        $this->simpleQuery('sp_actualizarImportacionPesoYBultos ?, ?, ?, ?', [DATABASE_SAP, $importacion->codigo, ($pesoRecepcionadoTotal * -1), ($bultosRecepcionadosTotal * -1)]);
         foreach ($inserted as $line) {
             $this->simpleQuery('sp_anularRecepcion ?, ?', [$line, $comentario]);
         }

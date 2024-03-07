@@ -1083,7 +1083,7 @@ function rollbackPedido(pedido, cabecera, items) {
 function changeColor(item, cantidadPedida, cantidadPendiente) {
   const estado = document.getElementById(`estado_items_${item}`);
   const cantidadRecibida = parseFloat(
-    document.getElementById(`txtCantidadRecepcionada_${item}`).value ?? "0"
+    document.getElementById(`txtCantidadRecepcionada_${item}`).value || 0
   );
   const faltante = cantidadPedida - cantidadPendiente;
   let color = "#28a745";

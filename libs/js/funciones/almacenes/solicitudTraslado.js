@@ -501,7 +501,7 @@ function mailNotification(
 function changeColor(item, cantidadPendiente) {
   const estado = document.getElementById(`estado_items_${item}`);
   const cantidadRecibida = parseFloat(
-    document.getElementById(`txtCantidad_${item}`).value ?? "0"
+    document.getElementById(`txtCantidad_${item}`).value || 0
   );
   let color = "#f44336";
 

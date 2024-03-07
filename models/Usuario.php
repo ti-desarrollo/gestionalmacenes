@@ -13,7 +13,7 @@ class Usuario extends Conexion
    {
       $response = [];
       $hour = date('H:m');
-      if ($hour > '07:30' && $hour < '18:00') {
+      // if ($hour > '07:30' && $hour < '18:00') {
          $query = "SELECT 
                   T0.id AS 'codigo'
                   ,T0.usuario AS 'usuario'
@@ -55,12 +55,12 @@ class Usuario extends Conexion
                'message' => 'Credenciales no válidas, por favor intenta otra vez'
             ];
          }
-      } else {
-         $response = [
-            'success' => false,
-            'message' => 'Estás fuera del horario permitido para el acceso al sistema'
-         ];
-      }
+      // } else {
+      //    $response = [
+      //       'success' => false,
+      //       'message' => 'Estás fuera del horario permitido para el acceso al sistema'
+      //    ];
+      // }
       return $response;
    }
 
