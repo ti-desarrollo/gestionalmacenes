@@ -9,7 +9,7 @@ class Soldadura extends Conexion
     {
         parent::__construct();
     }
-    
+
     public function listarPesajes(int $sede): array
     {
         $data = $this->returnQuery('EXEC sp_listarPesajes ?', [$sede]);
@@ -36,25 +36,21 @@ class Soldadura extends Conexion
 
     public function registrarSoldadura(string $sede, int $cantidad, string $descripcion, string $empaque, string $peso, string $fecha, string $responsable): array
     {
-        $response = [];
         $data = $this->insertPesajes($sede, $cantidad, $descripcion, $empaque, $peso, $fecha, $responsable);
         $carpeta = $this->listaCarpeta($sede);
 
-        if ($data > 0)
-        {
-            return  $response = ['success' => true, 'message' => 'Pesaje procesado', 'data' => ['cabecera' => $data, 'carpeta' => $carpeta[0]["Folder"], 'usuario' => $responsable]];
+        if ($data > 0) {
+            return ['success' => true, 'message' => 'Pesaje procesado', 'data' => ['cabecera' => $data, 'carpeta' => $carpeta[0]["Folder"], 'usuario' => $responsable]];
         }
-        return $response = ['success' => true, 'message' => 'Pesaje procesado', 'data' => ['cabecera' => $data, 'carpeta' => $carpeta, 'usuario' => $responsable]];
-        
+        return ['success' => true, 'message' => 'Pesaje procesado', 'data' => ['cabecera' => $data, 'carpeta' => $carpeta, 'usuario' => $responsable]];
     }
 
     private function insertPesajes($sede, $cantidad, $descripcion, $empaque, $peso, $fecha, $responsable)
     {
-        $data = $this->simpleQuery("INSERT INTO soldadura (Cantidad, Descripcion, Peso, Empaque, Fecha_Pesaje, Fecha_Registro, Sede, Responsable, estado_b) VALUES ($cantidad, '$descripcion', $peso, '$empaque', '$fecha', GETDATE(), '$sede', '$responsable', 1);", [$sede, $cantidad, $descripcion, $empaque, $peso, $fecha, $responsable]);
+        $this->simpleQuery("INSERT INTO soldadura (Cantidad, Descripcion, Peso, Empaque, Fecha_Pesaje, Fecha_Registro, Sede, Responsable, estado_b) VALUES ($cantidad, '$descripcion', $peso, '$empaque', '$fecha', GETDATE(), '$sede', '$responsable', 1);", [$sede, $cantidad, $descripcion, $empaque, $peso, $fecha, $responsable]);
         // Obtenemos el id insertado
         $lastID = $this->lastId();
         return $lastID['idInsertado'];
-        //return $data;
     }
 
     private function listaCarpeta($sede)
@@ -65,24 +61,21 @@ class Soldadura extends Conexion
 
     public function registrarSobrantes(string $sede, int $cantidad, string $descripcion, string $peso, string $fecha, string $responsable): array
     {
-        $response = [];
         $data = $this->insertSobrante($sede, $cantidad, $descripcion, $peso, $fecha, $responsable);
         $carpeta = $this->listaCarpeta($sede);
 
-        if ($data > 0)
-        {
-            return  $response = ['success' => true, 'message' => 'Sobrante procesado', 'data' => ['cabecera' => $data, 'carpeta' => $carpeta[0]["Folder"], 'usuario' => $responsable]];
+        if ($data > 0) {
+            return ['success' => true, 'message' => 'Sobrante procesado', 'data' => ['cabecera' => $data, 'carpeta' => $carpeta[0]["Folder"], 'usuario' => $responsable]];
         }
-        return $response = ['success' => true, 'message' => 'Sobrante procesado', 'data' => ['cabecera' => $data, 'carpeta' => $carpeta[0]["Folder"], 'usuario' => $responsable]];
+        return ['success' => true, 'message' => 'Sobrante procesado', 'data' => ['cabecera' => $data, 'carpeta' => $carpeta[0]["Folder"], 'usuario' => $responsable]];
     }
 
     private function insertSobrante($sede, $cantidad, $descripcion, $peso, $fecha, $responsable)
     {
-        $data = $this->simpleQuery("INSERT INTO varillas_sobrantes (Cantidad, Descripcion, Peso, Fecha_Pesaje, Fecha_Registro, Sede, Responsable, estado_b) VALUES ($cantidad, '$descripcion', $peso, '$fecha', GETDATE(), '$sede', '$responsable', 1);", [$sede, $cantidad, $descripcion, $peso, $fecha, $responsable]);
+        $this->simpleQuery("INSERT INTO varillas_sobrantes (Cantidad, Descripcion, Peso, Fecha_Pesaje, Fecha_Registro, Sede, Responsable, estado_b) VALUES ($cantidad, '$descripcion', $peso, '$fecha', GETDATE(), '$sede', '$responsable', 1);", [$sede, $cantidad, $descripcion, $peso, $fecha, $responsable]);
         // Obtenemos el id insertado
         $lastID = $this->lastId();
         return $lastID['idInsertado'];
-        //return $data;
     }
 
     public function eliminarPesaje(int $id): int | bool
@@ -97,10 +90,6 @@ class Soldadura extends Conexion
         return $data;
     }
 
-    private function listarArchivos(string $codigo, string $guia): array
-    {
-        return $this->returnQuery('sp_listarDocumentosPedido ?, ?', [$codigo, $guia]);
-    }
 
     public function uploadFile(int $cabecera, string $dir, array $data): array
     {
@@ -180,16 +169,6 @@ class Soldadura extends Conexion
 
     private function validateFileName(string $dir, string $fileName): array
     {
-        // $directorio = "\\\amseq-files\\ALMACEN - TIENDA\\$dir";
-        // if (file_exists($directorio)) {
-        //     $files = array_diff(scandir($directorio), array('.', '..'));
-        //     foreach ($files as $x) {
-        //         if (substr($x, 16) === $fileName) {
-        //             return ['success' => false, 'message' => "El archivo $fileName ya está cargado. Intenta con otro archivo"];
-        //             break;
-        //         }
-        //     }
-        // }
         return ['success' => true, 'message' => "El archivo $fileName es válido"];
     }
 
@@ -227,9 +206,7 @@ class Soldadura extends Conexion
 
     public function confirmar(int $codigo, string $sede, string $operacion, int $estado, string $comentarios, string $fecha): array
     {
-        $response = [];
-        $data = $this->returnQuery('EXEC sp_confirmar ?, ?, ?, ?, ?, ?', [$codigo, $sede, $operacion, $estado, $comentarios, $fecha]);
-        
-        return  $response = ['success' => true, 'message' => 'Sobrante confirmado', 'data' => ['cabecera' => $operacion, 'estado' => $estado]];
+        $this->returnQuery('EXEC sp_confirmar ?, ?, ?, ?, ?, ?', [$codigo, $sede, $operacion, $estado, $comentarios, $fecha]);
+        return ['success' => true, 'message' => 'Sobrante confirmado', 'data' => ['cabecera' => $operacion, 'estado' => $estado]];
     }
 }
