@@ -12,11 +12,11 @@ class EntradaMercancia extends Conexion
     public function paginacion(string $inicio, string $fin, string $search, string | null $sede): int
     {
         $total = 0;
-        $sedeFilter = $sede ? " AND SBO_3AAMSEQ.dbo.sededeAlmacen((SELECT TOP 1 X.WhsCode FROM SBO_3AAMSEQ.dbo.PDN1 X WHERE T0.DocEntry = X.DocEntry)) = '$sede' " : "";
-        
+        $sedeFilter = $sede ? " AND " . DATABASE_SAP . ".dbo.sededeAlmacen((SELECT TOP 1 X.WhsCode FROM " . DATABASE_SAP . ".dbo.PDN1 X WHERE T0.DocEntry = X.DocEntry)) = '$sede' " : "";
+
         $result = $this->returnQuery("SELECT 
                 COUNT(T0.DocEntry) count 
-            FROM SBO_3AAMSEQ.dbo.OPDN T0 WITH(NOLOCK) 
+            FROM " . DATABASE_SAP . ".dbo.OPDN T0 WITH(NOLOCK) 
             WHERE 
                 T0.CANCELED = 'N' AND 
                 T0.CreateDate BETWEEN CONVERT(DATE, ?) AND CONVERT(DATE, ?) AND
@@ -35,12 +35,12 @@ class EntradaMercancia extends Conexion
     public function listarEntradas_A(string $inicio, string $fin, string $search, int $page, int $limit): array
     {
         $startFrom = ($page - 1) * $limit;
-        $data = $this->returnQuery('EXEC sp_listarEntradaMercanciasAdm ?, ?, ?, ?, ?', [$inicio, $fin, $search, $startFrom, $limit]);
+        $data = $this->returnQuery('sp_listarEntradaMercanciasAdm ?, ?, ?, ?, ?, ?', [DATABASE_SAP, $inicio, $fin, $search, $startFrom, $limit]);
         foreach ($data as $entrada => &$valor) {
             $adjuntos = '';
             $files = $this->listarDocumentosPedido($valor['docentryPedido'], $valor['guia']);
             foreach ($files as $file) {
-                $adjuntos .= "<p style='margin: unset;'><a href='https://gestionalmacenes.3aamseq.com.pe/docs/pedidos/{$file['carpeta']}/RECEPCIÓN%20DE%20MERCADERÍA - ALMACÉN/{$file['year']}/{$file['mes']}/COMPRAS NACIONALES/{$file['proveedor']}/{$file['fechaFormato']}/{$file['fileName']}' target='_blank'>{$file['fileName']}</a></p>";
+                $adjuntos .= "<p style='margin: unset;'><a href='" . LINK_ARCHIVOS . "/{$file['carpeta']}/RECEPCIÓN%20DE%20MERCADERÍA - ALMACÉN/{$file['year']}/{$file['mes']}/COMPRAS NACIONALES/{$file['proveedor']}/{$file['fechaFormato']}/{$file['fileName']}' target='_blank'>{$file['fileName']}</a></p>";
             }
             $valor['adjuntos'] = $adjuntos;
         }
@@ -50,12 +50,12 @@ class EntradaMercancia extends Conexion
     public function listarEntradas(string $sede, string $inicio, string $fin, string $search, int $page, int $limit): array
     {
         $startFrom = ($page - 1) * $limit;
-        $data = $this->returnQuery('EXEC sp_listarEntradaMercancias ?, ?, ?, ?, ?, ?', [$sede, $inicio, $fin, $search, $startFrom, $limit]);
+        $data = $this->returnQuery('sp_listarEntradaMercancias ?, ?, ?, ?, ?, ?, ?', [DATABASE_SAP, $sede, $inicio, $fin, $search, $startFrom, $limit]);
         foreach ($data as $entrada => &$valor) {
             $adjuntos = '';
             $files = $this->listarDocumentosPedido($valor['docentryPedido'], $valor['guia']);
             foreach ($files as $file) {
-                $adjuntos .= "<p style='margin: unset;'><a href='https://gestionalmacenes.3aamseq.com.pe/docs/pedidos/{$file['carpeta']}/RECEPCIÓN%20DE%20MERCADERÍA - ALMACÉN/{$file['year']}/{$file['mes']}/COMPRAS NACIONALES/{$file['proveedor']}/{$file['fechaFormato']}/{$file['fileName']}' target='_blank'>{$file['fileName']}</a></p>";
+                $adjuntos .= "<p style='margin: unset;'><a href='" . LINK_ARCHIVOS . "/{$file['carpeta']}/RECEPCIÓN%20DE%20MERCADERÍA - ALMACÉN/{$file['year']}/{$file['mes']}/COMPRAS NACIONALES/{$file['proveedor']}/{$file['fechaFormato']}/{$file['fileName']}' target='_blank'>{$file['fileName']}</a></p>";
             }
             $valor['adjuntos'] = $adjuntos;
         }
@@ -64,16 +64,16 @@ class EntradaMercancia extends Conexion
 
     public function buscarDetalle(string $sede, string $codigo): array
     {
-        return $this->returnQuery('EXEC sp_buscarEntradaMercancia ?, ?', [$sede, $codigo]);
+        return $this->returnQuery('sp_buscarEntradaMercancia ?, ?, ?', [DATABASE_SAP, $sede, $codigo]);
     }
 
     private function listarDocumentosPedido(string|null $pedido, string|null $guia): array
     {
-        return $this->returnQuery('EXEC sp_listarDocumentosPedido ?, ?', [$pedido, $guia]);
+        return $this->returnQuery('sp_listarDocumentosPedido ?, ?, ?', [DATABASE_SAP, $pedido, $guia]);
     }
 
     public function layout(string $docentry,): array
     {
-        return $this->returnQuery('EXEC SBO_3AAMSEQ.dbo.USP_ME_NOTARECEPCION ?', [$docentry]);
+        return $this->returnQuery(DATABASE_SAP . '.dbo.USP_ME_NOTARECEPCION ?', [$docentry]);
     }
 }

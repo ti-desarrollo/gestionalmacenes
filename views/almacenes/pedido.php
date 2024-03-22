@@ -1,9 +1,9 @@
 <?php
 date_default_timezone_set('America/Lima');
 session_start();
-if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'], $_SESSION['ga-sedeUsu'])) {
+if (isset($_SESSION['ga-usuario'])) {
     include('../tmp_header.html');
-    if (in_array($_SESSION['ga-idPerfilUsu'], [1, 2, 3]) or in_array($_SESSION['ga-usuario'], ['amq-alm-02'])) {
+    if (in_array($_SESSION['ga-area'], ['RESPONSABLE DE ALMACEN', 'SISTEMAS'])) {
 ?>
 
         <!-- Importamos el archivo js -->
@@ -161,6 +161,7 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'], $_SESSION['ga-sedeUsu'
                                             <th>Cantidad pedida</th>
                                             <th>Cantidad recibida</th>
                                             <th>Cantidad pendiente de recepción</th>
+                                            <th></th>
                                         </tr>
                                     </thead>
                                     <tbody id="tbd">

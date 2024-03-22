@@ -148,8 +148,25 @@ function verDetalle(docentry) {
             <td style="vertical-align: middle">${index + 1}</td>
             <td style="vertical-align: middle">${element.itemcode}</td>
             <td style="vertical-align: middle">${element.descripcion}</td>
-            <td style="vertical-align: middle" class="inputQPedida">${element.cantidad}</td>
-            <td><input type="number" class="form-control form-control-sm inputQRecibida" value="${element.cantidadRecibida}" ${element.estado === "PROCESADA" ? "disabled" : ""}/></td>
+            <td style="vertical-align: middle" class="inputQPedida">${
+              element.cantidad
+            }</td>
+            <td>
+              <input
+                id="txtCantidad_${element.itemcode}"
+                type="number" 
+                class="form-control form-control-sm inputQRecibida" 
+                value="${element.cantidadRecibida}" ${
+        element.estado === "PROCESADA" ? "disabled" : ""
+      }
+                onkeyup="changeColor('${element.itemcode}', ${
+        element.cantidad
+      })"
+              />
+            </td>
+            <td><div id="estado_items_${
+              element.itemcode
+            }" style="height: 10px; width: 10px; border-radius: 10px; background: #f44336; margin: auto;"></div></td>
       </tr>`;
     });
   });
@@ -479,4 +496,23 @@ function mailNotification(
     },
     function () {}
   );
+}
+
+function changeColor(item, cantidadPendiente) {
+  const estado = document.getElementById(`estado_items_${item}`);
+  const cantidadRecibida = parseFloat(
+    document.getElementById(`txtCantidad_${item}`).value || 0
+  );
+  let color = "#f44336";
+
+  if (cantidadRecibida > cantidadPendiente) {
+    color = "#ff9800";
+  }
+  if (cantidadRecibida === cantidadPendiente) {
+    color = "#28a745";
+  }
+  if (cantidadRecibida < cantidadPendiente) {
+    color = "#f44336";
+  }
+  estado.style.background = color;
 }

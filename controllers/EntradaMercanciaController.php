@@ -8,7 +8,7 @@ if (isset($_REQUEST, $_SESSION)) {
     switch ($_REQUEST['task']) {
         case 1:
             // Paginación
-            echo json_encode($entrada->paginacion($_POST['fechaI'], $_POST['fechaF'], $_POST['search'], $_POST['flag'] === "0" ? $_SESSION['ga-idSedeUsu'] : null));
+            echo json_encode($entrada->paginacion($_POST['fechaI'], $_POST['fechaF'], $_POST['search'], $_POST['flag'] === "0" ? $_SESSION['ga-sede'] : null));
             break;
 
         case 2:
@@ -18,11 +18,12 @@ if (isset($_REQUEST, $_SESSION)) {
 
         case 3:
             // Listar las entradas de mercancía por sede
-            echo json_encode($entrada->listarEntradas($_SESSION['ga-idSedeUsu'], $_POST['fechaI'], $_POST['fechaF'], $_POST['search'], $_POST['page'], $_POST['limit']));
+            echo json_encode($entrada->listarEntradas($_SESSION['ga-sede'], $_POST['fechaI'], $_POST['fechaF'], $_POST['search'], $_POST['page'], $_POST['limit']));
             break;
 
-        case 4: // Buscar el detalle de una entrada
-            echo json_encode($entrada->buscarDetalle($_POST['sede'] ?? $_SESSION['ga-idSedeUsu'],  $_POST['docentry']));
+        case 4:
+            // Buscar el detalle de una entrada
+            echo json_encode($entrada->buscarDetalle($_POST['sede'] ?? $_SESSION['ga-sede'],  $_POST['docentry']));
             break;
 
         case 5:

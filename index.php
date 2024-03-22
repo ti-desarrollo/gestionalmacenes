@@ -1,7 +1,7 @@
 <?php
 date_default_timezone_set('America/Lima');
 session_start();
-if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'])) {
+if (isset($_SESSION['ga-usuario'])) {
 ?>
     <!DOCTYPE html>
     <html lang="es">
@@ -23,7 +23,7 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'])) {
         <!-- Estilos -->
         <link href="libs/css/sb-admin.css" rel="stylesheet">
         <link href="libs/css/estilos.css" rel="stylesheet">
-        
+
         <!-- SweetAlert2 CSS -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.9.0/sweetalert2.min.css" integrity="sha512-IScV5kvJo+TIPbxENerxZcEpu9VrLUGh1qYWv6Z9aylhxWE4k4Fch3CHl0IYYmN+jrnWQBPlpoTVoWfSMakoKA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
@@ -70,7 +70,7 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'])) {
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
-                <ul class="navbar-nav navbar-sidenav accordion" id="exampleAccordion">
+                <ul class="navbar-nav navbar-sidenav accordion" id="menuPrincipal">
 
                     <li class="nav-item" title="Inicio">
                         <a class="nav-link" href="index.php">
@@ -79,13 +79,13 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'])) {
                     </li>
 
                     <li class="nav-item" title="Tiendas">
-                        <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" data-target="#collapseComponents1" href="#">
+                        <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" data-target="#menuTiendas" href="#">
                             <i class="fa fa-fw fa-list"></i><span class="nav-link-text"> Tiendas</span>
                         </a>
-                        <ul class="sidenav-second-level collapse" id="collapseComponents1" data-parent="#exampleAccordion">
+                        <ul class="sidenav-second-level collapse" id="menuTiendas" data-parent="#menuPrincipal">
                             <li>
                                 <a class="nav-link-collapse collapsed" data-toggle="collapse" data-target="#collapseMulti1" href="#"><span class="nav-link-text">Almacenes</span></a>
-                                <ul class="sidenav-third-level collapse" id="collapseMulti1" data-parent="#collapseComponents1">
+                                <ul class="sidenav-third-level collapse" id="collapseMulti1" data-parent="#menuTiendas">
                                     <li><a href="views/almacenes/solicitudtraslado.php"><span class="nav-link-text">Solicitudes de traslado</span></a></li>
                                     <li><a href="views/almacenes/transferenciastock.php"><span class="nav-link-text">Transferencias de stock</span></a></li>
                                     <li><a href="views/almacenes/pedido.php"><span class="nav-link-text">Pedidos</span></a></li>
@@ -96,20 +96,20 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'])) {
                     </li>
 
                     <li class="nav-item" title="Administrativos">
-                        <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" data-target="#collapseComponents2" href="#">
+                        <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" data-target="#menuAdministrativos" href="#">
                             <i class="fa fa-fw fa-building"></i><span class="nav-link-text"> Administrativos</span>
                         </a>
-                        <ul class="sidenav-second-level collapse" id="collapseComponents2" data-parent="#exampleAccordion">
+                        <ul class="sidenav-second-level collapse" id="menuAdministrativos" data-parent="#menuPrincipal">
                             <li>
                                 <a class="nav-link-collapse collapsed" data-toggle="collapse" data-target="#collapseMulti2" href="#"><span class="nav-link-text">Almacenes</span></a>
-                                <ul class="sidenav-third-level collapse" id="collapseMulti2" data-parent="#collapseComponents2">
+                                <ul class="sidenav-third-level collapse" id="collapseMulti2" data-parent="#menuAdministrativos">
                                     <li><a href="views/administrativos/pedido.php"><span class="nav-link-text">Pedidos</span></a></li>
                                     <li><a href="views/administrativos/solicitudtraslado.php"><span class="nav-link-text">Solicitudes de traslado</span></a></li>
                                 </ul>
                             </li>
                             <li>
                                 <a class="nav-link-collapse collapsed" data-toggle="collapse" data-target="#collapseMulti3" href="#"><span class="nav-link-text">Mesa de partes</span></a>
-                                <ul class="sidenav-third-level collapse" id="collapseMulti3" data-parent="#collapseComponents2">
+                                <ul class="sidenav-third-level collapse" id="collapseMulti3" data-parent="#menuAdministrativos">
                                     <li><a href="views/administrativos/entradamercancia.php"><span class="nav-link-text">Entrada de mercancías</span></a></li>
                                     <li><a href="views/administrativos/transferenciastock.php"><span class="nav-link-text">Transferencias de stock</span></a></li>
                                 </ul>
@@ -117,16 +117,38 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'])) {
                         </ul>
                     </li>
 
+                    <li class="nav-item" title="Importaciones">
+                        <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" data-target="#menuImportaciones" href="#">
+                            <i class="fa fa-fw fa-ship"></i><span class="nav-link-text"> Importaciones</span>
+                        </a>
+                        <ul class="sidenav-second-level collapse" id="menuImportaciones" data-parent="#menuPrincipal">
+                            <li>
+                                <a class="nav-link-collapse collapsed" data-toggle="collapse" data-target="#importacionesAlmacenes" href="#"><span class="nav-link-text">Almacenes</span></a>
+                                <ul class="sidenav-third-level collapse" id="importacionesAlmacenes" data-parent="#menuImportaciones">
+                                    <li><a href="views/almacenes/importaciones_reg.php"><span class="nav-link-text">Registro</span></a></li>
+                                    <li><a href="views/almacenes/importaciones_rep.php"><span class="nav-link-text">Reporte</span></a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a class="nav-link-collapse collapsed" data-toggle="collapse" data-target="#importacionesLogistica" href="#"><span class="nav-link-text">Logística</span></a>
+                                <ul class="sidenav-third-level collapse" id="importacionesLogistica" data-parent="#menuImportaciones">
+                                    <li><a href="views/administrativos/importaciones_rep.php"><span class="nav-link-text">Reporte</span></a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+
                     <li class="nav-item" title="Soldadura">
-                        <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" data-target="#collapseComponents3" href="#">
+                        <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" data-target="#menuSoldadura" href="#">
                             <i class="fa fa-fw fa-building"></i><span class="nav-link-text"> Control de Soldadura</span>
                         </a>
-                        <ul class="sidenav-second-level collapse" id="collapseComponents3" data-parent="#exampleAccordion">
+                        <ul class="sidenav-second-level collapse" id="menuSoldadura" data-parent="#menuPrincipal">
                             <li>
-                                <a class="nav-link-collapse collapsed" data-toggle="collapse" data-target="#collapseMulti4" href="#"><span class="nav-link-text">Almacenes</span></a>
-                                <ul class="sidenav-third-level collapse" id="collapseMulti4" data-parent="#collapseComponents3">
+                                <a class="nav-link-collapse collapsed" data-toggle="collapse" data-target="#soldaduraAlmacenes" href="#"><span class="nav-link-text">Almacenes</span></a>
+                                <ul class="sidenav-third-level collapse" id="soldaduraAlmacenes" data-parent="#menuSoldadura">
                                     <li><a href="views/soldadura/pesajes.php"><span class="nav-link-text">Pesaje</span></a></li>
                                     <li><a href="views/soldadura/confirmacion.php"><span class="nav-link-text">Confirmación</span></a></li>
+                                    <li><a href="views/soldadura/reporte.php"><span class="nav-link-text">Reporte</span></a></li>
                                 </ul>
                             </li>
                         </ul>
@@ -154,8 +176,8 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'])) {
         <div class="content-wrapper">
             <div class="container-fluid">
                 <h2>
-                    <i class="fa fa-user-circle"></i> <?php echo $_SESSION["ga-naUsu"]; ?> |
-                    <i class="fa fa-building-o"></i> <?php echo $_SESSION["ga-sedeUsu"]; ?>
+                    <i class="fa fa-user-circle"></i> <?php echo $_SESSION["ga-nombres"]; ?> |
+                    <i class="fa fa-building-o"></i> <?php echo $_SESSION["ga-ciudad"]; ?>
                 </h2>
                 <hr>
                 <p>

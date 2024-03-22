@@ -1,57 +1,67 @@
 <?php
 date_default_timezone_set('America/Lima');
 session_start();
-if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'], $_SESSION['ga-sedeUsu'])) {
+if (isset($_SESSION['ga-usuario'])) {
     include('../tmp_header.html');
-    if (in_array($_SESSION['ga-idPerfilUsu'], [1, 2, 3]) or in_array($_SESSION['ga-usuario'], ['amq-alm-02'])) {
+    if (in_array($_SESSION['ga-area'], ['RESPONSABLE DE ALMACEN', 'SISTEMAS'])) {
 ?>
+        <!-- Importamos el archivo js -->
+        <script src="../../libs/js/funciones/soldadura/pesajes.js"></script>
+        <script src="../../libs/js/funciones/msjes.js"></script>
 
         <script type="text/javascript">
             let descripcion;
+            let n_varilla = 0;
+            //let codDescripcion = [];
+            function mayus(e) {
+            e.value = e.value.toUpperCase();    
+            }
             $(document).ready(
-                function () {
+                function() {
                     ListarPesajes();
                     ListarSobrantes();
                     kgTotal = 0;
                     kgTotalS = 0;
                     $("#btnNuevoRegistro").click(
-                        function () {
+                        function() {
                             $("#frmRegPesaje")[0].reset();
                             $("#tblDetalles").empty();
                             kgTotal = 0;
                             kgTotalS = 0;
                         }
                     );
+                    
+                    $('.mi-selector').select2();
 
                     $("#addFila").click(
-                        function () {
-                            if( $("#nmbKG").val() != 0 && $.trim($("#txtDescripcion").val()).length > 0 ){
+                        function() {
+                            if ($("#nmbKG").val() != 0 && $.trim($("#txtDescripcion").val()).length > 0) {
                                 descripcion = $("#txtDescripcion").val();
                                 kgTotal = kgTotal + parseFloat($("#nmbKG").val());
                                 $("#tblDetalles").append("<tr>" +
                                     "<td style='vertical-align: middle;'><a href='#' class='delete'><i class='fa fa-remove'></i></a></td>" +
-                                    "<td><input type='text' class='form-control form-control-sm' name='descripcion[]' value='" + $("#txtDescripcion").val() + "' readonly/></td>" +
+                                    "<td><input type='text' class='form-control form-control-sm' name='descripcionDetalle[]' value='" + $("#txtDescripcion").val() + "' readonly/></td>" +
                                     "<td><input type='number' style='text-align:right;' class='form-control form-control-sm KG' name='KG[]' value='" + $("#nmbKG").val() + "' readonly/></td>" +
                                     "</tr>");
                                 $("#txtDescripcion").val("");
                                 $("#nmbKG").val("");
                                 $("#nmbKGTotal").val(kgTotal);
 
-                                $(".delete").off().click(function (e) {
+                                $(".delete").off().click(function(e) {
                                     subTotal = parseFloat($(this).parent("td").parent("tr").find(".KG").val());
                                     $(this).parent("td").parent("tr").remove();
                                     kgTotal = kgTotal - subTotal;
                                     $("#nmbKGTotal").val(kgTotal);
                                 });
-                            }else{
+                            } else {
                                 alert(":: Faltan datos en la línea de detalle a agregar.");
                             }
                         }
                     );
 
                     $("#addFilaS").click(
-                        function () {
-                            if( $("#nmbKGS").val() != 0 && $.trim($("#txtDescripcionS").val()).length > 0 ){
+                        function() {
+                            if ($("#nmbKGS").val() != 0 && $.trim($("#txtDescripcionS").val()).length > 0) {
                                 descripcion2 = $("#txtDescripcionS").val();
                                 kgTotalS = kgTotalS + parseFloat($("#nmbKGS").val());
                                 $("#tblDetallesS").append("<tr>" +
@@ -63,13 +73,13 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'], $_SESSION['ga-sedeUsu'
                                 $("#nmbKGS").val("");
                                 $("#nmbKGTotalS").val(kgTotalS);
 
-                                $(".delete").off().click(function (e) {
+                                $(".delete").off().click(function(e) {
                                     subTotalS = parseFloat($(this).parent("td").parent("tr").find(".KGS").val());
                                     $(this).parent("td").parent("tr").remove();
                                     kgTotalS = kgTotalS - subTotalS;
                                     $("#nmbKGTotalS").val(kgTotalS);
                                 });
-                            }else{
+                            } else {
                                 alert(":: Faltan datos en la línea de detalle a agregar.");
                             }
                         }
@@ -77,10 +87,6 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'], $_SESSION['ga-sedeUsu'
                 }
             );
         </script>
-
-        <!-- Importamos el archivo js -->
-        <script src="../../libs/js/funciones/soldadura/pesajes.js"></script>
-        <script src="../../libs/js/funciones/msjes.js"></script>
 
         <!-- Breadcrumbs-->
         <ol class="breadcrumb">
@@ -100,32 +106,58 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'], $_SESSION['ga-sedeUsu'
                                 <div class="form-group row">
                                     <label class="col-sm-4 col-form-label">Fecha de Pesaje:</label>
                                     <div class="col-sm-8">
-                                        <input type="date" class="form-control form-control-sm" id="txtFecha" name="txtFecha" title="" value="<?php echo date('Y-m-d');?>">
+                                        <input type="date" class="form-control form-control-sm" id="txtFecha" name="txtFecha" title="" value="<?php echo date('Y-m-d'); ?>">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 col-form-label">Seleccione Item:</label>
+                                    <div class="col-sm-8">
+                                        <select class="form-control mi-selector form-control-sm" id="cboItem" onchange="selectNit(event)" name="cboItem" title="Seleccione Item">
+                                            <option selected value="0">Seleccionar</option>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-sm-4 col-form-label">Empaque:</label>
                                     <div class="col-sm-8">
-                                        <select class="form-control form-control-sm" id="cboEmpaque" name="cboEmpaque" title="">
-                                        <option value="0">Selecciona</option>
-                                        <option value="1">CAJA</option>
-                                        <option value="2">LATA</option>
-                                    </select>
+                                        <select class="form-control form-control-sm" id="cboEmpaque" name="cboEmpaque" title="Seleccione Tipo de Empaque">
+                                            <option value="0">Selecciona</option>
+                                            <option value="1">CAJA</option>
+                                            <option value="2">LATA</option>
+                                        </select>
                                     </div>
                                 </div>
+                                <!-- <form action="" id="frmAdjunto">
+                                    <div class="form-group row">
+                                        <div class="col-sm-4 col-md-4">
+                                            <label for="archivo[]" class="control-label">Archivos</label>
+                                        </div>
+                                        <div class="col-sm-8">
+                                            <input type="file" class="form-control form-control-sm" id="archivo[]" name="archivo[]" multiple="">
+                                        </div>			
+                                    </div>
+                                </form> -->
                                 <div class="form-group row">
+                                    <div class="col-sm-4 col-md-4">
+							            <label for="archivo[]" class="control-label">Archivos</label>
+                                    </div>
+							        <div class="col-sm-8">
+								        <input type="file" class="form-control form-control-sm" id="archivo[]" name="archivo[]" multiple="">
+							        </div>			
+		        				</div>
+                                <!-- <div class="form-group row">
                                     <div class="col-sm-4 col-md-4">
                                         <label for="mdlRegFile01">Evidencia:</label>
                                     </div>
                                     <div class="col-sm-8">
                                         <input class="form-control form-control-sm" id="mdlRegFile01" name="mdlRegFile01" type="file" accept="application/pdf">
                                     </div>
-                                </div>
+                                </div> -->
                                 <div class="form-group row">
                                     <label class="col-sm-4 col-form-label">Cantidad Soldadura:</label>
                                     <div class="col-sm-8">
-                                        <input type="number" class="form-control form-control-sm" id="txtCantidad" name="txtCantidad" title="" value="">
-                                    </select>
+                                        <!-- <input onkeyup="buscar();" type="number" class="form-control form-control-sm" id="txtCantidad" name="txtCantidad" title="Selecione la cantidad" value=""> -->
+                                        <input onkeyup="buscar(this.value);" type="number" class="form-control form-control-sm" id="txtCantidad" name="txtCantidad" title="Selecione la cantidad" value="0">
                                     </div>
                                 </div>
                                 <label><b><u>Agregar detalles:</u></b></label>
@@ -134,7 +166,7 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'], $_SESSION['ga-sedeUsu'
                                         <input type="number" class="form-control form-control-sm" id="nmbKG" min="0" placeholder="KG (1.00)">
                                     </div>
                                     <div class="col-sm-6">
-                                        <input type="text" class="form-control form-control-sm" id="txtDescripcion" placeholder="Descripción (evitar apóstrofes)">
+                                        <input type="text" class="form-control form-control-sm" id="txtDescripcion" placeholder="Descripción (evitar apóstrofes)" disabled>
                                     </div>
                                     <div class="col-sm-2" align="right">
                                         <button type="button" class="btn btn-sm btn-outline-primary" id="addFila"><i class="fa fa-plus"></i> Agregar</button>
@@ -143,7 +175,11 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'], $_SESSION['ga-sedeUsu'
                                 <label><b><u>Detalles:</u></b></label>
                                 <table class="table table-bordered table-sm">
                                     <thead>
-                                        <tr><th><i class="fa fa-cog"></i></th><th>Descripción</th><th width="30%">KG</th></tr>
+                                        <tr>
+                                            <th><i class="fa fa-cog"></i></th>
+                                            <th>Descripción</th>
+                                            <th width="30%">KG</th>
+                                        </tr>
                                     </thead>
                                     <tfoot>
                                         <tr>
@@ -155,7 +191,7 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'], $_SESSION['ga-sedeUsu'
                                 </table>
                                 <div class="text-right">
                                     <button class="btn btn-primary btn-sm" type="button" onclick="registrarPesaje()">
-                                    <!-- <button class="btn btn-primary btn-sm" type="button" onclick="registrar()"> -->
+                                        <!-- <button class="btn btn-primary btn-sm" type="button" onclick="registrar()"> -->
                                         <i class="fa fa-save"></i> Registrar Pesaje
                                     </button>
                                 </div>
@@ -168,17 +204,24 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'], $_SESSION['ga-sedeUsu'
                                 <hr>
                                 <div class="form-group row">
                                     <div class="col-sm-4 col-md-4">
+							            <label for="mdlRegFile02" class="control-label">Archivos</label>
+                                    </div>
+							        <div class="col-sm-8">
+								        <input type="file" class="form-control form-control-sm" id="mdlRegFile02" name="amdlRegFile02" multiple="">
+							        </div>			
+		        				</div>
+                                <!-- <div class="form-group row">
+                                    <div class="col-sm-4 col-md-4">
                                         <label for="mdlRegFile02">Evidencia:</label>
                                     </div>
                                     <div class="col-sm-8">
                                         <input class="form-control form-control-sm" id="mdlRegFile02" name="mdlRegFile02" type="file" accept="application/pdf">
                                     </div>
-                                </div>
+                                </div> -->
                                 <div class="form-group row">
                                     <label class="col-sm-4 col-form-label">Cantidad Sobrante:</label>
                                     <div class="col-sm-8">
-                                    <input type="number" class="form-control form-control-sm" id="txtCantidadSobrante" name="txtCantidadSobrante" title="" value="">
-                                    </select>
+                                        <input type="number" class="form-control form-control-sm" id="txtCantidadSobrante" name="txtCantidadSobrante" title="" value="0">
                                     </div>
                                 </div>
                                 <label><b><u>Agregar sobrante:</u></b></label>
@@ -187,7 +230,7 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'], $_SESSION['ga-sedeUsu'
                                         <input type="number" class="form-control form-control-sm" id="nmbKGS" min="0" placeholder="KG (1.00)">
                                     </div>
                                     <div class="col-sm-6">
-                                        <input type="text" class="form-control form-control-sm" id="txtDescripcionS" placeholder="Descripción (evitar apóstrofes)">
+                                        <input type="text" class="form-control form-control-sm" id="txtDescripcionS" placeholder="Descripción (evitar apóstrofes)" onkeyup="mayus(this);">
                                     </div>
                                     <div class="col-sm-2" align="right">
                                         <button type="button" class="btn btn-sm btn-outline-primary" id="addFilaS"><i class="fa fa-plus"></i> Agregar</button>
@@ -196,7 +239,11 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'], $_SESSION['ga-sedeUsu'
                                 <label><b><u>Detalles Sobrante:</u></b></label>
                                 <table class="table table-bordered table-sm">
                                     <thead>
-                                        <tr><th><i class="fa fa-cog"></i></th><th>Descripción</th><th width="30%">KG</th></tr>
+                                        <tr>
+                                            <th><i class="fa fa-cog"></i></th>
+                                            <th>Descripción</th>
+                                            <th width="30%">KG</th>
+                                        </tr>
                                     </thead>
                                     <tfoot>
                                         <tr>
@@ -238,7 +285,7 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'], $_SESSION['ga-sedeUsu'
                                 <div class="table-responsive" id="divTabla2"></div>
                             </div>
                             <div class="card-footer small text-muted">Los registros están ordenados de forma descendente por FECHA y ascendente por KG.</div>
-                        </div>  
+                        </div>
                     </div>
                 </div>
             </div>
@@ -283,7 +330,13 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'], $_SESSION['ga-sedeUsu'
                         </div>
                         <label for=""><b><u>Detalles</u></b></label>
                         <table class="table table-bordered table-sm">
-                            <thead><tr><th>#</th><th>Descripción</th><th>Empaque</th></tr></thead>
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Descripción</th>
+                                    <th>Empaque</th>
+                                </tr>
+                            </thead>
                             <tbody id="mdlTblDtsDetalles"></tbody>
                         </table>
                     </div>
@@ -333,7 +386,13 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'], $_SESSION['ga-sedeUsu'
                         </div>
                         <label for=""><b><u>Detalles</u></b></label>
                         <table class="table table-bordered table-sm">
-                            <thead><tr><th>#</th><th>Descripción</th><th>Peso Total</th></tr></thead>
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Descripción</th>
+                                    <th>Peso Total</th>
+                                </tr>
+                            </thead>
                             <tbody id="mdlTblDtsDetallesS"></tbody>
                         </table>
                     </div>

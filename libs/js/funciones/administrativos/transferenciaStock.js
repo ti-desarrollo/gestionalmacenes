@@ -212,7 +212,7 @@ function pdf(data) {
   pdf.text(data[0].comentarios ?? "", 12, height + 10);
 
   // Guardas el PDF
-  pdf.save(`Nota de Transferencia N°${data[0].docnum}`);
+  pdf.save(`Nota de Transferencia N°${data[0].docentry}`);
 
   // Regresamos el botón a su estado inicial
   $(`#tdDownload_${data[0].docentry}`).html(

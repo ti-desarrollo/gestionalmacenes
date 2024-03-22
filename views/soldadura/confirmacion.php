@@ -1,23 +1,17 @@
 <?php
-$numero=0;
+$numero = 0;
 $numero++;
 date_default_timezone_set('America/Lima');
 session_start();
-//$_SESSION['codigo'] = $_REQUEST['codigo'];
-if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'], $_SESSION['ga-sedeUsu'])) {
+if (isset($_SESSION['ga-usuario'])) {
     include('../tmp_header.html');
-    if (in_array($_SESSION['ga-idPerfilUsu'], [1, 2, 3]) or in_array($_SESSION['ga-usuario'], ['amq-alm-02'])) {
-        if (isset($_POST["numero"])) {
-            $numero=(int)$_POST["numero"];
-        }
+    if (in_array($_SESSION['ga-area'], ['RESPONSABLE DE ALMACEN', 'SISTEMAS'])) {
 ?>
         <script type="text/javascript">
             $(document).ready(
                 function() {
                     jsListarSobrantes();
                     setInterval(jsNotificadorSobrantes, 3000);
-                    //console.log(op);
-                    // var codigo = "S"+localStorage.getItem('codigo').padStart(5, '00000'); 
                 }
             );
         </script>
@@ -40,7 +34,6 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'], $_SESSION['ga-sedeUsu'
                         <i class="fa fa-file-archive-o"></i> VERIFICACION DE SOBRANTES - <b>Área: Almacenes</b>
                     </div>
                     <div class="card-body">
-                        <!-- <div id="btnLayout" class="text-left mb-3 mt-3"></div> -->
                         <div class="table-responsive" id="divTablaSobrantes"> </div>
                     </div>
                     <div class="card-footer small text-muted">Los registros recientes se muestran primero.</div>
@@ -49,7 +42,6 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'], $_SESSION['ga-sedeUsu'
         </div>
 
         <!-- Modal detalle de Confirmacion -->
-
         <div class="modal fade" id="dmlConfirmacion" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
@@ -63,20 +55,19 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'], $_SESSION['ga-sedeUsu'
                             <form id="frmAutorizacion">
                                 <input type="hidden" id="txtID">
                                 <div class="form-row">
-                                <div class="col-md-12">
+                                    <div class="col-md-12">
                                         <label for="txtOP"><b>N° OPERACION:</b></label>
-                                        <!-- <input type="text" class="form-control form-control-sm" id="txtOP" onkeyup="verificarViaticos(11);" value="<?php echo "S".sprintf("%05d",$numero);?>" disabled> -->
                                         <input type="text" class="form-control form-control-sm" id="txtOP" onkeyup="verificarViaticos(11);" disabled>
                                     </div>
                                 </div>
                                 <div class="form-row">
                                     <div class="col-md-6">
                                         <label for="txtEmpleado"><b>EMPLEADO:</b></label>
-                                        <input type="text" class="form-control form-control-sm" id="txtEmpleado" onkeyup="verificarViaticos(11);" value="<?php echo $_SESSION['ga-naUsu'] ?>" disabled>
+                                        <input type="text" class="form-control form-control-sm" id="txtEmpleado" onkeyup="verificarViaticos(11);" value="<?php echo $_SESSION['ga-usuario'] ?>" disabled>
                                     </div>
                                     <div class="col-md-6">
                                         <label for="txtFC"><b>FECHA DE CONFIRMACIÓN:</b></label>
-                                        <input type="date" class="form-control form-control-sm" id="txtFC" onkeyup="verificarViaticos(11);" min = "<?php echo date("Y-m-d",strtotime(date("Y-m-d")."- 2 days"));?>" max = "<?php echo date("Y-m-d",strtotime(date("Y-m-d")."+ 0 days"));?>" value="<?php echo date("Y-m-d") ?>" >
+                                        <input type="date" class="form-control form-control-sm" id="txtFC" onkeyup="verificarViaticos(11);" min="<?php echo date("Y-m-d", strtotime(date("Y-m-d") . "- 2 days")); ?>" max="<?php echo date("Y-m-d", strtotime(date("Y-m-d") . "+ 0 days")); ?>" value="<?php echo date("Y-m-d") ?>">
                                     </div>
                                 </div>
                                 <div class="form-row">
@@ -111,7 +102,6 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'], $_SESSION['ga-sedeUsu'
         </div>
 
         <!-- Modal detalle de Sobrantes -->
-
         <div class="modal fade" id="dmlSobrante" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
@@ -146,22 +136,6 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'], $_SESSION['ga-sedeUsu'
                                 </div>
                             </div>
                         </form>
-                        <!-- <div class="table-responsive" id="mdlDivTabla">
-                            <table id="mdlTblDatos" class="table table-bordered">
-                                <thead class="table-success">
-                                    <tr>
-                                        <th>#</th>
-                                        <th>USUARIO</th>
-                                        <th>FECHA CONFIRMACION</th>
-                                        <th>HORA</th>
-                                        <th>ESTADO</th>
-                                        <th>COMENTARIOS</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="mdlTblDatosDetalle">
-                                </tbody>
-                            </table>
-                        </div> -->
                     </div>
                 </div>
             </div>
@@ -173,8 +147,8 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'], $_SESSION['ga-sedeUsu'
                 <div class="modal-content" style="padding: 20px; overflow-x: scroll;">
                     <div class="modal-header">
                         <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">X</span></button>
-                        </div>
-                        <div class="modal-body">
+                    </div>
+                    <div class="modal-body">
                         <div id="layout">
                         </div>
                     </div>
@@ -188,6 +162,6 @@ if (isset($_SESSION['ga-usuario'], $_SESSION['ga-idUsu'], $_SESSION['ga-sedeUsu'
     }
     include("../tmp_footer.html");
 } else {
-    header("Location: ../login");
+    header("Location: ../../login.php");
 }
 ?>

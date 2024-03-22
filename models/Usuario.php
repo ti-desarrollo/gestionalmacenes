@@ -13,20 +13,24 @@ class Usuario extends Conexion
    {
       $response = [];
       $hour = date('H:m');
-      if ($hour > '07:30' && $hour < '18:00') {
+      // if ($hour > '07:30' && $hour < '18:00') {
          $query = "SELECT 
-                  T0.id
-                  ,T0.usuario
-                  ,T0.naUsuario
-                  ,T0.idSede
-                  ,T1.descripcion AS descSede
+                  T0.id AS 'codigo'
+                  ,T0.usuario AS 'usuario'
+                  ,T0.naUsuario AS 'nombres'
+                  ,T0.idSede AS 'sede'
+                  ,T1.descripcion AS 'ciudad'
                   ,T0.idPerfil
-                  ,CASE T0.idPerfil 
-                     WHEN 1 THEN 'SA' 
-                     WHEN 2 THEN 'Administrador de tienda'
-                     WHEN 3 THEN 'Almacenero' 
-                     ELSE 'Jefe de almacén '
-                  END AS perfil
+                  ,CASE T0.idPerfil
+                     WHEN 1 THEN 'SISTEMAS'
+                     WHEN 2 THEN 'ADMINISTRADOR TIENDA'
+                     WHEN 3 THEN 'RESPONSABLE DE ALMACEN'
+                     WHEN 4 THEN 'ALMACENES'
+                     WHEN 5 THEN 'MESA DE PARTES'
+                     WHEN 6 THEN 'LOGISTICA'
+                  END AS 'area'
+                  ,T0.correo AS 'correo'
+
                FROM usuarios T0
                INNER JOIN sedes T1 ON T0.idSede = T1.id
                WHERE 
@@ -35,13 +39,12 @@ class Usuario extends Conexion
                   T0.estado = 1";
          $data = $this->returnQuery($query, [$usuario, $password]);
          if (sizeof($data) == 1) {
-            $_SESSION['ga-idUsu'] = $data[0]['id'];
-            $_SESSION['ga-naUsu'] = $data[0]['naUsuario'];
             $_SESSION['ga-usuario'] = $data[0]['usuario'];
-            $_SESSION['ga-idSedeUsu'] = $data[0]['idSede'];
-            $_SESSION['ga-sedeUsu'] = $data[0]['descSede'];
-            $_SESSION['ga-perfilUsu'] = $data[0]['perfil'];
-            $_SESSION['ga-idPerfilUsu'] = $data[0]['idPerfil'];
+            $_SESSION['ga-nombres'] = $data[0]['nombres'];
+            $_SESSION['ga-sede'] = $data[0]['sede'];
+            $_SESSION['ga-ciudad'] = $data[0]['ciudad'];
+            $_SESSION['ga-area'] = $data[0]['area'];
+            $_SESSION['ga-correo'] = $data[0]['correo'];
             $response = [
                'success' => true,
                'message' => 'Inicio de sesión exitoso'
@@ -52,26 +55,36 @@ class Usuario extends Conexion
                'message' => 'Credenciales no válidas, por favor intenta otra vez'
             ];
          }
-      } else {
-         $response = [
-            'success' => false,
-            'message' => 'Estás fuera del horario permitido para el acceso al sistema'
-         ];
-      }
+      // } else {
+      //    $response = [
+      //       'success' => false,
+      //       'message' => 'Estás fuera del horario permitido para el acceso al sistema'
+      //    ];
+      // }
       return $response;
    }
 
-   public function guardarToken(string $token, string $usuario, string $perfil): int| bool
+
+   public function abrirSesion(string $usuario, string $area, string $token, string $correo): int| bool
    {
-      if (in_array($perfil, ['1', '4'])) {
-         $query = "UPDATE usuarios SET tokenfcm = ? WHERE usuario = ?";
-         return $this->simpleQuery($query, [$token, $usuario]);
+      $host = getenv('COMPUTERNAME');
+      if (in_array($area, ['SISTEMAS', 'ALMACENES'])) {
+         $sesion = $this->insertQuery('sp_abrirSesion ?, ?, ?, ?, ?', [$usuario, $area, $token, $correo, $host]);
+         if ($sesion) {
+            $_SESSION['ga-sesion'] = $sesion;
+         }
+         return $sesion;
       }
-      return 0;
+      return false;
    }
 
-   public function leerToken(): array
+   public function cerrarSesion(int $sesion = null): int| bool
    {
-      return $this->returnQuery("SELECT ISNULL(tokenfcm, '') AS tokenfcm, correo FROM usuarios WHERE correo IS NOT NULL AND idPerfil = 4", []);
+      return $this->simpleQuery('sp_cerrarSesion ?', [$sesion]);
+   }
+
+   public function leerSesiones(): array
+   {
+      return $this->returnQuery("sp_listarSesiones", []);
    }
 }

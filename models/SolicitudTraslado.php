@@ -12,12 +12,12 @@ class SolicitudTraslado extends Conexion
 
     public function listarSolicitudes_A(string $inicio, string $fin): array
     {
-        $data = $this->returnQuery('EXEC sp_listarSoliTrasladoAdm ?, ?', [$inicio, $fin]);
+        $data = $this->returnQuery('sp_listarSoliTrasladoAdm ?, ?, ?', [DATABASE_SAP, $inicio, $fin]);
         foreach ($data as $solicitud => &$valor) {
             $adjuntos = '';
             $files = $this->listarArchivos($valor['docentry']);
             foreach ($files as $file) {
-                $adjuntos .= "<p style='margin: unset;'><a href='https://gestionalmacenes.3aamseq.com.pe/docs/pedidos/{$file['carpeta']}/RECEPCIÓN DE MERCADERÍA - ALMACÉN/{$file['year']}/{$file['mes']}/TRANSFERENCIAS/{$file['origen']}/{$file['fechaFormato']}/{$file['fileName']}' target='_blank'>{$file['fileName']}</a></p>";
+                $adjuntos .= "<p style='margin: unset;'><a href='" . LINK_ARCHIVOS . "/{$file['carpeta']}/RECEPCIÓN DE MERCADERÍA - ALMACÉN/{$file['year']}/{$file['mes']}/TRANSFERENCIAS/{$file['origen']}/{$file['fechaFormato']}/{$file['fileName']}' target='_blank'>{$file['fileName']}</a></p>";
             }
             $valor['adjuntos'] = $adjuntos;
         }
@@ -26,12 +26,12 @@ class SolicitudTraslado extends Conexion
 
     public function listarSolicitudes(string $sede, string $inicio, string $fin): array
     {
-        $data = $this->returnQuery('EXEC sp_listarSoliTraslado ?, ?, ?', [$sede, $inicio, $fin]);
+        $data = $this->returnQuery('sp_listarSoliTraslado ?, ?, ?, ?', [DATABASE_SAP, $sede, $inicio, $fin]);
         foreach ($data as $solicitud => &$valor) {
             $adjuntos = '';
             $files = $this->listarArchivos($valor['docentry']);
             foreach ($files as $file) {
-                $adjuntos .= "<p style='margin: unset;'><a href='https://gestionalmacenes.3aamseq.com.pe/docs/pedidos/{$file['carpeta']}/RECEPCIÓN DE MERCADERÍA - ALMACÉN/{$file['year']}/{$file['mes']}/TRANSFERENCIAS/{$file['origen']}/{$file['fechaFormato']}/{$file['fileName']}' target='_blank'>{$file['fileName']}</a></p>";
+                $adjuntos .= "<p style='margin: unset;'><a href='" . LINK_ARCHIVOS . "/{$file['carpeta']}/RECEPCIÓN DE MERCADERÍA - ALMACÉN/{$file['year']}/{$file['mes']}/TRANSFERENCIAS/{$file['origen']}/{$file['fechaFormato']}/{$file['fileName']}' target='_blank'>{$file['fileName']}</a></p>";
             }
             $valor['adjuntos'] = $adjuntos;
         }
@@ -40,7 +40,7 @@ class SolicitudTraslado extends Conexion
 
     public function buscarDetalle(string $sede, string $codigo): array
     {
-        return $this->returnQuery('EXEC sp_buscarSoliTraslado ?, ?', [$sede, $codigo]);
+        return $this->returnQuery('sp_buscarSoliTraslado ?, ?, ?', [DATABASE_SAP, $sede, $codigo]);
     }
 
     public function procesarSolicitud(string $codigo, string $guia, string $comentarios, string $conformidad, string $usuario, array $items): array
@@ -74,13 +74,13 @@ class SolicitudTraslado extends Conexion
 
     private function obtenerEstado(string $codigo): array
     {
-        return $this->returnQuery('SELECT U_AMQ_ESTADO_ST estado FROM SBO_3AAMSEQ.dbo.OWTQ WHERE DocEntry = ?', [$codigo]);
+        return $this->returnQuery('SELECT U_AMQ_ESTADO_ST estado FROM ' . DATABASE_SAP . '.dbo.OWTQ WHERE DocEntry = ?', [$codigo]);
     }
 
     private function actualizarCabecera(string $codigo, string $comentarios, string $conformidad, string $guia, string $usuario): int | bool
     {
         // Actualizamos la cebecera en SAP
-        $this->simpleQuery("EXEC sp_actualizarCabeceraSolicitudTraslado ?, ?, ?", [$codigo, $comentarios, $conformidad]);
+        $this->simpleQuery("sp_actualizarCabeceraSolicitudTraslado ?, ?, ?, ?", [DATABASE_SAP, $codigo, $comentarios, $conformidad]);
 
         // Insertamos los datos en el aplicativo
         $this->simpleQuery("INSERT INTO recepcion_solicitud_traslado_cabecera(rstc_solicitud, rstc_guia, rstc_usuario) VALUES($codigo, '$guia', '$usuario');", []);
@@ -92,12 +92,12 @@ class SolicitudTraslado extends Conexion
 
     private function actualizarDetalle(string $cabecera, string $codigo, string $itemcode, string $cantidad): int | false
     {
-        return $this->simpleQuery('EXEC sp_actualizarDetalleSolicitudTraslado ?, ?, ?, ?', [$cabecera, $codigo, $itemcode, $cantidad]);
+        return $this->simpleQuery('sp_actualizarDetalleSolicitudTraslado ?, ?, ?, ?, ?', [DATABASE_SAP, $cabecera, $codigo, $itemcode, $cantidad]);
     }
 
     private function listarArchivos(string $solicitud): array
     {
-        return $this->returnQuery('EXEC sp_listarDocumentosSolicitud ?', [$solicitud]);
+        return $this->returnQuery('sp_listarDocumentosSolicitud ?, ?', [DATABASE_SAP, $solicitud]);
     }
 
     public function uploadFile(int $solicitud, string $dir, array $data): array
@@ -140,7 +140,7 @@ class SolicitudTraslado extends Conexion
 
     public function enviarCorreo(string $body, string $recipients, string $subject): int | bool
     {
-        $this->simpleQuery("EXECUTE [10.2.3.30].msdb.dbo.sp_send_dbmail @profile_name = 'PerfilEnvioCorreos2023', @body = ?, @body_format ='HTML', @recipients = ?, @subject = ?;", [$body, $recipients, $subject]);
+        $this->simpleQuery("[10.2.3.30].msdb.dbo.sp_send_dbmail @profile_name = 'PerfilEnvioCorreos2023', @body = ?, @body_format ='HTML', @recipients = ?, @subject = ?;", [$body, $recipients, $subject]);
         return 1;
     }
 }

@@ -1,10 +1,11 @@
 <?php
 
+require '../config/Global.php';
 class Conexion
 {
     private $server = '10.2.3.30', $connection;
     private $config = [
-        'Database' => 'bd_magazenoj_pruebas',
+        'Database' => DATABASE,
         'UID' => 'sa',
         'PWD' => '@123789852456_@M53Q*20*',
         'Characterset' => 'UTF-8',
@@ -39,6 +40,23 @@ class Conexion
     {
         $last_id = sqlsrv_query($this->connection, 'SELECT SCOPE_IDENTITY() AS idInsertado');
         return sqlsrv_fetch_array($last_id, SQLSRV_FETCH_ASSOC);
+    }
+
+    public function insertQuery($query, $params): int|bool
+    {
+        try {
+            $result = sqlsrv_query($this->connection, $query, $params);
+            if ($result === false) {
+                return false;
+            }
+            sqlsrv_next_result($result);
+            sqlsrv_fetch($result);
+            $ultimoID = sqlsrv_get_field($result, 0);
+            sqlsrv_free_stmt($result);
+            return $ultimoID ?? false;
+        } catch (Exception $e) {
+            return false;
+        }
     }
 
     public function closeConnection(): void

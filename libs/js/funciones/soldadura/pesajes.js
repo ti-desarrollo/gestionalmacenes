@@ -1,4 +1,8 @@
+let codDescripcion = [];
+let codDescripcionS = [];
+ListarItem();
 var bandera = false;
+var codigoSobrante;
 
 var idNC = 0;
 
@@ -13,7 +17,7 @@ function ListarPesajes() {
        function (response) {
           //console.log(response);
           datos = JSON.parse(response);
-          console.log(datos);
+          // console.log(datos);
           $.each(datos, function (i) {
              $("#tblDtsDetalles").append("<tr>" +
                    "<td><a href='#' data-toggle='modal' data-target='#mdlPesajeSoldadura' onclick='ListarPesaje("+ datos[i].id +")'>"+datos[i].id.toString().padStart(3, '0')+"</a></td>" +
@@ -63,6 +67,9 @@ function registrarPesaje() {
    let cantidad = $("#txtCantidad").val();
    var combo = document.getElementById("cboEmpaque");
    var empaque = combo.options[combo.selectedIndex].text;
+   //let descripcionDetalle = $("#descripcionDetalle[]").val();
+   const descripcionDetalle = document.getElementById("descripcionDetalle[]");
+   console.log(descripcionDetalle);
    let peso = $("#nmbKGTotal").val();   
    let fecha = $("#txtFecha").val();
 
@@ -71,6 +78,8 @@ function registrarPesaje() {
    let carpeta;
    let dir = '';
    const inputFile = document.getElementById("mdlRegFile01");
+   const inputFile2 = document.getElementById("archivo[]");
+  //  console.log(inputFile2);
 
    if (cantidad <= 0 || cantidad === "") {
      alert("Ingresa una cantidad correcta (mayor a 0)");
@@ -83,6 +92,8 @@ function registrarPesaje() {
      data.append("task", 3);
      data.append("cantidad", cantidad);
      data.append("descripcion", descripcion);
+     data.append("codDescripcion", codDescripcion);
+     //data.append("descripcionDetalle", descripcion);
      data.append("peso", peso);
      data.append("empaque", empaque);
      data.append("txtFecha", fecha);
@@ -95,7 +106,7 @@ function registrarPesaje() {
        contentType: false,
        processData: false,
        success: function (response) {
-         console.log(response);
+         //console.log(response);
          if (response.data.cabecera > 0) {
           if (response.success) {
             cabecera = response.data.cabecera;
@@ -108,12 +119,21 @@ function registrarPesaje() {
             var fecha = `${(f.getDate())}`.padStart(2,'0') + "-"+ `${(f.getMonth()+1)}`.padStart(2, '0')+ "-" +f.getFullYear();
             dir = `${carpeta}\\RECEPCIÓN DE SOLDADURA - ALMACÉN\\${anio}\\${mes + '. ' + nombreMes.toUpperCase()}\\KILEO SOLDADURA\\${fecha}`;
             console.log(dir);
-            for (let i = 0; i < inputFile.files.length; i++) {
-              responseFile = uploadFile(cabecera, dir, inputFile.files[i]);
+            // for (let i = 0; i < inputFile.files.length; i++) {
+            //   responseFile = uploadFile(cabecera, dir, inputFile.files[i]);
+            //   console.log(responseFile);
+            // }
+            for (let i = 0; i < inputFile2.files.length; i++) {
+              responseFile = uploadFiles(cabecera, dir, inputFile2.files[i]);
+              console.log(responseFile);
+              if (responseFile === undefined) {
+                responseFile = "";
+              }
             }
             alert(msjExito);
             $("#frmRegPesaje")[0].reset();
-            window.location.reload();
+            //window.location.reload();
+            ListarPesajes();
             return responseFile;
            }           
           //  alert(msjExito);
@@ -155,6 +175,7 @@ function registrarPesaje() {
      data.append("task", 4);
      data.append("cantidad", cantidad);
      data.append("descripcion", descripcion2);
+     data.append("codDescripcionS", codDescripcionS);
      data.append("peso", peso);
      data.append("fecha", fecha);
      
@@ -181,15 +202,20 @@ function registrarPesaje() {
             console.log(dir);
             for (let i = 0; i < inputFile.files.length; i++) {
               responseFile = uploadFileSobrante(cabecera, dir, inputFile.files[i]);
+              console.log(responseFile);
+              if (responseFile === undefined) {
+                responseFile = "";
+              }
             }
             alert(msjExito);
             $("#frmRegSobrantePesaje")[0].reset();
-            window.location.reload();
+            // window.location.reload();
+            ListarSobrantes();
             return responseFile;
            }
           //  alert(msjExito);
           //  $("#frmRegSobrantePesaje")[0].reset();
-          //  window.location.reload();
+          //  window.location.reload();s
          } else {
            alert(msjError);
            console.log(msjError);
@@ -374,6 +400,30 @@ function uploadFile(cabecera, dir, file) {
   return responseUpload;
 }
 
+function |uploadFiles(cabecera, dir, file) {
+  let responseUpload;
+  let formData = new FormData($("#frmRegPesaje")[0]);
+  formData.append("task", 17);
+  formData.append("archivo", file);
+  formData.append("dir", dir);
+  formData.append("cabecera", cabecera);
+  $.ajax({
+    url: controllerPE,
+    dataType: "text",
+    cache: false,
+    contentType: false,
+    processData: false,
+    data: formData,
+    type: "post",
+    success: function (response) {
+      console.log(response);
+      responseUpload = JSON.parse(response);
+    },
+  });
+
+  return responseUpload;
+}
+
 function uploadFileSobrante(cabecera, dir, file) {
   let responseUpload;
   let formData = new FormData($("#frmRegSobrantePesaje")[0]);
@@ -397,3 +447,56 @@ function uploadFileSobrante(cabecera, dir, file) {
 
   return responseUpload;
 }
+
+function ListarItem(){
+  $.get("../../controllers/SoldaduraController.php", { task: 18},
+        function (response) {
+         //console.log(response);
+           datos = JSON.parse(response);
+           console.log(datos);
+           //Asignar valores al option del Select
+           $.each(datos, function (i) {
+            $("#cboItem").append(
+              "<option data-nit='" + datos[i].ItemName +"'"+
+                "data-varilla='" + datos[i].numero_varillas +"'"+
+                "value=" + datos[i].ItemCode +
+                ">" + datos[i].ItemCode +
+                "</option>"
+            );
+            // var objeto = datos[i].ItemCode;
+            // codDescripcion.push(objeto);
+           });
+        }
+  );
+}
+
+function selectNit(e) {
+  document.getElementById("txtDescripcionS").value = "";
+  document.getElementById("txtCantidadSobrante").value = "0";
+  var nit =  e.target.selectedOptions[0].getAttribute("data-nit");
+  n_varilla =  e.target.selectedOptions[0].getAttribute("data-varilla");
+  var objeto= e.target.selectedOptions[0].getAttribute("value");
+  codDescripcion.push(objeto);
+  codDescripcionS.push(objeto);
+  // console.log(nit);
+  document.getElementById("txtDescripcion").value = nit;
+  document.getElementById("txtCantidad").value = n_varilla;
+  codigoSobrante = nit;
+}
+
+function buscar(cantidad)
+{
+    document.getElementById("txtCantidad").value = cantidad;
+    var cant = $("#txtCantidad").val();
+    // console.log(cant);
+    var total = cant - n_varilla;
+    // console.log(total);
+    $("#txtCantidadSobrante").val(total);
+
+    var cantidadSobrante = $("#txtCantidadSobrante").val();
+    if(cantidadSobrante != 0)
+    {
+      document.getElementById("txtDescripcionS").value = codigoSobrante;
+    }
+}
+
