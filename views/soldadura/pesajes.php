@@ -5,8 +5,17 @@ if (isset($_SESSION['ga-usuario'])) {
     include('../tmp_header.html');
     if (in_array($_SESSION['ga-area'], ['RESPONSABLE DE ALMACEN', 'SISTEMAS'])) {
 ?>
+        <!-- Importamos el archivo js -->
+        <script src="../../libs/js/funciones/soldadura/pesajes.js"></script>
+        <script src="../../libs/js/funciones/msjes.js"></script>
+
         <script type="text/javascript">
             let descripcion;
+            let n_varilla = 0;
+            //let codDescripcion = [];
+            function mayus(e) {
+            e.value = e.value.toUpperCase();    
+            }
             $(document).ready(
                 function() {
                     ListarPesajes();
@@ -21,6 +30,8 @@ if (isset($_SESSION['ga-usuario'])) {
                             kgTotalS = 0;
                         }
                     );
+                    
+                    $('.mi-selector').select2();
 
                     $("#addFila").click(
                         function() {
@@ -29,7 +40,7 @@ if (isset($_SESSION['ga-usuario'])) {
                                 kgTotal = kgTotal + parseFloat($("#nmbKG").val());
                                 $("#tblDetalles").append("<tr>" +
                                     "<td style='vertical-align: middle;'><a href='#' class='delete'><i class='fa fa-remove'></i></a></td>" +
-                                    "<td><input type='text' class='form-control form-control-sm' name='descripcion[]' value='" + $("#txtDescripcion").val() + "' readonly/></td>" +
+                                    "<td><input type='text' class='form-control form-control-sm' name='descripcionDetalle[]' value='" + $("#txtDescripcion").val() + "' readonly/></td>" +
                                     "<td><input type='number' style='text-align:right;' class='form-control form-control-sm KG' name='KG[]' value='" + $("#nmbKG").val() + "' readonly/></td>" +
                                     "</tr>");
                                 $("#txtDescripcion").val("");
@@ -77,10 +88,6 @@ if (isset($_SESSION['ga-usuario'])) {
             );
         </script>
 
-        <!-- Importamos el archivo js -->
-        <script src="../../libs/js/funciones/soldadura/pesajes.js"></script>
-        <script src="../../libs/js/funciones/msjes.js"></script>
-
         <!-- Breadcrumbs-->
         <ol class="breadcrumb">
             <li class="breadcrumb-item">
@@ -103,28 +110,54 @@ if (isset($_SESSION['ga-usuario'])) {
                                     </div>
                                 </div>
                                 <div class="form-group row">
+                                    <label class="col-sm-4 col-form-label">Seleccione Item:</label>
+                                    <div class="col-sm-8">
+                                        <select class="form-control mi-selector form-control-sm" id="cboItem" onchange="selectNit(event)" name="cboItem" title="Seleccione Item">
+                                            <option selected value="0">Seleccionar</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
                                     <label class="col-sm-4 col-form-label">Empaque:</label>
                                     <div class="col-sm-8">
-                                        <select class="form-control form-control-sm" id="cboEmpaque" name="cboEmpaque" title="">
+                                        <select class="form-control form-control-sm" id="cboEmpaque" name="cboEmpaque" title="Seleccione Tipo de Empaque">
                                             <option value="0">Selecciona</option>
                                             <option value="1">CAJA</option>
                                             <option value="2">LATA</option>
                                         </select>
                                     </div>
                                 </div>
+                                <!-- <form action="" id="frmAdjunto">
+                                    <div class="form-group row">
+                                        <div class="col-sm-4 col-md-4">
+                                            <label for="archivo[]" class="control-label">Archivos</label>
+                                        </div>
+                                        <div class="col-sm-8">
+                                            <input type="file" class="form-control form-control-sm" id="archivo[]" name="archivo[]" multiple="">
+                                        </div>			
+                                    </div>
+                                </form> -->
                                 <div class="form-group row">
+                                    <div class="col-sm-4 col-md-4">
+							            <label for="archivo[]" class="control-label">Archivos</label>
+                                    </div>
+							        <div class="col-sm-8">
+								        <input type="file" class="form-control form-control-sm" id="archivo[]" name="archivo[]" multiple="">
+							        </div>			
+		        				</div>
+                                <!-- <div class="form-group row">
                                     <div class="col-sm-4 col-md-4">
                                         <label for="mdlRegFile01">Evidencia:</label>
                                     </div>
                                     <div class="col-sm-8">
                                         <input class="form-control form-control-sm" id="mdlRegFile01" name="mdlRegFile01" type="file" accept="application/pdf">
                                     </div>
-                                </div>
+                                </div> -->
                                 <div class="form-group row">
                                     <label class="col-sm-4 col-form-label">Cantidad Soldadura:</label>
                                     <div class="col-sm-8">
-                                        <input type="number" class="form-control form-control-sm" id="txtCantidad" name="txtCantidad" title="" value="">
-                                        </select>
+                                        <!-- <input onkeyup="buscar();" type="number" class="form-control form-control-sm" id="txtCantidad" name="txtCantidad" title="Selecione la cantidad" value=""> -->
+                                        <input onkeyup="buscar(this.value);" type="number" class="form-control form-control-sm" id="txtCantidad" name="txtCantidad" title="Selecione la cantidad" value="0">
                                     </div>
                                 </div>
                                 <label><b><u>Agregar detalles:</u></b></label>
@@ -133,7 +166,7 @@ if (isset($_SESSION['ga-usuario'])) {
                                         <input type="number" class="form-control form-control-sm" id="nmbKG" min="0" placeholder="KG (1.00)">
                                     </div>
                                     <div class="col-sm-6">
-                                        <input type="text" class="form-control form-control-sm" id="txtDescripcion" placeholder="Descripción (evitar apóstrofes)">
+                                        <input type="text" class="form-control form-control-sm" id="txtDescripcion" placeholder="Descripción (evitar apóstrofes)" disabled>
                                     </div>
                                     <div class="col-sm-2" align="right">
                                         <button type="button" class="btn btn-sm btn-outline-primary" id="addFila"><i class="fa fa-plus"></i> Agregar</button>
@@ -171,17 +204,24 @@ if (isset($_SESSION['ga-usuario'])) {
                                 <hr>
                                 <div class="form-group row">
                                     <div class="col-sm-4 col-md-4">
+							            <label for="mdlRegFile02" class="control-label">Archivos</label>
+                                    </div>
+							        <div class="col-sm-8">
+								        <input type="file" class="form-control form-control-sm" id="mdlRegFile02" name="amdlRegFile02" multiple="">
+							        </div>			
+		        				</div>
+                                <!-- <div class="form-group row">
+                                    <div class="col-sm-4 col-md-4">
                                         <label for="mdlRegFile02">Evidencia:</label>
                                     </div>
                                     <div class="col-sm-8">
                                         <input class="form-control form-control-sm" id="mdlRegFile02" name="mdlRegFile02" type="file" accept="application/pdf">
                                     </div>
-                                </div>
+                                </div> -->
                                 <div class="form-group row">
                                     <label class="col-sm-4 col-form-label">Cantidad Sobrante:</label>
                                     <div class="col-sm-8">
-                                        <input type="number" class="form-control form-control-sm" id="txtCantidadSobrante" name="txtCantidadSobrante" title="" value="">
-                                        </select>
+                                        <input type="number" class="form-control form-control-sm" id="txtCantidadSobrante" name="txtCantidadSobrante" title="" value="0">
                                     </div>
                                 </div>
                                 <label><b><u>Agregar sobrante:</u></b></label>
@@ -190,7 +230,7 @@ if (isset($_SESSION['ga-usuario'])) {
                                         <input type="number" class="form-control form-control-sm" id="nmbKGS" min="0" placeholder="KG (1.00)">
                                     </div>
                                     <div class="col-sm-6">
-                                        <input type="text" class="form-control form-control-sm" id="txtDescripcionS" placeholder="Descripción (evitar apóstrofes)">
+                                        <input type="text" class="form-control form-control-sm" id="txtDescripcionS" placeholder="Descripción (evitar apóstrofes)" onkeyup="mayus(this);">
                                     </div>
                                     <div class="col-sm-2" align="right">
                                         <button type="button" class="btn btn-sm btn-outline-primary" id="addFilaS"><i class="fa fa-plus"></i> Agregar</button>

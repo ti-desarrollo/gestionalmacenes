@@ -18,12 +18,12 @@ if (isset($_REQUEST, $_SESSION)) {
 
         case 3:
             // Registrar Pesaje de soldadura
-            echo json_encode($soldadura->registrarSoldadura($_POST['sede'] ?? $_SESSION['ga-sede'], $_POST['txtCantidad'], $_POST['descripcion'], $_POST['empaque'], $_POST['nmbKGTotal'], $_POST['txtFecha'], $_SESSION['ga-usuario']));
+            echo json_encode($soldadura->registrarSoldadura($_POST['sede'] ?? $_SESSION['ga-sede'], $_POST['txtCantidad'], $_POST['codDescripcion'], implode(",", $_POST['descripcionDetalle']), implode(",", $_POST['KG']) , $_POST['empaque'], $_POST['nmbKGTotal'], $_POST['txtFecha'], $_SESSION['ga-usuario']));
             break;
             
         case 4:
             // Registrar sobrante de soldadura
-            echo json_encode($soldadura->registrarSobrantes($_POST['sede'] ?? $_SESSION['ga-sede'], $_POST['cantidad'], $_POST['descripcion'], $_POST['nmbKGTotalS'], $_POST['fecha'], $_SESSION['ga-usuario']));
+            echo json_encode($soldadura->registrarSobrantes($_POST['sede'] ?? $_SESSION['ga-sede'], $_POST['cantidad'], $_POST['codDescripcionS'], implode(",", $_POST['descripcionS']), implode(",", $_POST['KGS']) ,$_POST['nmbKGTotalS'], $_POST['fecha'], $_SESSION['ga-usuario']));
             break;
 
         case 5:
@@ -84,6 +84,16 @@ if (isset($_REQUEST, $_SESSION)) {
         case 16:
             // Mostrar datos para el layout
             echo json_encode($soldadura->layout($_POST['docentry']));
+            break;
+
+        case 17:
+            // Subir archivos
+            echo json_encode($soldadura->uploadFiles($_POST['cabecera'], $_POST['dir'], $_FILES['archivo']));
+            break;
+
+        case 18:
+            // Select de Item soldadura
+            echo json_encode($soldadura->items());
             break;
 
         default:

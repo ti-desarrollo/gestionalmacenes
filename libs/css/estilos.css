@@ -112,3 +112,7 @@ a:active {
     background: #007bff1d;
   }
 }
+
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+  font-size: small;
+}

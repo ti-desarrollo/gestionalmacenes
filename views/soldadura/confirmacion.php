@@ -63,7 +63,7 @@ if (isset($_SESSION['ga-usuario'])) {
                                 <div class="form-row">
                                     <div class="col-md-6">
                                         <label for="txtEmpleado"><b>EMPLEADO:</b></label>
-                                        <input type="text" class="form-control form-control-sm" id="txtEmpleado" onkeyup="verificarViaticos(11);" value="<?php echo $_SESSION['ga-naUsu'] ?>" disabled>
+                                        <input type="text" class="form-control form-control-sm" id="txtEmpleado" onkeyup="verificarViaticos(11);" value="<?php echo $_SESSION['ga-usuario'] ?>" disabled>
                                     </div>
                                     <div class="col-md-6">
                                         <label for="txtFC"><b>FECHA DE CONFIRMACIÓN:</b></label>

@@ -148,6 +148,7 @@ if (isset($_SESSION['ga-usuario'])) {
                                 <ul class="sidenav-third-level collapse" id="soldaduraAlmacenes" data-parent="#menuSoldadura">
                                     <li><a href="views/soldadura/pesajes.php"><span class="nav-link-text">Pesaje</span></a></li>
                                     <li><a href="views/soldadura/confirmacion.php"><span class="nav-link-text">Confirmación</span></a></li>
+                                    <li><a href="views/soldadura/reporte.php"><span class="nav-link-text">Reporte</span></a></li>
                                 </ul>
                             </li>
                         </ul>
