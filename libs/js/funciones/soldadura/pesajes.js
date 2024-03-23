@@ -400,7 +400,7 @@ function uploadFile(cabecera, dir, file) {
   return responseUpload;
 }
 
-function |uploadFiles(cabecera, dir, file) {
+function uploadFiles(cabecera, dir, file) {
   let responseUpload;
   let formData = new FormData($("#frmRegPesaje")[0]);
   formData.append("task", 17);
