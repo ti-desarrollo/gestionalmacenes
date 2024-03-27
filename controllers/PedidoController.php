@@ -56,7 +56,12 @@ if (isset($_REQUEST, $_SESSION)) {
         case 12:
             echo json_encode($pedido->rechazarRecepcion($_POST['pedido'], $_POST['cabecera'], $_POST['guia'], $_POST['items'], $_POST['comentarios'], $_SESSION['ga-usuario']));
             break;
-            
+
+        case 13:
+            // Reporte de pedidos
+            echo json_encode($pedido->listarPedidosReporte($_POST['fechaI'], $_POST['fechaF']));
+            break;
+
         default:
             echo json_encode('Tarea no implementada.');
             break;

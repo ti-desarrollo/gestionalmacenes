@@ -36,6 +36,11 @@ if (isset($_REQUEST, $_SESSION)) {
             echo json_encode($solicitud->enviarCorreo($_POST['body'], $_POST['recipients'], $_POST['subject']));
             break;
 
+        case 7:
+            // Enviar correo para notificar procesamiento de una solicitud
+            echo json_encode($solicitud->listarSolicitudesReporte($_POST['fechaI'], $_POST['fechaF']));
+            break;
+
         default:
             echo json_encode('Tarea no implementada');
             break;

@@ -154,6 +154,19 @@ if (isset($_SESSION['ga-usuario'])) {
                         </ul>
                     </li>
 
+                    <li class="nav-item" title="Reportes">
+                        <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" data-target="#menuReportes" href="#">
+                            <i class="fa fa-fw fa-line-chart"></i><span class="nav-link-text"> Reportes</span>
+                        </a>
+                        <ul class="sidenav-second-level collapse" id="menuReportes" data-parent="#menuPrincipal">
+                            <li>
+                                <a href="views/reportes/solicitudestraslado.php"><span class="nav-link-text">Solicitudes de traslado</span></a>
+                                <a href="views/reportes/pedidos.php"><span class="nav-link-text">Pedidos</span></a>
+                            </li>
+                        </ul>
+                    </li>
+
+
                 </ul>
 
                 <ul class="navbar-nav sidenav-toggler">

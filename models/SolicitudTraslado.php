@@ -10,6 +10,11 @@ class SolicitudTraslado extends Conexion
         parent::__construct();
     }
 
+    public function listarSolicitudesReporte(string $inicio, string $fin): array
+    {
+        return $this->returnQuery('sp_listarSoliTrasladoReporte ?, ?, ?', [DATABASE_SAP, $inicio, $fin]);
+    }
+
     public function listarSolicitudes_A(string $inicio, string $fin): array
     {
         $data = $this->returnQuery('sp_listarSoliTrasladoAdm ?, ?, ?', [DATABASE_SAP, $inicio, $fin]);

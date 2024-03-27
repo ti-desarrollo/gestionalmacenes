@@ -10,6 +10,11 @@ class Pedido extends Conexion
         parent::__construct();
     }
 
+    public function listarPedidosReporte(string $inicio, string $fin): array
+    {
+        return $this->returnQuery('sp_listarPedidosReporte ?, ?, ?', [DATABASE_SAP, $inicio, $fin]);
+    }
+
     public function listarPedidos_A(string $inicio, string $fin): array
     {
         $data = $this->returnQuery('sp_listarPedidosAdministrativos ?, ?, ?', [DATABASE_SAP, $inicio, $fin]);

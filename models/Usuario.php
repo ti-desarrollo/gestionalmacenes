@@ -12,7 +12,7 @@ class Usuario extends Conexion
    public function login(string $usuario, string $password): array
    {
       $response = [];
-      $hour = date('H:m');
+      $hour = date('H:i');
       if ($hour > '07:30' && $hour < '18:00') {
          $query = "SELECT 
                   T0.id AS 'codigo'
