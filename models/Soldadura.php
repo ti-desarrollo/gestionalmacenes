@@ -272,7 +272,7 @@ class Soldadura extends Conexion
 
     public function layout(string $codigo): array
     {
-        return $this->returnQuery('EXEC SBO_3AAMSEQ.dbo.SYP_LYT_COMOC01 ?', [$codigo]);
+        return $this->returnQuery("EXEC " . DATABASE_SAP . ".dbo.SYP_LYT_COMOC01 ?", [$codigo]);
     }
 
     public function confirmar(int $codigo, string $sede, string $operacion, int $estado, string $comentarios, string $fecha): array
