@@ -1,14 +1,12 @@
 const controllerI = "../../controllers/ImportacionesController.php";
 
 const campos = {
+  adjunto: "Adjunto",
   grr: "GRR",
-  grrAdjunto: "GRR (adjunto)",
   grrBultos: "GRR - Bultos",
   grrPeso: "GRR - Peso",
   grt: "GRT",
-  grtAdjunto: "GRT (adjunto)",
   ticket: "TICKET",
-  ticketAdjunto: "TICKET (adjunto)",
   ticketBultos: "TICKET - Bultos",
   ticketPeso: "TICKET - Peso",
   pesoRecepcionado: "Peso recepcionado",
@@ -89,7 +87,7 @@ function listar() {
       datos.forEach((element) => {
         tbody.innerHTML += `
           <tr id="row${element.codigo}">
-            <td class="text-primary" onclick="verDetalle(${element.codigo})">${element.codigo}</td>
+            <td class="text-primary" onclick="verDetalle(${element.codigo}, ${element.sede})">${element.codigo}</td>
             <td>${element.estado}</td>
             <td>${element.pedido}</td>
             <td>${element.proveedor}</td>
@@ -105,7 +103,7 @@ function listar() {
   });
 }
 
-function verDetalle(docentry) {
+function verDetalle(docentry, sede) {
   rowSelected(docentry);
   const task = 3;
   const tbody = document.getElementById("tbd");
@@ -113,7 +111,7 @@ function verDetalle(docentry) {
   divdl.style.display = "none";
   divdd.style.display = "block";
 
-  $.post(controllerI, { task, docentry }, function (response) {
+  $.post(controllerI, { task, docentry, sede }, function (response) {
     const datos = JSON.parse(response);
 
     if (datos.length === 0) {
@@ -198,24 +196,20 @@ function readRecepcion(recepcion) {
       if (input) input.value = datos[0][key];
     });
 
-    const file1 = document.getElementById("txtGRTAdjunto");
-    const file2 = document.getElementById("txtGRRAdjunto");
-    const file3 = document.getElementById("txtTicketAdjunto");
-    const file4 = document.getElementById("txtAdjuntoNoConformidad");
+    const file = document.getElementById("txtAdjunto");
+    const fileNC = document.getElementById("txtAdjuntoNoConformidad");
     const UsuarioNoCo = document.getElementById("UsuarioNoCo");
     const FechaNoCo = document.getElementById("FechaNoCo");
 
-    file1.href = datos[0]["GRTAdjunto"];
-    file2.href = datos[0]["GRRAdjunto"];
-    file3.href = datos[0]["TicketAdjunto"];
-    file4.href = datos[0]["AdjuntoNoConformidad"];
+    file.href = datos[0].adjunto;
+    fileNC.href = datos[0].AdjuntoNoConformidad;
 
     if (datos[0]["AdjuntoNoConformidad"] === null) {
-      file4.style.visibility = "hidden";
+      fileNC.style.visibility = "hidden";
       UsuarioNoCo.style.display = "none";
       FechaNoCo.style.display = "none";
     } else {
-      file4.style.visibility = "visible";
+      fileNC.style.visibility = "visible";
       UsuarioNoCo.style.display = "block";
       FechaNoCo.style.display = "block";
     }
@@ -336,14 +330,12 @@ function addLineaRecepcion() {
   newRow.innerHTML = `
     <td style="vertical-align: middle">${id}</td>
     <td><i class="fa fa-fw fa-trash" style="color: #F44336; font-size: large; cursor: pointer;" onclick="deleteLineaRecepcion(this)"></i></td>
-    <td style="vertical-align: middle"><input type="text" id="grr_${id}" /></td>
-    <td style="vertical-align: middle"><input type="file" accept="image/jpeg,image/jpg,image/png,application/pdf" id="grrAdjunto_${id}" /></td>
+    <td style="vertical-align: middle"><input type="file" accept="image/jpeg,image/jpg,image/png,application/pdf" id="adjunto_${id}" /></td>
+    <td style="vertical-align: middle"><input type="text" id="grr_${id}" /></td>    
     <td style="vertical-align: middle"><input type="number" id="grrBultos_${id}" /></td>
     <td style="vertical-align: middle"><input type="number" id="grrPeso_${id}" /></td>
     <td style="vertical-align: middle"><input type="text" id="grt_${id}" /></td>
-    <td style="vertical-align: middle"><input type="file" accept="image/jpeg,image/jpg,image/png,application/pdf" id="grtAdjunto_${id}" /></td>
     <td style="vertical-align: middle"><input type="text" id="ticket_${id}" /></td>
-    <td style="vertical-align: middle"><input type="file" accept="image/jpeg,image/jpg,image/png,application/pdf" id="ticketAdjunto_${id}" /></td>
     <td style="vertical-align: middle"><input type="number" id="ticketBultos_${id}" /></td>
     <td style="vertical-align: middle"><input type="number" id="ticketPeso_${id}" /></td>
     <td style="vertical-align: middle"><input type="number" id="bultosRecepcionados_${id}" /></td>
@@ -476,8 +468,8 @@ function validarDatos() {
     const bultosGRR = parseFloat(inputs[2].value.trim());
     const pesoGRR = parseFloat(inputs[3].value.trim());
 
-    const bultosAlm = parseFloat(inputs[10].value.trim());
-    const pesoAlm = parseFloat(inputs[11].value.trim());
+    const bultosAlm = parseFloat(inputs[8].value.trim());
+    const pesoAlm = parseFloat(inputs[9].value.trim());
 
     if (bultosGRR !== bultosAlm) {
       if (conformidad === "01") {
@@ -506,19 +498,17 @@ function validarDatos() {
     }
 
     const dato = {
-      grr: inputs[0].value.trim(),
-      grrAdjunto: inputs[1].files[0],
+      adjunto: inputs[0].files[0],
+      grr: inputs[1].value.trim(),
       grrBultos: inputs[2].value.trim(),
       grrPeso: inputs[3].value.trim(),
       grt: inputs[4].value.trim(),
-      grtAdjunto: inputs[5].files[0],
-      ticket: inputs[6].value.trim(),
-      ticketAdjunto: inputs[7].files[0],
-      ticketBultos: inputs[8].value.trim(),
-      ticketPeso: inputs[9].value.trim(),
-      bultosRecepcionados: inputs[10].value.trim(),
-      pesoRecepcionado: inputs[11].value.trim(),
-      placaVehiculo: inputs[12].value.trim(),
+      ticket: inputs[5].value.trim(),
+      ticketBultos: inputs[6].value.trim(),
+      ticketPeso: inputs[7].value.trim(),
+      bultosRecepcionados: inputs[8].value.trim(),
+      pesoRecepcionado: inputs[9].value.trim(),
+      placaVehiculo: inputs[10].value.trim(),
       conformidad: conformidad,
       comentario: comentario,
       dua: txtDUA.value.trim(),
@@ -553,9 +543,7 @@ function addRecepcion(datos) {
       const formData = new FormData();
       for (let i = 0; i < datos.length; i++) {
         const id = i + 1;
-        formData.append(`grrAdjunto_${id}`, datos[i].grrAdjunto);
-        formData.append(`grtAdjunto_${id}`, datos[i].grtAdjunto);
-        formData.append(`ticketAdjunto_${id}`, datos[i].ticketAdjunto);
+        formData.append(`adjunto_${id}`, datos[i].adjunto);
       }
       formData.append("importacion", JSON.stringify(importacion));
       formData.append("recepcion", JSON.stringify(datos));
@@ -598,35 +586,48 @@ function addRecepcion(datos) {
 
 async function sendNotification(codigo) {
   const recepcion = await detalleRecepcion(codigo);
-  const task = 4;
-  $.post(
-    "../../controllers/UsuarioController.php",
-    {
-      task,
-    },
-    function (response) {
-      const data = JSON.parse(response);
-      data.forEach((element) => {
-        pushNotification(element.tokenfcm, recepcion.pedido, recepcion.sede);
+  // const task = 4;
+  // $.post(
+  //   "../../controllers/UsuarioController.php",
+  //   {
+  //     task,
+  //   },
+  //   function (response) {
+  //     const data = JSON.parse(response);
+  //     data.forEach((element) => {
+  //       pushNotification(element.tokenfcm, recepcion.pedido, recepcion.sede);
 
-        // mailNotification(
-        //   element.correo,
-        //   recepcion.pedido,
-        //   recepcion.sede,
-        //   recepcion.usuario,
-        //   recepcion.proveedor,
-        //   recepcion.GRR,
-        //   recepcion.GRRAdjunto,
-        //   recepcion.GRT,
-        //   recepcion.GRTAdjunto,
-        //   recepcion.Ticket,
-        //   recepcion.TicketAdjunto,
-        //   recepcion.Conformidad,
-        //   recepcion.FechaRecepcion
-        // );
-      });
-    }
+  mailNotification(
+    // element.correo,
+    "jvasquez@3aamseq.com.pe",
+    recepcion.pedido,
+    recepcion.sede,
+    recepcion.usuario,
+    recepcion.proveedor,
+    recepcion.adjunto,
+    recepcion.GRR,
+    recepcion.GRT,
+    recepcion.Ticket,
+    recepcion.Conformidad,
+    recepcion.FechaRecepcion
   );
+  mailNotification(
+    // element.correo,
+    "nmolina@3aamseq.com.pe",
+    recepcion.pedido,
+    recepcion.sede,
+    recepcion.usuario,
+    recepcion.proveedor,
+    recepcion.adjunto,
+    recepcion.GRR,
+    recepcion.GRT,
+    recepcion.Ticket,
+    recepcion.Conformidad,
+    recepcion.FechaRecepcion
+  );
+  //     });
+  //   }
+  // );
 }
 
 function pushNotification(token, pedido, sede) {
@@ -656,12 +657,10 @@ function mailNotification(
   sede,
   usuario,
   proveedor,
-  grr,
   adjunto,
+  grr,
   grt,
-  adjunto2,
   ticket,
-  adjunto3,
   conformidad,
   fechaRecepcion
 ) {
@@ -678,10 +677,12 @@ function mailNotification(
       <div>
         <span>Usuario: <b>${usuario}</b></span><br />
         <span>N° Pedido: <b>${pedido}</b></span><br />
+        <span>Sede: <b>${sede}</b></span><br />
         <span>Proveedor: <b>${proveedor}</b></span><br />
-        <span>N° GRR: <b>${grr} (<a href="${adjunto}" target="_blank">Descargar</a>)</b></span><br />
-        <span>N° GRT: <b>${grt} (<a href="${adjunto2}" target="_blank">Descargar</a>)</b></span><br />
-        <span>N° TICKET: <b>${ticket} (<a href="${adjunto3}" target="_blank">Descargar</a>)</b></span><br />
+        <span>Adjunto: <a href="${adjunto}" target="_blank">Descargar</a></b></span><br />
+        <span>N° GRR: <b>${grr}</b></span><br />
+        <span>N° GRT: <b>${grt}</b></span><br />
+        <span>N° TICKET: <b>${ticket}</b></span><br />
         <span>Conformidad: <b>${conformidad}</b></span><br />
         <span>Fecha de recepción: <b>${fechaRecepcion}</b></span><br />
       </div>

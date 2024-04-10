@@ -23,7 +23,7 @@ class Importaciones extends Conexion
     public function buscarDetalleImportacion(string $sede, string $pedido, string $usuario): array
     {
         $this->registrarImportacion($sede, $pedido, $usuario);
-        return $this->returnQuery('sp_buscarImportacion ?, ?, ?, ?', [DATABASE_SAP, $sede, $pedido, $usuario]);
+        return $this->returnQuery('sp_buscarImportacion ?, ?, ?', [DATABASE_SAP, $sede, $pedido]);
     }
 
     private function registrarImportacion(string $sede, int $pedido, string $usuario): int | bool
@@ -54,21 +54,17 @@ class Importaciones extends Conexion
         foreach ($recepciones as $dato) {
             try {
                 $recepcion = (object) $dato;
-                $recepcion->grrAdjunto = (object) $_FILES["grrAdjunto_$id"];
-                $recepcion->grtAdjunto = (object) $_FILES["grtAdjunto_$id"];
-                $recepcion->ticketAdjunto = (object) $_FILES["ticketAdjunto_$id"];
+                $recepcion->adjunto = (object) $_FILES["adjunto_$id"];
                 $id++;
 
                 // Procesar la recepción (dato)
                 $codigo = $importacion->codigo;
+                $adjunto = $this->uploadFile($importacion->dir, $recepcion->adjunto, $codigo);
                 $grr = str_replace('GRR', '09', $recepcion->grr);
-                $grrAdjunto = $this->uploadFile($importacion->dir, $recepcion->grrAdjunto, $grr);
                 $grrBultos = (int) $recepcion->grrBultos;
                 $grrPeso = (float) $recepcion->grrPeso;
                 $grt = str_replace('GRR', '31', $recepcion->grt);
-                $grtAdjunto =  $this->uploadFile($importacion->dir, $recepcion->grtAdjunto, $grt);
                 $ticket = $recepcion->ticket;
-                $ticketAdjunto = $this->uploadFile($importacion->dir, $recepcion->ticketAdjunto, $ticket);
                 $ticketBultos = (int) $recepcion->ticketBultos;
                 $ticketPeso = (float) $recepcion->ticketPeso;
                 $pesoRecepcionado = (float) $recepcion->pesoRecepcionado;
@@ -81,18 +77,16 @@ class Importaciones extends Conexion
                 $agenteAduana = $recepcion->agenteAduana;
 
                 // Guardamos los archivos cargados
-                array_push($uploadedFiles, $grrAdjunto, $grtAdjunto, $ticketAdjunto);
+                array_push($uploadedFiles, $adjunto);
 
-                $result = $this->insertQuery('sp_registrarRecepcionImportacion ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?', [
+                $result = $this->insertQuery('sp_registrarRecepcionImportacion ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?', [
                     $codigo,
+                    $adjunto,
                     $grr,
-                    $grrAdjunto,
                     $grrBultos,
                     $grrPeso,
                     $grt,
-                    $grtAdjunto,
                     $ticket,
-                    $ticketAdjunto,
                     $ticketBultos,
                     $ticketPeso,
                     $pesoRecepcionado,

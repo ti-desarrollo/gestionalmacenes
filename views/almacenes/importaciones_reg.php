@@ -154,14 +154,12 @@ if (isset($_SESSION['ga-usuario'])) {
                                 <thead class="table-dark">
                                     <th>#</th>
                                     <th>Acción</th>
+                                    <th>Adjunto</th>
                                     <th>GRR</th>
-                                    <th>GRR (adjunto)</th>
                                     <th>GRR - Bultos</th>
                                     <th>GRR - Peso</th>
                                     <th>GRT</th>
-                                    <th>GRT (adjunto)</th>
                                     <th>TICKET</th>
-                                    <th>TICKET (adjunto)</th>
                                     <th>TICKET - Bultos</th>
                                     <th>TICKET - Peso</th>
                                     <th>Bultos recepcionados</th>
@@ -232,13 +230,19 @@ if (isset($_SESSION['ga-usuario'])) {
                                                     </div>
                                                     <div class="card-body">
                                                         <div class="row">
-                                                            <div class="mb-2 col-xs-12 col-sm-6 col-lg-4 col-xl-4 col-xxl-4">
+                                                            <div class="mb-2 col-xs-12 col-sm-6 col-lg-4 col-xl-3 col-xxl-3">
                                                                 <label for="txtOrden">Orden</label>
                                                                 <input type="text" readonly class="form-control form-control-sm" id="txtOrden">
                                                             </div>
-                                                            <div class="mb-2 col-xs-12 col-sm-6 col-lg-8 col-xl-8 col-xxl-8">
+                                                            <div class="mb-2 col-xs-12 col-sm-12 col-lg-6 col-xl-6 col-xxl-6">
                                                                 <label for="txtFechaRecepcion">Fecha/Hora</label>
                                                                 <input type="text" readonly class="form-control form-control-sm" id="txtFechaRecepcion">
+                                                            </div>
+                                                            <div class="mb-2 col-xs-12 col-sm-6 col-lg-3 col-xl-3 col-xxl-3">
+                                                                <label for="txtAdjunto">Adjunto</label>
+                                                                <div class="input-group-prepend">
+                                                                    <a target="_blank" class="input-group-text" id="txtAdjunto" style="color: #4CAF50"><i class="fa fa-fw fa-download"></i></a>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -252,9 +256,6 @@ if (isset($_SESSION['ga-usuario'])) {
                                                     <div class="card-body">
                                                         <div class="input-group mb-2">
                                                             <input type="text" readonly class="form-control form-control-sm" id="txtGRT">
-                                                            <div class="input-group-prepend">
-                                                                <a target="_blank" class="input-group-text" id="txtGRTAdjunto" style="color: #4CAF50"><i class="fa fa-fw fa-download"></i></a>
-                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -269,9 +270,6 @@ if (isset($_SESSION['ga-usuario'])) {
                                                             <div class="mb-2 col-xs-12 col-sm-12 col-lg-12 col-xl-12 col-xxl-12">
                                                                 <div class="input-group mb-2">
                                                                     <input type="text" readonly class="form-control form-control-sm" id="txtGRR">
-                                                                    <div class="input-group-prepend">
-                                                                        <a target="_blank" class="input-group-text" id="txtGRRAdjunto" style="color: #4CAF50"><i class="fa fa-fw fa-download"></i></a>
-                                                                    </div>
                                                                 </div>
                                                             </div>
                                                             <div class="mb-2 col-xs-12 col-sm-6 col-lg-6 col-xl-6 col-xxl-6">
@@ -296,9 +294,6 @@ if (isset($_SESSION['ga-usuario'])) {
                                                             <div class="mb-2 col-xs-12 col-sm-12 col-lg-12 col-xl-12 col-xxl-12">
                                                                 <div class="input-group mb-2">
                                                                     <input type="text" readonly class="form-control form-control-sm" id="txtTicket">
-                                                                    <div class="input-group-prepend">
-                                                                        <a target="_blank" class="input-group-text" id="txtTicketAdjunto" style="color: #4CAF50"><i class="fa fa-fw fa-download"></i></a>
-                                                                    </div>
                                                                 </div>
                                                             </div>
                                                             <div class="mb-2 col-xs-12 col-sm-6 col-lg-6 col-xl-6 col-xxl-6">
